@@ -1,6 +1,6 @@
 name: rdfgraph
 description: A dart toolkit for organizing RDF files.
-version: 0.0.1
+version: 0.0.2
 authors:
   - Tian WU <tianwu@outlook.com>
 homepage: https://github.com/tian3rd/rdfgraph.git
