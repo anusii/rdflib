@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:rdfgraph/src/namespace.dart';
 
 Logger logger = Logger('term');
 
@@ -40,6 +41,10 @@ class URIRef {
 
   bool isValidUri(String uri) {
     return Uri.tryParse(uri)?.hasAbsolutePath ?? false;
+  }
+
+  bool inNamespace(Namespace ns) {
+    return value.startsWith(ns.ns);
   }
 
   @override
