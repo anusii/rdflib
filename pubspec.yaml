@@ -1,5 +1,5 @@
 name: rdfgraph
-description: A new Flutter project for organizing RDF files.
+description: A dart toolkit for organizing RDF files.
 version: 0.0.1
 homepage: https://github.com/tian3rd/rdfgraph.git
 
