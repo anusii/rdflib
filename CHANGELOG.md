@@ -1,3 +1,15 @@
+## 0.0.3
+
+Add examples, refer to README.
+
+- Namespace
+  - add RDF and FOAF (incomplete lists)
+- URIRef
+  - add comments
+  - update methods
+- Triple
+  - update method
+
 ## 0.0.2
 
 Add the following simple naive classes:
