@@ -9,7 +9,25 @@
 ## Usage
 
 ```dart
-// TODO: include short examples from /example folder
+import 'package:rdfgraph/rdfgraph.dart';
+
+void main() {
+  Graph g = Graph();
+
+  URIRef example = URIRef.fullUri('http://example.org');
+  URIRef donna = example.slash('donna');
+
+  g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
+  g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
+  g.add(Triple(sub: donna, pre: FOAF.nick, obj: 'donna'));
+  g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
+  g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
+  g.add(Triple(sub: donna, pre: FOAF.mbox, obj: URIRef.fullUri('mailto:donna@example.org')));
+
+  for (Triple t in g.triples) {
+    print(t);
+  }
+}
 ```
 
 ## Additional information
