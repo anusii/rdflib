@@ -21,20 +21,9 @@ class Triple {
 
   @override
   String toString() {
+    if (obj.runtimeType == String) {
+      return '$sub $pre "$obj" .';
+    }
     return '$sub $pre $obj .';
   }
-}
-
-main() {
-  Triple t = Triple(
-      sub: URIRef.fullUri('sublink'), pre: URIRef.fullUri('prelink'), obj: 5);
-  Triple t1 = Triple(
-      sub: URIRef.fullUri('sublink'), pre: URIRef.fullUri('prelink'), obj: 5);
-  Set se = {};
-  se.add(t);
-  print(se);
-  print(t == t1);
-  print(t.hashCode == t1.hashCode);
-  se.add(t1);
-  print(se);
 }
