@@ -4,7 +4,13 @@
 
 ## Features
 
+- Create triple instances
+- Create a graph to store triples without duplicates
+- Find triples based on criteria
+
 ## Getting started
+
+Refer to the code example below, or go to `/example` to find out more!
 
 ## Usage
 
@@ -25,11 +31,31 @@ void main() {
   g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
   // add duplicated record
   g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
-  g.add(Triple(sub: donna, pre: FOAF.mbox, obj: URIRef.fullUri('mailto:donna@example.org')));
+  g.add(Triple(
+      sub: donna,
+      pre: FOAF.mbox,
+      obj: URIRef.fullUri('mailto:donna@example.org')));
 
+  // add another in the graph
+  URIRef ed = example.slash('edward');
+  g.add(Triple(sub: ed, pre: RDF.type, obj: FOAF.Person));
+  g.add(Triple(sub: ed, pre: FOAF.nick, obj: 'ed'));
+  g.add(Triple(sub: ed, pre: FOAF.name, obj: 'Edward Scissorhands'));
+  g.add(Triple(sub: ed, pre: FOAF.mbox, obj: 'e.scissorhands@example.org'));
+
+  // TEST triples should print correctly
+  print('-'*30);
   for (Triple t in g.triples) {
     // duplicated records will not be added and printed out
     print(t);
+  }
+
+  print('-'*30);
+  // TEST correct subjects/objects should print out
+  for (URIRef s in g.subjects(RDF.type, FOAF.Person)) {
+    for (var o in g.objects(s, FOAF.mbox)) {
+      print(o);
+    }
   }
 }
 ```
