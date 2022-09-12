@@ -12,6 +12,19 @@
 
 Refer to the code example below, or go to `/example` to find out more!
 
+### For testing the `rdfgraph` package
+
+```bash
+# create a dart project for testing
+dart create test_rdfgraph
+cd test_rdfgraph
+# install rdfgraph as the dependency with dart pub add
+dart pub add rdfgraph
+# copy the following code to /bin/test_rdfgraph.dart
+# run the file with dart
+dart run
+```
+
 ## Usage
 
 ```dart
