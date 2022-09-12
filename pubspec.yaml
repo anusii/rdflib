@@ -1,6 +1,9 @@
 name: rdfgraph
-description: A dart toolkit for organizing RDF files inspired by RDFLib. Current functinalities include creating a graph to store different triples, finding subjects/objects based on specified criteria.
-version: 0.0.5
+description:
+  A dart toolkit for organizing RDF files inspired by RDFLib.
+  Current functinalities include creating a graph to store different triples,
+  finding subjects/objects based on specified criteria, exporting to turtle file, etc.
+version: 0.0.6
 homepage: https://github.com/tian3rd/rdfgraph.git
 
 environment:
