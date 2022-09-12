@@ -18,12 +18,12 @@ class URIRef {
 
   // check valid uri
   void checkUri() {
+    String warningInfo =
+        'this uri may not be valid, it may break the code later';
     if (!isValidUri(value)) {
-      logger.warning('this uri may not be valid, it may break the code later');
+      logger.warning(warningInfo);
+      print(warningInfo);
     }
-    // else if (!value.endsWith("#")) {
-    //   value += '#';
-    // }
   }
 
   String fragment() {
@@ -33,8 +33,10 @@ class URIRef {
 
   // add attribute, e.g., URIRef.fullUri('http://example.org').slash('donna')
   URIRef slash(String name) {
-    if (name.startsWith('/')) {
+    if (name.startsWith('/') && value.endsWith('/')) {
       name = name.substring(1);
+    } else if (!name.startsWith('/') && !value.endsWith('/')) {
+      name = '/' + name;
     }
     // TODO: check if there's invalid char in name
     // update value
