@@ -15,16 +15,20 @@ void main() {
   Graph g = Graph();
 
   URIRef example = URIRef.fullUri('http://example.org');
+  // subject and predicate should be a valid URIRef instance
   URIRef donna = example.slash('donna');
 
   g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
+  // add duplicated record
   g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
   g.add(Triple(sub: donna, pre: FOAF.nick, obj: 'donna'));
   g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
+  // add duplicated record
   g.add(Triple(sub: donna, pre: FOAF.name, obj: 'Donna Fales'));
   g.add(Triple(sub: donna, pre: FOAF.mbox, obj: URIRef.fullUri('mailto:donna@example.org')));
 
   for (Triple t in g.triples) {
+    // duplicated records will not be added and printed out
     print(t);
   }
 }
