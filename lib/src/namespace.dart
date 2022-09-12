@@ -11,18 +11,28 @@ class Namespace {
   }
 }
 
-final URIRef rdfProperty =
-    URIRef.fullUri('http://www.w3.org/1999/02/22-rdf-syntax-ns/');
+const String rdfAnchor = 'http://www.w3.org/1999/02/22-rdf-syntax-ns/';
+final URIRef rdfProperty = URIRef.fullUri(rdfAnchor);
 
-class RDF {
+class RDF extends Namespace {
+  final ns = rdfAnchor;
+
+  RDF({ns}) : super(ns: ns);
   static URIRef type = rdfProperty.slash('#type');
+  static String rdf = rdfAnchor;
 }
 
-final URIRef foafProperty = URIRef.fullUri('http://xmlns.com/foaf/0.1/');
+const String foafAnchor = 'http://xmlns.com/foaf/0.1/';
+final URIRef foafProperty = URIRef.fullUri(foafAnchor);
 
-class FOAF {
+class FOAF extends Namespace {
+  final ns = foafAnchor;
+
   static URIRef Person = foafProperty.slash('Person');
   static URIRef nick = foafProperty.slash('nick');
   static URIRef name = foafProperty.slash('name');
   static URIRef mbox = foafProperty.slash('mbox');
+  static String foaf = foafAnchor;
+
+  FOAF({required super.ns});
 }
