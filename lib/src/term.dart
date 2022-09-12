@@ -16,7 +16,9 @@ class URIRef {
     checkUri();
   }
 
-  // check valid uri
+  /// check valid uri
+  ///
+  /// log a warning if uri seems invalid
   void checkUri() {
     String warningInfo =
         'this uri may not be valid, it may break the code later';
@@ -26,12 +28,15 @@ class URIRef {
     }
   }
 
+  /// extract fragment after '#'
   String fragment() {
-    // extract fragment after '#'
     return Uri.parse(value).fragment;
   }
 
-  // add attribute, e.g., URIRef.fullUri('http://example.org').slash('donna')
+  // add attribute to form a concrete URIRef
+  //
+  // returns a new instance,
+  // e.g., URIRef.fullUri('http://example.org').slash('donna')
   URIRef slash(String name) {
     if (name.startsWith('/') && value.endsWith('/')) {
       name = name.substring(1);

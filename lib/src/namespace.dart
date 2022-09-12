@@ -6,6 +6,9 @@ class Namespace {
 
   Namespace({required this.ns}) : uriRef = URIRef.fullUri(ns);
 
+  /// can be used to further shorten the namespace binding
+  ///
+  /// note to check validity (not implemented)
   URIRef withAttr(String attr) {
     return URIRef.fullUri(ns + attr);
   }

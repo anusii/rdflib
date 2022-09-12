@@ -9,6 +9,9 @@ class Graph {
   Map<String, String> contexts = {};
   Set triples = {};
 
+  /// add triple to the set, also update the graph to include the triple.
+  ///
+  /// using a triples set can avoid duplicated records
   void add(Triple triple) {
     triples.add(triple);
     // create a new set if key is not existed
@@ -18,7 +21,10 @@ class Graph {
     graphs[triple.sub]!.add(triple);
   }
 
-  // bind a namespace to a prefix
+  /// bind a namespace to a prefix for readability
+  ///
+  /// throws an [Exception] if trying to bind the same name twice
+  /// [ns] uses its own property to initialize: eg, FOAF(ns: FOAF.foaf)
   void bind(String name, Namespace ns) {
     if (!contexts.containsKey(name)) {
       contexts[name] = ns.ns;
@@ -27,6 +33,9 @@ class Graph {
     }
   }
 
+  /// find the subjects which have a certain predicate and object
+  ///
+  /// returns a set
   Set<URIRef> subjects(URIRef pre, dynamic obj) {
     Set<URIRef> subs = {};
     for (Triple t in triples) {
@@ -37,6 +46,9 @@ class Graph {
     return subs;
   }
 
+  /// find the objects which have a certain subject and predicate
+  ///
+  /// returns a set
   Set objects(URIRef sub, URIRef pre) {
     Set objs = {};
     for (Triple t in triples) {
@@ -47,6 +59,11 @@ class Graph {
     return objs;
   }
 
+  /// serialize the graph to certain format and export to file
+  ///
+  /// now support exporting to turtle file (will be the default format)
+  /// needs to check the [dest] before writing to file (not implemented)
+  /// also needs to optimize the namespace binding instead of full URIRef
   void serialize({String format = 'ttl', String? dest}) {
     String indent = ' ' * 4;
     if (dest != null) {
