@@ -70,6 +70,12 @@ void main() {
       print(o);
     }
   }
+
+  // bind 'foaf' to FOAF for easy readout
+  g.bind('foaf', FOAF(ns: FOAF.foaf));
+
+  // export graph to turtle format
+  g.serialize(format: 'ttl', dest: 'example/ex1.ttl');
 }
 ```
 
