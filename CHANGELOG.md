@@ -1,3 +1,13 @@
+## 0.0.4
+
+Add methods to find subjects and objects based on the criteria in the graph.
+
+Update package description with what it can do currently.
+
+Add example file in `example/` folder.
+
+Tidy up unused imports.
+
 ## 0.0.3
 
 Add examples, refer to README.
