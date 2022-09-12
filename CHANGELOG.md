@@ -1,3 +1,7 @@
+## 0.0.5
+
+Move example code to the top `example/` folder.
+
 ## 0.0.4
 
 Add methods to find subjects and objects based on the criteria in the graph.
