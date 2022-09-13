@@ -1,3 +1,7 @@
+## 0.0.7
+
+Improve `serialize()` by shortening full `URIRef` instance to the bound namespace name.
+
 ## 0.0.6
 
 Update `Graph` class:
