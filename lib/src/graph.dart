@@ -85,23 +85,23 @@ class Graph {
         for (Triple t in g!) {
           if (isNewGraph) {
             isNewGraph = !isNewGraph;
-            String firstHalf = '<${t.sub.value}> <${t.pre.value}>';
+            String firstHalf = '${_abbrUrirefToTtl(t.sub, contexts)} ${_abbrUrirefToTtl(t.pre, contexts)}';
             if (t.obj.runtimeType == String) {
               line = '$firstHalf "${t.obj}" ;';
             } else if (t.obj.runtimeType == URIRef) {
               URIRef o = t.obj as URIRef;
-              line = '$firstHalf <${o.value}> ;';
+              line = '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
             } else {
               line = '$firstHalf ${t.obj} ;';
             }
           } else {
             line += '\n';
-            String firstHalf = '$indent<${t.pre.value}>';
+            String firstHalf = '$indent${_abbrUrirefToTtl(t.pre, contexts)}';
             if (t.obj.runtimeType == String) {
               line += '$firstHalf "${t.obj}" ;';
             } else if (t.obj.runtimeType == URIRef) {
               URIRef o = t.obj as URIRef;
-              line += '$firstHalf <${o.value}> ;';
+              line += '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
             } else {
               line += '$firstHalf ${t.obj} ;';
             }
@@ -116,5 +116,18 @@ class Graph {
       sink.write(output);
       sink.close();
     }
+  }
+
+  /// abbreviate uriref in namespace to bound short name for better readability
+  ///
+  /// this is useful when serializing and exporting to files to turtle
+  String _abbrUrirefToTtl(URIRef uriRef, Map<String, String> ctx) {
+    for (String abbr in ctx.keys) {
+      String ns = ctx[abbr]!;
+      if (uriRef.inNamespace(Namespace(ns: ns))) {
+        return '$abbr:${uriRef.value.substring(ns.length)}';
+      }
+    }
+    return '<${uriRef.value}>';
   }
 }
