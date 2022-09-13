@@ -56,7 +56,10 @@ class URIRef {
   /// ref: https://stackoverflow.com/questions/52975739/dart-flutter-validating-a-string-for-url
   bool isValidUri(String uri) {
     // TODO: find a robust way to validate uri
-    return Uri.tryParse(uri)?.hasAbsolutePath ?? false;
+    var u = Uri.tryParse(uri);
+    return u?.hasAbsolutePath != null &&
+        u?.scheme != null &&
+        u!.scheme.startsWith('http');
   }
 
   /// check if a full URIRef contains the namespace
