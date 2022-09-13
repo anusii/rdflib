@@ -12,6 +12,9 @@ class URIRef {
     checkUri();
   }
 
+  /// construct an instance from a full uri which is ofter handier
+  ///
+  /// need to find a way to extract base in the future
   URIRef.fullUri(this.value) : base = '' {
     checkUri();
   }
@@ -48,15 +51,22 @@ class URIRef {
     return URIRef.fullUri(value + name);
   }
 
+  /// check if a uri if valid based on the discussion in stackoverflow
+  ///
+  /// ref: https://stackoverflow.com/questions/52975739/dart-flutter-validating-a-string-for-url
   bool isValidUri(String uri) {
     // TODO: find a robust way to validate uri
     return Uri.tryParse(uri)?.hasAbsolutePath ?? false;
   }
 
+  /// check if a full URIRef contains the namespace
+  ///
+  /// can be useful in serializing process
   bool inNamespace(Namespace ns) {
     return value.startsWith(ns.ns);
   }
 
+  /// this is just for debug purpose for now
   @override
   String toString() {
     // return raw form of URIRef instance
