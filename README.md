@@ -74,7 +74,8 @@ void main() {
   // bind 'foaf' to FOAF for easy readout
   g.bind('foaf', FOAF(ns: FOAF.foaf));
 
-  // export graph to turtle format
+  // export graph to turtle format 
+  // (you need to change the destination, e.g., 'lib/ex1.ttl')
   g.serialize(format: 'ttl', dest: 'example/ex1.ttl');
 }
 ```
