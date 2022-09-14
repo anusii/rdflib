@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://www.dartlang.org/guides/libraries/private-files
 
 # Files and directories created by pub
@@ -20,6 +21,8 @@ doc/api/
 *.js.deps
 *.js.map
 
+=======
+>>>>>>> 5803aaa (add first commit files)
 # Miscellaneous
 *.class
 *.log
@@ -47,3 +50,9 @@ migrate_working_dir/
 # Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
 /pubspec.lock
 **/doc/api/
+<<<<<<< HEAD
+=======
+.dart_tool/
+.packages
+build/
+>>>>>>> 5803aaa (add first commit files)
