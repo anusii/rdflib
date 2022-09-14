@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> da4d842 (update .gitignore)
 # See https://www.dartlang.org/guides/libraries/private-files
 
 # Files and directories created by pub
@@ -21,8 +24,11 @@ doc/api/
 *.js.deps
 *.js.map
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5803aaa (add first commit files)
+=======
+>>>>>>> da4d842 (update .gitignore)
 # Miscellaneous
 *.class
 *.log
@@ -51,8 +57,11 @@ migrate_working_dir/
 /pubspec.lock
 **/doc/api/
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .dart_tool/
 .packages
 build/
 >>>>>>> 5803aaa (add first commit files)
+=======
+>>>>>>> da4d842 (update .gitignore)
