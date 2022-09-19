@@ -5,10 +5,18 @@ Logger logger = Logger('term');
 
 class URIRef {
   String value;
-  String base;
+  String? base;
 
-  URIRef({required this.value, required this.base}) {
-    value = base + value;
+  /// modify default constructor's base to be optional
+  URIRef(this.value, {this.base}) {
+    if (base == null) {
+      base = '';
+    } else {
+      if (!base!.endsWith('/') || !base!.endsWith('#')) {
+        base = base! + '/';
+      }
+    }
+    value = base! + value;
     checkUri();
   }
 
