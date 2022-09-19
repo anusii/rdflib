@@ -1,6 +1,6 @@
 import 'dart:io' show File;
 
-import 'package:rdfgraph/src/namespace.dart';
+import './namespace.dart';
 import './term.dart';
 import './triple.dart';
 
