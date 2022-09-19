@@ -84,6 +84,14 @@ class URIRef {
         u!.scheme.startsWith('http');
   }
 
+  /// two URIRef are equal if they have the same value
+  @override
+  bool operator ==(Object other) {
+    return other is URIRef &&
+        runtimeType == other.runtimeType &&
+        value == other.value;
+  }
+
   /// check if a full URIRef contains the namespace
   ///
   /// can be useful in serializing process
