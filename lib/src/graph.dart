@@ -14,7 +14,8 @@ class Graph {
   /// using a triples set can avoid duplicated records
   void add(Triple triple) {
     triples.add(triple);
-    // create a new set if key is not existed
+
+    /// create a new set if key is not existed (a new triple group identity)
     if (!graphs.containsKey(triple.sub)) {
       graphs[triple.sub] = Set();
     }
