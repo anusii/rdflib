@@ -77,6 +77,7 @@ final URIRef _xsd = URIRef.fullUri(_xsdAnchor);
 /// W3C XML Schema Definition Language (XSD) 1.1
 class XSD extends Namespace {
   final ns = _xsdAnchor;
+  static final String xsd = _xsdAnchor;
 
   /// https://www.w3.org/TR/xmlschema11-2/#<fundamental facets>
   static final URIRef ordered = _xsd.slash('ordered');
