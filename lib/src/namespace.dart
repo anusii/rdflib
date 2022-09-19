@@ -206,3 +206,12 @@ class OWL extends Namespace {
   static final URIRef topObjectProperty = _owl.slash('topObjectProperty');
   static final URIRef NamedIndividual = _owl.slash('NamedIndividual');
 }
+
+/// include standard prefixes for namespace checking and shortening for export
+/// to other formats
+final Map<String, String> standardPrefixes = {
+  'xsd': _xsdAnchor,
+  'owl': _owlAnchor,
+  'rdf': _rdfAnchor,
+  'rdfs': _rdfsAnchor,
+};
