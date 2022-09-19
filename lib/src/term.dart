@@ -106,3 +106,40 @@ class URIRef {
     return '$runtimeType($value)';
   }
 }
+
+class Literal {
+  final String value;
+  URIRef? datatype;
+  String? lang;
+
+  Literal(this.value, {this.datatype, this.lang}) {
+    if (datatype != null && lang != null) {
+      throw Exception(
+          'A Literal can only have one of lang or datatype, per http://www.w3.org/TR/rdf-concepts/#section-Graph-Literal');
+    } else if (datatype == null && lang == null) {
+      datatype = XSD.string;
+    }
+  }
+
+  /// convert a Literal to a turtle format for an object
+  String toTtl() {
+    String subType = 'Conversion to ttl not implemented!';
+    if (lang != null) {
+      return '\"$value\"@$lang';
+    } else if (datatype!.inNamespace(XSD(ns: XSD.xsd))) {
+      subType = datatype!.value.substring(XSD.xsd.length);
+      return '\"$value\"^^xsd:$subType';
+    } else {
+      throw Exception('$subType');
+    }
+  }
+
+  @override
+  String toString() {
+    if (datatype != null) {
+      return 'Literal($value, datatype: $datatype)';
+    } else {
+      return 'Literal($value, lang: $lang)';
+    }
+  }
+}
