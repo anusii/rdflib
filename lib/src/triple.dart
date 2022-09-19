@@ -5,7 +5,11 @@ class Triple {
   final URIRef pre;
   dynamic obj;
 
-  Triple({required this.sub, required this.pre, required this.obj});
+  Triple({required this.sub, required this.pre, required this.obj}) {
+    if (obj.runtimeType == String) {
+      obj = Literal(obj);
+    }
+  }
 
   /// for checking if two triples are the same for them to be put
   /// in the set of the graph efficiently (without duplicates)
