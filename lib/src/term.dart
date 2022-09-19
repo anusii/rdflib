@@ -36,16 +36,19 @@ class URIRef {
     return Uri.parse(value).fragment;
   }
 
-  // add attribute to form a concrete URIRef
-  //
-  // returns a new instance,
-  // e.g., URIRef.fullUri('http://example.org').slash('donna')
+  /// add attribute to form a concrete URIRef
+  ///
+  /// returns a new instance, e.g., URIRef.fullUri('http://example.org').slash('donna')
   URIRef slash(String name) {
+    /// check if there's any delimiter such as '/' or '#' in the end
     if (name.startsWith('/') && value.endsWith('/')) {
       name = name.substring(1);
-    } else if (!name.startsWith('/') && !value.endsWith('/')) {
+    } else if (!name.startsWith('/') &&
+        !value.endsWith('/') &&
+        !value.endsWith('#')) {
       name = '/' + name;
     }
+
     // TODO: check if there's invalid char in name
     // update value
     return URIRef.fullUri(value + name);
