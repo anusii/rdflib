@@ -19,6 +19,28 @@ class Graph {
       graphs[triple.sub] = Set();
     }
     graphs[triple.sub]!.add(triple);
+
+    /// update the prefixes/contexts by iterating through sub, pre, obj
+    _updateContexts(triple.sub, contexts);
+    _updateContexts(triple.pre, contexts);
+    if (triple.obj.runtimeType == Literal) {
+      Literal objLiteral = triple.obj as Literal;
+      if (objLiteral.datatype != null) {
+        _updateContexts(objLiteral.datatype!, contexts);
+      }
+    }
+    // print('Contexts now: $contexts');
+  }
+
+  /// update standard prefixes to include in the contexts
+  ///
+  /// useful for serialization
+  void _updateContexts(URIRef u, Map ctx) {
+    for (String sp in standardPrefixes.keys) {
+      if (u.inNamespace(Namespace(ns: standardPrefixes[sp]!)) && !ctx.containsKey(sp)) {
+        ctx[sp] = standardPrefixes[sp];
+      }
+    }
   }
 
   /// bind a namespace to a prefix for readability
@@ -85,10 +107,16 @@ class Graph {
         for (Triple t in g!) {
           if (isNewGraph) {
             isNewGraph = !isNewGraph;
-            String firstHalf = '${_abbrUrirefToTtl(t.sub, contexts)} ${_abbrUrirefToTtl(t.pre, contexts)}';
+            String firstHalf =
+                '${_abbrUrirefToTtl(t.sub, contexts)} ${_abbrUrirefToTtl(t.pre, contexts)}';
             if (t.obj.runtimeType == String) {
               line = '$firstHalf "${t.obj}" ;';
+            } else if (t.obj.runtimeType == Literal) {
+              /// Literal
+              Literal o = t.obj as Literal;
+              line = '$firstHalf ${o.toTtl()} ;';
             } else if (t.obj.runtimeType == URIRef) {
+              /// URIRef
               URIRef o = t.obj as URIRef;
               line = '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
             } else {
@@ -99,7 +127,12 @@ class Graph {
             String firstHalf = '$indent${_abbrUrirefToTtl(t.pre, contexts)}';
             if (t.obj.runtimeType == String) {
               line += '$firstHalf "${t.obj}" ;';
+            } else if (t.obj.runtimeType == Literal) {
+              /// Literal
+              Literal o = t.obj as Literal;
+              line += '$firstHalf ${o.toTtl()} ;';
             } else if (t.obj.runtimeType == URIRef) {
+              /// URIRef
               URIRef o = t.obj as URIRef;
               line += '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
             } else {
