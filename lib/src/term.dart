@@ -46,7 +46,7 @@ class URIRef {
         'this uri may not be valid, it may break the code later';
     if (!isValidUri(value)) {
       logger.warning(warningInfo);
-      print(warningInfo);
+      // print(warningInfo);
     }
   }
 
