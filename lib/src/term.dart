@@ -27,6 +27,17 @@ class URIRef {
     checkUri();
   }
 
+  /// set a different base
+  void updateBase({required String newBase}) {
+    if (!value.startsWith(newBase)) {
+      /// if new base is not contained in value, all existed URIRefs have to update values
+      /// so it's not allowed in this case
+      throw Exception('new base is not in original uri, forbidden');
+    } else {
+      base = newBase;
+    }
+  }
+
   /// check valid uri
   ///
   /// log a warning if uri seems invalid
