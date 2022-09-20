@@ -66,6 +66,21 @@ class Graph {
     return false;
   }
 
+  /// add object property to link two triple subjects together
+  ///
+  /// throws an [Exception] if object or property is not existed
+  void addObjectProperty(URIRef obj, URIRef relation, URIRef prop) {
+    // create the triple to represent the new relationship
+    Triple newRelation = Triple(sub: obj, pre: relation, obj: prop);
+    if (triples.contains(newRelation)) {
+      throw Exception('Triples are already linked!');
+    } else if (!graphs.containsKey(obj) || !graphs.containsKey(prop)) {
+      throw Exception('No triples with $obj or $prop exist');
+    } else {
+      add(newRelation);
+    }
+  }
+
   /// update standard prefixes to include in the contexts
   ///
   /// useful for serialization
