@@ -1,4 +1,4 @@
-import '../lib/rdfgraph.dart';
+import 'package:rdfgraph/rdfgraph.dart';
 
 main() {
   Graph g = Graph();

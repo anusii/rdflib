@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../lib/rdfgraph.dart';
+import 'package:rdfgraph/rdfgraph.dart';
 
 main() async {
   Graph g = Graph();
