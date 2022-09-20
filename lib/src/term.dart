@@ -141,6 +141,9 @@ class Literal {
     } else if (datatype!.inNamespace(XSD(ns: XSD.xsd))) {
       subType = datatype!.value.substring(XSD.xsd.length);
       return '\"$value\"^^xsd:$subType';
+    } else if (datatype!.inNamespace(OWL(ns: OWL.owl)) && value == '') {
+      // naive way of handling a general owl type
+      return 'owl:${datatype!.value.substring(OWL.owl.length)}';
     } else {
       throw Exception('$subType');
     }
