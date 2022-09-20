@@ -117,7 +117,19 @@ class Literal {
       throw Exception(
           'A Literal can only have one of lang or datatype, per http://www.w3.org/TR/rdf-concepts/#section-Graph-Literal');
     } else if (datatype == null && lang == null) {
-      datatype = XSD.string;
+      /// check for default data types including numeric and datetime
+      if (_isInteger(value)) {
+        datatype = XSD.int;
+      } else if (_isDouble(value)) {
+        /// default to float instead of double for now
+        datatype = XSD.float;
+      } else if (_isDateTime(value)) {
+        datatype = XSD.dateTime;
+      } else if (_isDateTimeStamp(value)) {
+        datatype = XSD.dateTimeStamp;
+      } else {
+        datatype = XSD.string;
+      }
     }
   }
 
@@ -132,6 +144,26 @@ class Literal {
     } else {
       throw Exception('$subType');
     }
+  }
+
+  /// helper function to make Literal more robust to read float/double numbers
+  bool _isDouble(String s) {
+    return double.tryParse(s) != null && !_isInteger(s);
+  }
+
+  /// helper function to make Literal more robust to read integers
+  bool _isInteger(String s) {
+    return int.tryParse(s) != null;
+  }
+
+  /// helper function to make Literal more robust to read datetime
+  bool _isDateTimeStamp(String s) {
+    return DateTime.tryParse(s) != null && s.endsWith('Z');
+  }
+
+  /// helper function to make Literal more robust to read datetime
+  bool _isDateTime(String s) {
+    return DateTime.tryParse(s) != null && !s.endsWith('Z');
   }
 
   @override
