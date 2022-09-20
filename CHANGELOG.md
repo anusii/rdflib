@@ -1,16 +1,22 @@
+### 0.0.9
+
+Updating pub.dev page sidebar homepage link to new ANUSII GitHub repository.
+
 ## 0.0.8
 
-- `namespace.dart`: adding default namespaces (e.g., `RDF`, `RDFS`, `OWL`, and `XSD` ) with reserved vocabulary of OWL
-  2 including special treatment, refer to [this link](https://www.w3.org/TR/owl-syntax/#IRIs) for
-  more details
-- `triple.dart`: converting single string value in object to a `Literal` instance with datatype `xsd:string`
-- `term.dart`: 
-  - refactoring constructor to accept full URI
-  - updating base address later if need be
-  - adding `Literal` class with data type and language options for more specific object description
-- `graph.dart`: 
-  - updating contexts when adding triples with different types
-  - serializing prefixes based on contexts
+- `namespace.dart`: adding default namespaces (e.g., `RDF`, `RDFS`, `OWL`, and `XSD` ) with reserved
+  vocabulary of OWL 2 including special treatment, refer
+  to [this link](https://www.w3.org/TR/owl-syntax/#IRIs) for more details
+- `triple.dart`: converting single string value in object to a `Literal` instance with
+  datatype `xsd:string`
+- `term.dart`:
+    - refactoring constructor to accept full URI
+    - updating base address later if need be
+    - adding `Literal` class with data type and language options for more specific object
+      description
+- `graph.dart`:
+    - updating contexts when adding triples with different types
+    - serializing prefixes based on contexts
 
 ## 0.0.7
 
