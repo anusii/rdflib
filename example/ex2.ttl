@@ -1,0 +1,11 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh-data: <http://silo.net.au/data/SOLID-Health#> .
+@prefix sh-onto: <http://sii.cecs.anu.edu.au/onto/SOLID-Health#> .
+
+sh-data:AssessmentTab-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:AssessmentTab ;
+    sh-onto:asthmaControl "Poor Control"^^xsd:string ;
+    sh-onto:diastolicBloodPressure "75"^^xsd:int ;
+    sh-onto:systolicBloodPressure "125.0"^^xsd:float .
