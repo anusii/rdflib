@@ -37,12 +37,42 @@ class Graph {
     // print('Contexts now: $contexts');
   }
 
+  /// add named individual to the graph: <subject> rdf:type owl:NamedIndividual
+  ///
+  bool addNamedIndividual(URIRef sub) {
+    /// check if the new individual already exists in the graph
+    /// if it's already there, can't add it and return false
+    if (_namedIndividualExists(sub)) {
+      return false;
+    }
+    Triple newNamedIndividual = Triple(
+        sub: sub,
+        pre: RDF.type,
+        // both ways work, but OWL.NamedIndividual is more succinct
+        // obj: Literal('', datatype: OWL.NamedIndividual));
+        obj: OWL.NamedIndividual);
+    // call add method to update contexts instead of just adding them to triples
+    add(newNamedIndividual);
+    return true;
+  }
+
+  /// check if a named individual already exists in the graph
+  bool _namedIndividualExists(URIRef sub) {
+    for (Triple t in triples) {
+      if (t.sub == sub) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// update standard prefixes to include in the contexts
   ///
   /// useful for serialization
   void _updateContexts(URIRef u, Map ctx) {
     for (String sp in standardPrefixes.keys) {
-      if (u.inNamespace(Namespace(ns: standardPrefixes[sp]!)) && !ctx.containsKey(sp)) {
+      if (u.inNamespace(Namespace(ns: standardPrefixes[sp]!)) &&
+          !ctx.containsKey(sp)) {
         ctx[sp] = standardPrefixes[sp];
       }
     }
