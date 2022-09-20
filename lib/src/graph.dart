@@ -29,6 +29,10 @@ class Graph {
       if (objLiteral.datatype != null) {
         _updateContexts(objLiteral.datatype!, contexts);
       }
+    } else if (triple.obj.runtimeType == URIRef) {
+      // need to update contexts for URIRef objects as well
+      URIRef o = triple.obj as URIRef;
+      _updateContexts(o, contexts);
     }
     // print('Contexts now: $contexts');
   }
