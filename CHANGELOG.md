@@ -1,4 +1,9 @@
-### 0.0.10
+## 0.0.11
+
+- `graph.dart`: adding function `addObjectProperty()` to link two named triple individuals together
+- updating `example/rdfgraph_example2.dart` to demonstrate linking triples
+
+## 0.0.10
 
 - `term.dart`: `Literal` default constructor can parse integer, float/double, and date time strings
   with corresponding `XSD` types
@@ -8,7 +13,7 @@
   examples for demonstration
 - Updating `README.md` to include new examples
 
-### 0.0.9
+## 0.0.9
 
 Updating pub.dev page sidebar homepage link to new ANUSII GitHub repository.
 
