@@ -1,3 +1,13 @@
+### 0.0.10
+
+- `term.dart`: `Literal` default constructor can parse integer, float/double, and date time strings
+  with corresponding `XSD` types
+- `graph.dart`: adding named individual
+- Adding
+  derived [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
+  examples for demonstration
+- Updating `README.md` to include new examples
+
 ### 0.0.9
 
 Updating pub.dev page sidebar homepage link to new ANUSII GitHub repository.
