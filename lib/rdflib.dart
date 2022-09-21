@@ -1,4 +1,4 @@
-library rdfgraph;
+library rdflib;
 
 export 'src/term.dart';
 export 'src/namespace.dart';

@@ -1,4 +1,4 @@
-import 'package:rdfgraph/rdfgraph.dart';
+import 'package:rdflib/rdflib.dart';
 
 main() {
   Graph g = Graph();
@@ -18,7 +18,7 @@ main() {
   g.add(Triple(
       sub: newAssessTab,
       pre: shOnto.withAttr('asthmaControl'),
-      obj: Literal('Poor Control')));
+      obj: Literal('Poor Control Tab')));
 
   // Literal integer
   g.add(Triple(

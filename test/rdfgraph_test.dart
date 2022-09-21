@@ -1,3 +1,3 @@
-import 'package:rdfgraph/rdfgraph.dart';
+import 'package:rdflib/rdflib.dart';
 
 void main() {}

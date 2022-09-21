@@ -1,4 +1,4 @@
-# RDFGraph
+# RDFLib
 
 > We're trying to create a tool for organizing RDF data efficiently in dart.
 
@@ -16,15 +16,15 @@
 
 Refer to the code example below, or go to `/example` to find out more!
 
-### For testing the `rdfgraph` package
+### For testing the `rdflib` package
 
 ```bash
 # create a dart project for testing
-dart create test_rdfgraph
-cd test_rdfgraph
-# install rdfgraph as the dependency with dart pub add
-dart pub add rdfgraph
-# copy the following code to /bin/test_rdfgraph.dart
+dart create test_rdflib
+cd test_rdflib
+# install rdflib as the dependency with dart pub add
+dart pub add rdflib
+# copy the following code to /bin/test_rdflib.dart
 # run the file with dart
 dart run
 ```
@@ -46,7 +46,7 @@ The following code snippet shows how to:
 
 ```dart
 import 'dart:io';
-import 'package:rdfgraph/rdfgraph.dart';
+import 'package:rdflib/rdflib.dart';
 
 main() async {
   Graph g = Graph();
@@ -118,7 +118,7 @@ main() async {
 ### 2. [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
 
 ```dart
-import '../lib/rdfgraph.dart';
+import '../lib/rdflib.dart';
 
 main() {
   Graph g = Graph();
@@ -173,7 +173,7 @@ main() {
 ### 3. Parsing local turtle file
 
 ```dart
-import 'package:rdfgraph/rdfgraph.dart';
+import 'package:rdflib/rdflib.dart';
 
 main() async {
   String filePath = 'example/ex1.ttl';

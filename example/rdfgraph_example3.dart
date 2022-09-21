@@ -1,4 +1,4 @@
-import 'package:rdfgraph/rdfgraph.dart';
+import 'package:rdflib/rdflib.dart';
 
 main() async {
   String filePath = 'example/ex1.ttl';
