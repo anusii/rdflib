@@ -10,6 +10,7 @@
 - Export graph to turtle `ttl` format (default)
 - Bind long namespace with customized shortened name for readability
 - Include [reserved vocabulary](https://www.w3.org/TR/owl-syntax/#IRIs) of OWL 2
+- Parse local turtle `ttl` file and store triples in the graph in memory
 
 ## Getting started
 
@@ -30,7 +31,10 @@ dart run
 
 ## Usage
 
-### General usage
+Head over to our GitHub repo to check out
+more [examples](https://github.com/anusii/rdfgraph/tree/main/example)!
+
+### 1. General usage
 
 The following code snippet shows how to:
 
@@ -111,7 +115,7 @@ main() async {
 }
 ```
 
-### [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
+### 2. [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
 
 ```dart
 import '../lib/rdfgraph.dart';
@@ -163,6 +167,25 @@ main() {
   g.bind('sh-onto', shOnto);
 
   g.serialize(dest: 'example/ex2.ttl');
+}
+```
+
+### 3. Parsing local turtle file
+
+```dart
+import 'package:rdfgraph/rdfgraph.dart';
+
+main() async {
+  String filePath = 'example/ex1.ttl';
+  // create a graph to read turtle file and store info
+  Graph g = Graph();
+  await g.parse(filePath);
+  // full format of triples (will use shorthand in serialization/export)
+  for (Triple t in g.triples) {
+    print(t);
+  }
+  // export it to a new file (should equivalent to the original one)
+  g.serialize(format: 'ttl', dest: 'example/ex3.ttl');
 }
 ```
 
