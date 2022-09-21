@@ -1,3 +1,7 @@
+## 0.1.1
+
+Renaming `rdfgraph` to `rdflib`. (GitHub repository stays the same)
+
 ## 0.1.0
 
 - `graph.dart`: supporting reading local turtle file into a `Graph` instance in memory
