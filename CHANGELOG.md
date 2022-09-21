@@ -1,3 +1,8 @@
+## 0.1.0
+
+- `graph.dart`: supporting reading local turtle file into a `Graph` instance in memory
+- updating `example/rdfgraph_example3.dart` to demonstrate parsing local `ttl` file
+
 ## 0.0.11
 
 - `graph.dart`: adding function `addObjectProperty()` to link two named triple individuals together

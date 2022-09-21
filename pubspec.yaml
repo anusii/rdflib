@@ -2,7 +2,7 @@ name: rdfgraph
 description:
   A dart toolkit for organizing RDF files (inspired by RDFLib).
   Use the graph to store triples, read RDF files and export to different formats.
-version: 0.0.11
+version: 0.1.0
 homepage: https://github.com/anusii/rdfgraph
 repository: https://github.com/anusii/rdfgraph
 
