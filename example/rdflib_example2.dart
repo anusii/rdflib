@@ -18,7 +18,7 @@ main() {
   g.add(Triple(
       sub: newAssessTab,
       pre: shOnto.withAttr('asthmaControl'),
-      obj: Literal('Poor Control Tab')));
+      obj: Literal('Poor Control')));
 
   // Literal integer
   g.add(Triple(
