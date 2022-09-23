@@ -1,6 +1,6 @@
 # RDFLib
 
-> A DART package for organizing RDF (resource description framework) data efficiently.
+> A pure Dart package for working with RDF (resource description framework).
 
 ## Features
 
