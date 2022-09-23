@@ -1,10 +1,9 @@
 name: rdflib
 description:
-  A dart toolkit for organizing RDF files.
-  Store triples, read RDF files and export to different formats.
-version: 0.1.1
-homepage: https://github.com/anusii/rdfgraph
-repository: https://github.com/anusii/rdfgraph
+  A pure Dart package for working with RDF (resource description framework).
+version: 0.1.2
+homepage: https://github.com/anusii/rdflib
+repository: https://github.com/anusii/rdflib
 
 environment:
   sdk: ">=2.17.3 <3.0.0"

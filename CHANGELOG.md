@@ -1,3 +1,7 @@
+## 0.1.2
+
+Updating description and GitHub repository.
+
 ## 0.1.1
 
 Renaming `rdfgraph` to `rdflib`. (GitHub repository stays the same)
