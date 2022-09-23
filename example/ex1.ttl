@@ -5,7 +5,6 @@
 <http://example.org/donna> rdf:type foaf:Person ;
     foaf:nick "donna"@en ;
     foaf:name "Donna Fales"^^xsd:string ;
-    foaf:name "Donna Fales"^^xsd:string ;
     foaf:mbox <mailto:donna@example.org> .
 
 <http://example.org/edward> rdf:type foaf:Person ;

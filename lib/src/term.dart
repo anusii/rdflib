@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:rdflib/rdflib.dart';
 import './namespace.dart';
 
 Logger logger = Logger('term');
@@ -167,6 +168,16 @@ class Literal {
   /// helper function to make Literal more robust to read datetime
   bool _isDateTime(String s) {
     return DateTime.tryParse(s) != null && !s.endsWith('Z');
+  }
+
+  /// for checking if two triples are equal when adding them to the set
+  @override
+  bool operator ==(Object other) {
+    return other is Literal &&
+        runtimeType == other.runtimeType &&
+        value == other.value &&
+        datatype == other.datatype &&
+        lang == other.lang;
   }
 
   @override
