@@ -1,5 +1,4 @@
 import 'package:logging/logging.dart';
-import 'package:rdflib/rdflib.dart';
 import './namespace.dart';
 
 Logger logger = Logger('term');
