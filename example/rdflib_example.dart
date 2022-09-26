@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:rdflib/rdflib.dart';
 
 main() async {
+  /// the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
   Graph g = Graph();
 
   URIRef example = URIRef.fullUri('http://example.org');
