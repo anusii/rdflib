@@ -1,3 +1,12 @@
+## 0.1.3
+
+Adding acknowledgement for [RDFLib](https://rdflib.readthedocs.io/)
+Adding examples for reading and writing a full `ttl` file, check it out in the `example/` folder!
+- `graph.dart`:
+  - fixing bugs in reading lines ending with `.`, `,` and `;`
+  - [partly] fixing prefix lines starting with ':' and '@base'
+  - fixing bugs in reading single numeric values (with no specified datatypes)
+
 ## 0.1.2
 
 Updating description and GitHub repository.
