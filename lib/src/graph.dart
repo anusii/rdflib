@@ -190,6 +190,11 @@ class Graph {
 
           /// re-use last sub
           add(Triple(sub: sub, pre: pre, obj: obj));
+        } else if (lst.length == 1 + 1) {
+          /// sub pre obj1 ,
+          ///         obj ;
+          obj = _parseElement(lst[0]);
+          add(Triple(sub: sub, pre: pre, obj: obj));
         } else {
           throw Exception('Error: illegal line ending with ";" $line');
         }
@@ -197,7 +202,26 @@ class Graph {
         /// 3. parse triple line ending with ','
         /// triple line with next line containing one element of object
         if (lst.length == 1 + 1) {
+          /// reuse the previous sub and pre
           obj = _parseElement(lst[0]);
+          add(Triple(sub: sub, pre: pre, obj: obj));
+        } else if (lst.length == 2 + 1) {
+          /// sub pre1 obj1 ,
+          ///         obj ;
+          ///     pre2 obj2 ,
+          ///          obj3 ,
+          pre = _parseElement(lst[0]) as URIRef;
+          obj = _parseElement(lst[1]);
+          add(Triple(sub: sub, pre: pre, obj: obj));
+        } else if (lst.length == 3 + 1) {
+          /// sub pre obj1 ,
+          ///         obj2 ;
+          /// sub will be re-used for following lines with 2 or 1 element(s)
+          sub = _parseElement(lst[0]) as URIRef;
+
+          /// pre will be re-used for following line with 1 element
+          pre = _parseElement(lst[1]) as URIRef;
+          obj = _parseElement(lst[2]);
           add(Triple(sub: sub, pre: pre, obj: obj));
         } else {
           throw Exception('Error: illegal line ending with "," $line');
