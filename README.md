@@ -199,3 +199,6 @@ main() async {
 ### How to contribute
 
 Make a pull request on our GitHub [repo](https://github.com/anusii/rdfgraph)!
+
+## Acknowledgement
+This `rdflib` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
