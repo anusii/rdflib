@@ -1,0 +1,769 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh-data: <http://silo.net.au/data/SOLID-Health#> .
+@prefix sh-onto: <http://sii.cecs.anu.edu.au/onto/SOLID-Health#> .
+
+sh-data:AssessmentTab-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:AssessmentTab ;
+    sh-onto:asthmaControl "Poor control"^^xsd:string ;
+    sh-onto:cardiovascularRisk "High Risk: 20-24%"^^xsd:string ;
+    sh-onto:diastolicBloodPressure "22"^^xsd:int ;
+    sh-onto:hearingAssessment "Abnormal"^^xsd:string ;
+    sh-onto:height "22"^^xsd:int ;
+    sh-onto:leftPTAndDP "Absent"^^xsd:string ;
+    sh-onto:monofilamentLeft "Present"^^xsd:string ;
+    sh-onto:monofilamentRight "Absent"^^xsd:string ;
+    sh-onto:otoscopyLeftEar "Wet perforation"^^xsd:string ;
+    sh-onto:otoscopyRightEar "Wax in canal"^^xsd:string ;
+    sh-onto:requiresKICA "No"^^xsd:string ;
+    sh-onto:rightPTAndDP "Present"^^xsd:string ;
+    sh-onto:symptomCOPD "Not applicable"^^xsd:string ;
+    sh-onto:systolicBloodPressure "8"^^xsd:int ;
+    sh-onto:visualAcuityLeftEye "6/24"^^xsd:string ;
+    sh-onto:visualAcuityRightEye "6/30"^^xsd:string ;
+    sh-onto:visualFieldsAssessment "Normal"^^xsd:string ;
+    sh-onto:waistCircumference "22"^^xsd:int ;
+    sh-onto:weight "22"^^xsd:int .
+
+sh-data:BGO-p12640-20220726T135211-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p12640-20220726T135211-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:06Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p12753-20220724T113425-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T13:54:26Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p24788-20220724T113628-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:15Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p36755-20220726T135147-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:08Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p43623-20220727T120913-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T10:53:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-24T12:23:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.7"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p62676-20220726T135232-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p63387-20220726T135202-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:27:56Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p86732-20220727T121657-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-27T12:16:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p88532-20220726T135223-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T10:28:10Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-1 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.5"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-2 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.6"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-3 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.8"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-4 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.2"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-5 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.3"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-6 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-14T21:02:55Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "7.0"^^xsd:float .
+
+sh-data:BGO-p89054-20220726T135228-7 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:BloodGlucoseObservation ;
+    sh-onto:observedTime "2022-07-26T11:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:updateTime "2022-07-16T21:49:04Z"^^xsd:dateTimeStamp ;
+    sh-onto:value "6.9"^^xsd:float .
+
+sh-data:Form-p12640-20220726T135211 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p12640-20220726T135211 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-24T13:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:28:07Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-26T13:52:11Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T10:28:07Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p12753-20220724T113425 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p12753-20220724T113425 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-25T13:54:18Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T13:54:27Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-24T11:34:25Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T13:54:27Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p24788-20220724T113628 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p24788-20220724T113628 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-23T10:27:17Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:28:17Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-24T11:36:28Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T10:28:17Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p36755-20220726T135147 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p36755-20220726T135147 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-23T13:51:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:28:09Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-26T13:51:47Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-25T10:28:09Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasAssessmentTab sh-data:AssessmentTab-p43623-20220727T120913 ;
+    sh-onto:hasInvestigationsTab sh-data:InvestigationsTab-p43623-20220727T120913 ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p43623-20220727T120913 ;
+    sh-onto:hasSeeAndDoTab sh-data:SeeAndDoTab-p43623-20220727T120913 ;
+    sh-onto:comment "h"^^xsd:string ;
+    sh-onto:date "2022-07-27T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-27T12:09:13Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-27T10:54:27Z"^^xsd:dateTimeStamp ;
+    sh-onto:patientDetails "h"^^xsd:string ;
+    sh-onto:recordTime "2022-07-27T12:09:13Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-27T10:54:27Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p62676-20220726T135232 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p62676-20220726T135232 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-26T13:52:32Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:28:05Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-26T13:52:32Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T10:28:05Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p63387-20220726T135202 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p63387-20220726T135202 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-26T13:52:02Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:27:57Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-26T13:52:32Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T10:27:57Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p86732-20220727T121657 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasInvestigationsTab sh-data:InvestigationsTab-p86732-20220727T121657 ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p86732-20220727T121657 ;
+    sh-onto:date "2022-07-27T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-27T12:16:46Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-27T12:16:57Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-27T12:16:57Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-27T11:38:33Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p88532-20220726T135223 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p88532-20220726T135223 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-26T13:52:23Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T10:28:12Z"^^xsd:dateTimeStamp ;
+    sh-onto:recordTime "2022-07-26T13:52:23Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T10:28:12Z"^^xsd:dateTimeStamp .
+
+sh-data:Form-p89054-20220726T135228 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Form ;
+    sh-onto:hasPreCheckMapTab sh-data:PreCheckMapTab-p89054-20220726T135228 ;
+    sh-onto:date "2022-07-26T00:00:00"^^xsd:dateTime ;
+    sh-onto:lastSeenTime "2022-07-26T13:52:28Z"^^xsd:dateTimeStamp ;
+    sh-onto:lastUpdatedTime "2022-07-26T11:52:13Z"^^xsd:dateTimeStamp ;
+    sh-onto:patientDetails "s"^^xsd:string ;
+    sh-onto:recordTime "2022-07-26T13:52:28Z"^^xsd:dateTimeStamp ;
+    sh-onto:submitRecordTime "2022-07-26T11:52:13Z"^^xsd:dateTimeStamp .
+
+sh-data:InvestigationsTab-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:InvestigationsTab ;
+    sh-onto:ACR "11"^^xsd:int ;
+    sh-onto:FEV1prePercent "4.0"^^xsd:float ;
+    sh-onto:HbA1c "22"^^xsd:int ;
+    sh-onto:TSH "3"^^xsd:int ;
+    sh-onto:abdominalUltrasound "fd"^^xsd:string ;
+    sh-onto:chronicDiseasePathology "1"^^xsd:string ;
+    sh-onto:chronicLiver "2d"^^xsd:string ;
+    sh-onto:descriptionECG "c"^^xsd:string ;
+    sh-onto:eGFR "123"^^xsd:int ;
+    sh-onto:fibroScanResult "Indetermined"^^xsd:string ;
+    sh-onto:haemoglobinHb "33"^^xsd:int ;
+    sh-onto:internationalNormalisedINR "cdsdc"^^xsd:string ;
+    sh-onto:levelHDL "33"^^xsd:int ;
+    sh-onto:levelLDL "123"^^xsd:int ;
+    sh-onto:requiresECG "Yes"^^xsd:string ;
+    sh-onto:requiresSpirometry "Yes"^^xsd:string ;
+    sh-onto:totalCholesterolLevel "123"^^xsd:int ;
+    sh-onto:triglycerideLevel "12"^^xsd:int .
+
+sh-data:InvestigationsTab-p86732-20220727T121657 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:InvestigationsTab ;
+    sh-onto:FEV1prePercent "23.8"^^xsd:float .
+
+sh-data:Patient-p12640 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p12640-20220726T135211 ;
+    sh-onto:birthDay "1981-12-16T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p12640"^^xsd:string ;
+    sh-onto:name "Karen Reep"^^xsd:string .
+
+sh-data:Patient-p12753 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p12753-20220724T113425 ;
+    sh-onto:birthDay "1989-12-02T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p12753"^^xsd:string ;
+    sh-onto:name "John Carter"^^xsd:string .
+
+sh-data:Patient-p24788 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p24788-20220724T113628 ;
+    sh-onto:birthDay "1988-10-25T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p24788"^^xsd:string ;
+    sh-onto:name "Toni Davis"^^xsd:string .
+
+sh-data:Patient-p36755 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p36755-20220726T135147 ;
+    sh-onto:birthDay "1999-09-06T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p36755"^^xsd:string ;
+    sh-onto:name "Patricia Kane"^^xsd:string .
+
+sh-data:Patient-p43623 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p43623-20220727T120913 ;
+    sh-onto:hasGender sh-onto:Gender-Male ;
+    sh-onto:livesIn sh-onto:State-QLD ;
+    sh-onto:birthDay "1990-08-10T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p43623"^^xsd:string ;
+    sh-onto:name "Charlie Breugel"^^xsd:string .
+
+sh-data:Patient-p62676 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p62676-20220726T135232 ;
+    sh-onto:birthDay "1976-08-12T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p62676"^^xsd:string ;
+    sh-onto:name "James Linder"^^xsd:string .
+
+sh-data:Patient-p63387 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p63387-20220726T135202 ;
+    sh-onto:birthDay "1985-05-14T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p63387"^^xsd:string ;
+    sh-onto:name "Leslie Smith"^^xsd:string .
+
+sh-data:Patient-p86732 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p86732-20220727T121657 ;
+    sh-onto:birthDay "1999-04-04T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p86732"^^xsd:string ;
+    sh-onto:name "Lois Small"^^xsd:string .
+
+sh-data:Patient-p88532 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p88532-20220726T135223 ;
+    sh-onto:birthDay "2000-02-21T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p88532"^^xsd:string ;
+    sh-onto:name "Michael White"^^xsd:string .
+
+sh-data:Patient-p89054 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:Patient ;
+    sh-onto:hasForm sh-data:Form-p89054-20220726T135228 ;
+    sh-onto:birthDay "2014-06-28T00:00:00"^^xsd:dateTime ;
+    sh-onto:id "p89054"^^xsd:string ;
+    sh-onto:name "Ann Franke"^^xsd:string .
+
+sh-data:PreCheckMapTab-p12640-20220726T135211 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-1 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-2 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-3 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-4 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-5 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-6 ;
+    sh-onto:hasBGO sh-data:BGO-p12640-20220726T135211-7 ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string .
+
+sh-data:PreCheckMapTab-p12753-20220724T113425 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-1 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-2 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-3 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-4 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-5 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-6 ;
+    sh-onto:hasBGO sh-data:BGO-p12753-20220724T113425-7 .
+
+sh-data:PreCheckMapTab-p24788-20220724T113628 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-1 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-2 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-3 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-4 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-5 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-6 ;
+    sh-onto:hasBGO sh-data:BGO-p24788-20220724T113628-7 ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string .
+
+sh-data:PreCheckMapTab-p36755-20220726T135147 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-1 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-2 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-3 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-4 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-5 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-6 ;
+    sh-onto:hasBGO sh-data:BGO-p36755-20220726T135147-7 ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string .
+
+sh-data:PreCheckMapTab-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-1 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-2 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-3 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-4 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-5 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-6 ;
+    sh-onto:hasBGO sh-data:BGO-p43623-20220727T120913-7 ;
+    sh-onto:alcoholConsumptionLevel "Non-drinker"^^xsd:string ;
+    sh-onto:currentHealthProblems "h"^^xsd:string ;
+    sh-onto:dietAssessment "Referred to dietician"^^xsd:string ;
+    sh-onto:exerciseLevel "Good = 30min mod. most days"^^xsd:string ;
+    sh-onto:influenzaVaccinationStatus "Not current"^^xsd:string ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string ;
+    sh-onto:pneumococcalVaccinationStatus "Current (includes given today)"^^xsd:string ;
+    sh-onto:smokingStatus "Current smoker - no intention to quit"^^xsd:string .
+
+sh-data:PreCheckMapTab-p62676-20220726T135232 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-1 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-2 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-3 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-4 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-5 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-6 ;
+    sh-onto:hasBGO sh-data:BGO-p62676-20220726T135232-7 ;
+    sh-onto:alcoholConsumptionLevel "Non-drinker"^^xsd:string ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string ;
+    sh-onto:smokingStatus "Current smoker - wants to quit now"^^xsd:string .
+
+sh-data:PreCheckMapTab-p63387-20220726T135202 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-1 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-2 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-3 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-4 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-5 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-6 ;
+    sh-onto:hasBGO sh-data:BGO-p63387-20220726T135202-7 .
+
+sh-data:PreCheckMapTab-p86732-20220727T121657 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-1 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-2 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-3 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-4 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-5 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-6 ;
+    sh-onto:hasBGO sh-data:BGO-p86732-20220727T121657-7 ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string .
+
+sh-data:PreCheckMapTab-p88532-20220726T135223 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-1 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-2 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-3 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-4 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-5 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-6 ;
+    sh-onto:hasBGO sh-data:BGO-p88532-20220726T135223-7 ;
+    sh-onto:medicationUsageRecord "No"^^xsd:string .
+
+sh-data:PreCheckMapTab-p89054-20220726T135228 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:PreCheckMapTab ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-1 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-2 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-3 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-4 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-5 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-6 ;
+    sh-onto:hasBGO sh-data:BGO-p89054-20220726T135228-7 .
+
+sh-data:SeeAndDoOption-p43623-20220727T120913-fitnessDrive rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:SeeAndDoOption ;
+    sh-onto:option "fitnessDrive"^^xsd:string ;
+    sh-onto:selected "Yes"^^xsd:string ;
+    sh-onto:time "Tomorrow"^^xsd:string .
+
+sh-data:SeeAndDoTab-p43623-20220727T120913 rdf:type owl:NamedIndividual ;
+    rdf:type sh-onto:SeeAndDoTab ;
+    sh-onto:hasSeeAndDoOption sh-data:SeeAndDoOption-p43623-20220727T120913-fitnessDrive ;
+    sh-onto:actionGPMPA "ds"^^xsd:string .
