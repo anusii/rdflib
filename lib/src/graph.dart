@@ -337,6 +337,11 @@ class Graph {
     } else if (element.contains(':')) {
       /// 5. abc:def (such as rdf:type)
       return _toFullUriref(element);
+    } else if (int.tryParse(element) != null) {
+      /// 6. single int/double/float without explicit datatype
+      return Literal(element, datatype: XSD.int);
+    } else if (double.tryParse(element) != null) {
+      return Literal(element, datatype: XSD.float);
     }
   }
 
