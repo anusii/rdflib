@@ -263,6 +263,10 @@ class Graph {
       /// not considering the trailing single ':' (be aware of a single ':')
       String k = lst[1].substring(0, lst[1].length - 1);
       String v = lst[2].substring(1, lst[2].length - 1);
+      /// single ':'
+      if (k.length == 0) {
+        return;
+      }
 
       /// update contexts, adding to triple will be handled by line
       contexts[k] = v;
