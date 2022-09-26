@@ -270,6 +270,9 @@ class Graph {
 
       /// update contexts, adding to triple will be handled by line
       contexts[k] = v;
+    } else if (prefixLine.toLowerCase().startsWith('@base') &&
+        prefixLine.endsWith('.')) {
+      /// TODO: fix @base line
     } else {
       throw Exception('Error: unable to parse this line $prefixLine');
     }
