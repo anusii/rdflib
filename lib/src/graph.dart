@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
+import 'package:encrypt/encrypt.dart';
+import 'package:crypto/crypto.dart';
+
 import './namespace.dart';
 import './term.dart';
 import './triple.dart';
@@ -350,68 +353,145 @@ class Graph {
   /// now support exporting to turtle file (will be the default format)
   /// needs to check the [dest] before writing to file (not implemented)
   /// also needs to optimize the namespace binding instead of full URIRef
-  void serialize({String format = 'ttl', String? dest}) {
+  /// throws [Exception] if encrypt and passphrase don't qualify
+  void serialize(
+      {String format = 'ttl',
+      String? dest,
+      String? encrypt,
+      String? passphrase}) {
+    /// encrypt and passphrase should both exist or not exist
+    /// TODO: passphrase strength checker
+    if (encrypt != null && (passphrase == null || passphrase.trim() == '')) {
+      throw Exception('No key is provided');
+    } else if (encrypt != null && encrypt != 'AES') {
+      throw Exception('$encrypt not supported');
+    } else if (encrypt == null && passphrase != null) {
+      throw Exception('No encryption is provided');
+    }
+
     String indent = ' ' * 4;
     if (dest != null) {
-      var file = File(dest);
-
       var output = StringBuffer();
-      String line = '';
-      // read and write prefixes
-      for (var c in contexts.keys) {
-        line = '@prefix $c: <${contexts[c]}> .\n';
-        output.write(line);
-      }
+      // 1. read and write every prefix
+      _writePrefixes(output);
+      // 2. read and write every graph
+      _writeGraphs(output, indent);
 
-      // read and write every graph
-      for (var k in graphs.keys) {
-        output.write('\n');
-        bool isNewGraph = true;
-        Set<Triple>? g = graphs[k];
-        for (Triple t in g!) {
-          if (isNewGraph) {
-            isNewGraph = !isNewGraph;
-            String firstHalf =
-                '${_abbrUrirefToTtl(t.sub, contexts)} ${_abbrUrirefToTtl(t.pre, contexts)}';
-            if (t.obj.runtimeType == String) {
-              line = '$firstHalf "${t.obj}" ;';
-            } else if (t.obj.runtimeType == Literal) {
-              /// Literal
-              Literal o = t.obj as Literal;
-              line = '$firstHalf ${o.toTtl()} ;';
-            } else if (t.obj.runtimeType == URIRef) {
-              /// URIRef
-              URIRef o = t.obj as URIRef;
-              line = '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
-            } else {
-              line = '$firstHalf ${t.obj} ;';
-            }
+      var file;
+
+      // 3. deal with encryption
+      if (encrypt != null) {
+        /// 3.0 calculate hashed key of passpharse
+        final hashedKey = sha256
+            .convert(utf8.encode(passphrase!))
+            .toString()
+            .substring(0, 32);
+
+        /// currently only support mode AES SIC
+        file = dest.endsWith('.ttl')
+            ? File(dest.substring(0, dest.indexOf('.ttl')) + '.enc.ttl')
+            : File(dest + '.enc.ttl');
+
+        /// 3.1 encrypt whole data first
+        // final key = Key.fromUtf8(passphrase!);
+        final key = Key.fromUtf8(hashedKey);
+        final iv = IV.fromLength(16);
+        final encrypter = Encrypter(AES(key));
+
+        /// keep it shorter using base64
+        final encrypted = encrypter.encrypt(output.toString(), iv: iv).base64;
+
+        /// 3.2 write to file with encrypted data
+        _exportToEncryptFile(file, encrypted, hashedKey);
+      } else {
+        file = File(dest.endsWith('.ttl') ? dest : dest + '.ttl');
+        // 4. write output to file location
+        _exportToFile(file, output);
+      }
+    }
+  }
+
+  /// using a Stream to write to file
+  void _exportToFile(File file, StringBuffer output) {
+    var sink = file.openWrite();
+    sink.write(output);
+    sink.close();
+  }
+
+  /// recursively call serialize function to write to file with encrypted data
+  void _exportToEncryptFile(File file, String encrypted, String hashedKey) {
+    Triple dataTypeTriple =
+        Triple(sub: RDF.subject, pre: RDF.type, obj: Literal('encrypted'));
+    Triple dataKeyTriple =
+        Triple(sub: RDF.subject, pre: XSD.token, obj: Literal(hashedKey));
+    Triple dataContentTriple =
+        Triple(sub: RDF.subject, pre: RDF.value, obj: Literal(encrypted));
+
+    /// create a new graph to write encrypted data to file
+    Graph encryptedGraph = Graph();
+    encryptedGraph.add(dataTypeTriple);
+    encryptedGraph.add(dataKeyTriple);
+    encryptedGraph.add(dataContentTriple);
+
+    encryptedGraph.serialize(format: 'ttl', dest: file.path);
+  }
+
+  /// write different graphs with various triples to output
+  void _writeGraphs(StringBuffer output, String indent) {
+    String line = '';
+    for (var k in graphs.keys) {
+      output.write('\n');
+      bool isNewGraph = true;
+      Set<Triple>? g = graphs[k];
+      for (Triple t in g!) {
+        if (isNewGraph) {
+          isNewGraph = !isNewGraph;
+          String firstHalf =
+              '${_abbrUrirefToTtl(t.sub, contexts)} ${_abbrUrirefToTtl(t.pre, contexts)}';
+          if (t.obj.runtimeType == String) {
+            line = '$firstHalf "${t.obj}" ;';
+          } else if (t.obj.runtimeType == Literal) {
+            /// Literal
+            Literal o = t.obj as Literal;
+            line = '$firstHalf ${o.toTtl()} ;';
+          } else if (t.obj.runtimeType == URIRef) {
+            /// URIRef
+            URIRef o = t.obj as URIRef;
+            line = '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
           } else {
-            line += '\n';
-            String firstHalf = '$indent${_abbrUrirefToTtl(t.pre, contexts)}';
-            if (t.obj.runtimeType == String) {
-              line += '$firstHalf "${t.obj}" ;';
-            } else if (t.obj.runtimeType == Literal) {
-              /// Literal
-              Literal o = t.obj as Literal;
-              line += '$firstHalf ${o.toTtl()} ;';
-            } else if (t.obj.runtimeType == URIRef) {
-              /// URIRef
-              URIRef o = t.obj as URIRef;
-              line += '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
-            } else {
-              line += '$firstHalf ${t.obj} ;';
-            }
+            line = '$firstHalf ${t.obj} ;';
+          }
+        } else {
+          line += '\n';
+          String firstHalf = '$indent${_abbrUrirefToTtl(t.pre, contexts)}';
+          if (t.obj.runtimeType == String) {
+            line += '$firstHalf "${t.obj}" ;';
+          } else if (t.obj.runtimeType == Literal) {
+            /// Literal
+            Literal o = t.obj as Literal;
+            line += '$firstHalf ${o.toTtl()} ;';
+          } else if (t.obj.runtimeType == URIRef) {
+            /// URIRef
+            URIRef o = t.obj as URIRef;
+            line += '$firstHalf ${_abbrUrirefToTtl(o, contexts)} ;';
+          } else {
+            line += '$firstHalf ${t.obj} ;';
           }
         }
-        if (line.endsWith(';')) {
-          line = line.substring(0, line.length - 1) + '.\n';
-        }
-        output.write(line);
       }
-      var sink = file.openWrite();
-      sink.write(output);
-      sink.close();
+      if (line.endsWith(';')) {
+        line = line.substring(0, line.length - 1) + '.\n';
+      }
+      output.write(line);
+    }
+  }
+
+  /// read and write prefixes
+  void _writePrefixes(StringBuffer output) {
+    String line = '';
+    for (var c in contexts.keys) {
+      line = '@prefix $c: <${contexts[c]}> .\n';
+      output.write(line);
     }
   }
 
