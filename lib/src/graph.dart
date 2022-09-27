@@ -135,6 +135,95 @@ class Graph {
     return objs;
   }
 
+  /// parse encrypted file (local) and update the graph
+  ///
+  /// throws [Exception] if file does not end with .enc.ttl (default)
+  /// or no password is provided
+  /// or decryption is not AES (defalult)
+  parseEncrypted(String filePath,
+      {String decrypt = 'AES', String? passphrase}) async {
+    if (!filePath.endsWith('.enc.ttl') || !await File(filePath).exists()) {
+      throw Exception('File is not correct');
+    } else if (passphrase == null) {
+      throw Exception('No password is provided');
+    } else if (decrypt != 'AES') {
+      throw Exception('$decrypt is not supported');
+    } else {
+      final hashedKey =
+          sha256.convert(utf8.encode(passphrase)).toString().substring(0, 32);
+
+      /// read the encrypted file to extract the hashed key and encrypted data
+      final file = File(filePath);
+      Stream<String> lines =
+          file.openRead().transform(utf8.decoder).transform(LineSplitter());
+
+      /// create a new graph for holding the encrypted triples
+      Graph encrytedGraph = Graph();
+      try {
+        Map<String, dynamic> encryptedConfig = {
+          'prefix': false,
+          'sub': URIRef('http://sub.encryt.pl'),
+          'pre': URIRef('http://pre.ecrypt.pl')
+        };
+        await for (var line in lines) {
+          line = line.trim();
+          encryptedConfig = encrytedGraph._parseLine(line, encryptedConfig);
+        }
+      } catch (e) {
+        print('Error in parsing encrypted file $filePath');
+      }
+
+      /// placeholder for the default format of triples in the encrypted file
+      /// ... prefixes ...
+      /// <RDF.subject> <RDF.type> <Literal('encrypted')> ;
+      ///               <XSD.token> <Literal of hashed key> ;
+      ///               <RDF.value> <Literal of encrypted data in base64> .
+      if (!encrytedGraph.graphs.keys.contains(RDF.subject)) {
+        throw Exception('Invalid content');
+      } else {
+        /// get the corresponding object(s)
+        var objs = encrytedGraph.objects(RDF.subject, XSD.token);
+        if (objs.length == 0) {
+          throw Exception('No hashed key is found');
+        } else if (objs.length > 1) {
+          throw Exception('Too many hashed key found');
+        } else {
+          Literal obj = objs.first as Literal;
+          String originalHashedKey = obj.value;
+          if (hashedKey != originalHashedKey) {
+            throw Exception('Keys don\'t match');
+          } else {
+            /// decryption
+            String encryptedContent =
+                (encrytedGraph.objects(RDF.subject, RDF.value).first as Literal)
+                    .value;
+
+            final iv = IV.fromLength(16);
+            final encrypter = Encrypter(AES(Key.fromUtf8(hashedKey)));
+
+            /// decrypt base64 string
+            final decrypted = encrypter
+                .decrypt(Encrypted.fromBase64(encryptedContent), iv: iv);
+
+            List<String> decryptedLines = decrypted.split('\n');
+
+            Map<String, dynamic> config = {
+              'prefix': false,
+              'sub': URIRef('http://sub.place.pl'),
+              'pre': URIRef('http://pre.place.pl')
+            };
+
+            /// read it line by line as usual to update graph
+            for (var line in decryptedLines) {
+              line = line.trim();
+              config = _parseLine(line, config);
+            }
+          }
+        }
+      }
+    }
+  }
+
   parse(String filePath) async {
     final file = File(filePath);
     Stream<String> lines =
