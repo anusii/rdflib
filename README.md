@@ -8,10 +8,11 @@
 - Create a graph to store triples without duplicates
 - Find triples based on criteria
 - Export graph to turtle `ttl` format (default)
-  - Export to encrypted turtle `ttl` file with `AES` encryption
+    - Export to encrypted turtle `ttl` file with `AES` encryption
 - Bind long namespace with customized shortened name for readability
 - Include [reserved vocabulary](https://www.w3.org/TR/owl-syntax/#IRIs) of OWL 2
 - Parse local turtle `ttl` file and store triples in the graph in memory
+    - Parse encrypted turtle `ttl` file which is encrypted using `AES`
 
 ## Getting started
 
@@ -198,6 +199,25 @@ main() async {
 }
 ```
 
+#### 3.1 Parsing encrypted local turtle file
+
+```dart
+import 'package:rdflib/rdflib.dart';
+
+main() async {
+  /// create a new graph to hold the data
+  Graph g = Graph();
+
+  /// need to use await keyword
+  await g.parseEncrypted('example/ex1.enc.ttl', passphrase: 'helloworld!');
+  print('Contexts:\n${g.contexts}');
+  print('Data:\n${g.triples}');
+
+  /// serialize it to specified location, should be equivalent to original file
+  g.serialize(format: 'ttl', dest: 'example/ex1.dec.ttl');
+}
+```
+
 ## Additional information
 
 ### Useful resources
@@ -210,4 +230,5 @@ main() async {
 Make a pull request on our GitHub [repo](https://github.com/anusii/rdfgraph)!
 
 ## Acknowledgement
+
 This `rdflib` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
