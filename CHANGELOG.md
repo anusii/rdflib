@@ -1,3 +1,12 @@
+## 0.1.5
+
+- `graph.dart`: adding optional decryption for the encrypted `ttl` file
+    - Note the encrypted file must contain a hashed key triple (for quick verification of password)
+      and the encrypted data triple
+    - `sha256` is used for hashing and verifying the password
+    - `AES` is the only supported decryption now (depends
+      on [`encrypt`](https://pub.dev/packages/encrypt))
+
 ## 0.1.4
 
 - `graph.dart`: adding optional encryption when serializing graph data to `ttl` file.
