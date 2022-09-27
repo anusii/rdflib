@@ -1,0 +1,13 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://example.org/donna> rdf:type foaf:Person ;
+    foaf:nick "donna"@en ;
+    foaf:name "Donna Fales"^^xsd:string ;
+    foaf:mbox <mailto:donna@example.org> .
+
+<http://example.org/edward> rdf:type foaf:Person ;
+    foaf:nick "ed"^^xsd:string ;
+    foaf:name "Edward Scissorhands"^^xsd:string ;
+    foaf:mbox "e.scissorhands@example.org"^^xsd:anyURI .
