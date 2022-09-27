@@ -1,12 +1,21 @@
+## 0.1.4
+
+- `graph.dart`: adding optional encryption when serializing graph data to `ttl` file.
+    - `AES` is the default encryption
+    - `sha256` is used for generating hashed passphrase
+    - new encrypted file will still be a valid `ttl` file with original contents encrypted in one
+      triple
+
 ## 0.1.3
 
 Adding acknowledgement for [RDFLib](https://rdflib.readthedocs.io/)
 
 Adding examples for reading and writing a full `ttl` file, check it out in the `example/` folder!
+
 - `graph.dart`:
-  - fixing bugs in reading lines ending with `.`, `,` and `;`
-  - [partly] fixing prefix lines starting with ':' and '@base'
-  - fixing bugs in reading single numeric values (with no specified datatypes)
+    - fixing bugs in reading lines ending with `.`, `,` and `;`
+    - [partly] fixing prefix lines starting with ':' and '@base'
+    - fixing bugs in reading single numeric values (with no specified datatypes)
 
 ## 0.1.2
 
