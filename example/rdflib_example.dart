@@ -66,4 +66,10 @@ main() async {
     await Directory(examplePath).create(recursive: true);
   }
   g.serialize(format: 'ttl', dest: '$examplePath/ex1.ttl');
+  // can also export to an encrypted file (will add .enc before .ttl in file name)
+  g.serialize(
+      format: 'ttl',
+      dest: '$examplePath/ex1.ttl',
+      encrypt: 'AES',
+      passphrase: 'helloworld!');
 }
