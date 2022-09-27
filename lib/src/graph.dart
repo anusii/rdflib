@@ -244,6 +244,12 @@ class Graph {
     }
   }
 
+  /// parse the line and update the graph
+  ///
+  /// params: [config] is used to hold and update prefix, subject and predicate
+  ///         it's a Map so we can change its value (not reference) although Dart
+  ///         param is passed by value (in this case, the address is passed)
+  /// returns: updated config
   Map<String, dynamic> _parseLine(String line, Map<String, dynamic> config) {
     URIRef sub = config['sub']! as URIRef;
     URIRef pre = config['pre']! as URIRef;
@@ -355,6 +361,7 @@ class Graph {
       /// not considering the trailing single ':' (be aware of a single ':')
       String k = lst[1].substring(0, lst[1].length - 1);
       String v = lst[2].substring(1, lst[2].length - 1);
+
       /// single ':'
       if (k.length == 0) {
         return;
@@ -443,6 +450,12 @@ class Graph {
   /// needs to check the [dest] before writing to file (not implemented)
   /// also needs to optimize the namespace binding instead of full URIRef
   /// throws [Exception] if encrypt and passphrase don't qualify
+  ///
+  /// params: [format] now only supports turtle ttl
+  ///         [dest] destination file location to write to (will overwrite if
+  ///                file already exists
+  ///         [encrypt] now only supports AES encryption
+  ///         [passphrase] user specified key/password
   void serialize(
       {String format = 'ttl',
       String? dest,
