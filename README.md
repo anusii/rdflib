@@ -8,6 +8,7 @@
 - Create a graph to store triples without duplicates
 - Find triples based on criteria
 - Export graph to turtle `ttl` format (default)
+  - Export to encrypted turtle `ttl` file with `AES` encryption
 - Bind long namespace with customized shortened name for readability
 - Include [reserved vocabulary](https://www.w3.org/TR/owl-syntax/#IRIs) of OWL 2
 - Parse local turtle `ttl` file and store triples in the graph in memory
@@ -49,6 +50,7 @@ import 'dart:io';
 import 'package:rdflib/rdflib.dart';
 
 main() async {
+  /// the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
   Graph g = Graph();
 
   URIRef example = URIRef.fullUri('http://example.org');
@@ -112,6 +114,12 @@ main() async {
     await Directory(examplePath).create(recursive: true);
   }
   g.serialize(format: 'ttl', dest: '$examplePath/ex1.ttl');
+  // can also export to an encrypted file (will add .enc before .ttl in file name)
+  g.serialize(
+      format: 'ttl',
+      dest: '$examplePath/ex1.ttl',
+      encrypt: 'AES',
+      passphrase: 'helloworld!');
 }
 ```
 
