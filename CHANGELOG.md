@@ -1,3 +1,9 @@
+## 0.1.6
+
+- `graph.dart`: fix issue of encryption/decryption by using a different key
+    - `sha256` is for quick verification of hashed passphrase
+    - `sha512` is for encryption/decryption
+
 ## 0.1.5
 
 - `graph.dart`: adding optional decryption for the encrypted `ttl` file
