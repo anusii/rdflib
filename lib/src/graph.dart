@@ -79,6 +79,9 @@ class Graph {
     if (triples.contains(newRelation)) {
       throw Exception('Triples are already linked!');
     } else if (!graphs.containsKey(obj) || !graphs.containsKey(prop)) {
+      /// the both obj, and prop should exist in the graph first, then we can
+      /// link them together, You can add them to graph using
+      /// `addNamedIndividual` or `add`.
       throw Exception('No triples with $obj or $prop exist');
     } else {
       add(newRelation);
