@@ -149,8 +149,7 @@ class Graph {
     } else if (decrypt != 'AES') {
       throw Exception('$decrypt is not supported');
     } else {
-      final hashedKey =
-          sha256.convert(utf8.encode(passphrase)).toString().substring(0, 32);
+      final hashedKey = sha256.convert(utf8.encode(passphrase)).toString();
 
       /// read the encrypted file to extract the hashed key and encrypted data
       final file = File(filePath);
@@ -199,7 +198,16 @@ class Graph {
                     .value;
 
             final iv = IV.fromLength(16);
-            final encrypter = Encrypter(AES(Key.fromUtf8(hashedKey)));
+
+            /// only if verification succeeds, decoding proceeds using sha512
+            /// use sha512 first 32 bytes as the key
+            final theKey = sha512
+                .convert(utf8.encode(passphrase))
+                .toString()
+                .substring(0, 32);
+
+            /// corresponds with the same process from encryption
+            final encrypter = Encrypter(AES(Key.fromUtf8(theKey)));
 
             /// decrypt base64 string
             final decrypted = encrypter
@@ -484,11 +492,12 @@ class Graph {
 
       // 3. deal with encryption
       if (encrypt != null) {
-        /// 3.0 calculate hashed key of passpharse
-        final hashedKey = sha256
-            .convert(utf8.encode(passphrase!))
-            .toString()
-            .substring(0, 32);
+        /// 3.0 calculate hashed key of passphrase for quick verification
+        final hashedKey = sha256.convert(utf8.encode(passphrase!)).toString();
+
+        /// 3.1 key to be used in encryption
+        final theKey =
+            sha512.convert(utf8.encode(passphrase)).toString().substring(0, 32);
 
         /// currently only support mode AES SIC
         file = dest.endsWith('.ttl')
@@ -497,7 +506,7 @@ class Graph {
 
         /// 3.1 encrypt whole data first
         // final key = Key.fromUtf8(passphrase!);
-        final key = Key.fromUtf8(hashedKey);
+        final key = Key.fromUtf8(theKey);
         final iv = IV.fromLength(16);
         final encrypter = Encrypter(AES(key));
 
