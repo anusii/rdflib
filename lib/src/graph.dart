@@ -139,7 +139,7 @@ class Graph {
   ///
   /// throws [Exception] if file does not end with .enc.ttl (default)
   /// or no password is provided
-  /// or decryption is not AES (defalult)
+  /// or decryption is not AES (default)
   parseEncrypted(String filePath,
       {String decrypt = 'AES', String? passphrase}) async {
     if (!filePath.endsWith('.enc.ttl') || !await File(filePath).exists()) {
@@ -186,7 +186,7 @@ class Graph {
         if (objs.length == 0) {
           throw Exception('No hashed key is found');
         } else if (objs.length > 1) {
-          throw Exception('Too many hashed key found');
+          throw Exception('Too many hashed keys found');
         } else {
           Literal obj = objs.first as Literal;
           String originalHashedKey = obj.value;
@@ -224,6 +224,7 @@ class Graph {
     }
   }
 
+  /// parse file and update graph accordingly
   parse(String filePath) async {
     final file = File(filePath);
     Stream<String> lines =
