@@ -13,4 +13,4 @@ dependencies:
   encrypt: ^5.0.1
   crypto: ^3.0.2
 
-dev_dependencies:
+#dev_dependencies:
