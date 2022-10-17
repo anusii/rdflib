@@ -256,6 +256,25 @@ class Graph {
     }
   }
 
+  /// parse whole text and update graph accordingly
+  parseText(String text) {
+    List<String> lines = text.split('\n');
+    try {
+      Map<String, dynamic> config = {
+        'prefix': false,
+        'sub': URIRef('http://sub.placeholder.pl'),
+        'pre': URIRef('http://pre.placeholder.pl')
+      };
+      for (var i = 0; i < lines.length; i++) {
+        /// remove leading and trailing spaces
+        String line = lines[i].trim();
+        config = _parseLine(line, config);
+      }
+    } catch (e) {
+      print('Error in parsing text: $e');
+    }
+  }
+
   /// parse the line and update the graph
   ///
   /// params: [config] is used to hold and update prefix, subject and predicate
