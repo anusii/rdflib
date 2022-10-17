@@ -1,3 +1,8 @@
+## 0.1.7
+
+- `graph.dart`: add function in `Graph` to parse a whole text string in additional to a file.
+- Add a corresponding example for parsing full text string.
+
 ## 0.1.6
 
 - `graph.dart`: fix issue of encryption/decryption by using a different key
