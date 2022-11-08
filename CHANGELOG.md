@@ -1,3 +1,12 @@
+## 0.1.9
+
+- `term.dart`: update `isValidUri` to static method
+- `graph.dart`: add support for reading different forms in subject/predicate/object to full URIRef form
+  - Case 1: `<valid_uri>` => `URIRef(valid_uri)`
+  - Case 2: `<invalid_uri>` => (there should be a default base to interpret this invalid uri) `URIRef(base_uri+invalid_uri)`
+  - Case 3: `a:b` => `URIRef(context[a]+b)`
+  - Case 4: `:a` => (there should be a shorthand prefix `:` in namespace prefix section) `URIRef(shorthand_uri+a)`
+
 ## 0.1.8
 
 - `graph.dart`: add support for parsing and writing `@base` and `@prefix :` in namespace prefixes section
