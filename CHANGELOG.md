@@ -1,3 +1,8 @@
+## 0.1.8
+
+- `graph.dart`: add support for parsing and writing `@base` and `@prefix :` in namespace prefixes section
+- `constants.dart`: create constants in this file to be imported to other files if necessary
+
 ## 0.1.7
 
 - `graph.dart`: add function in `Graph` to parse a whole text string in additional to a file.
