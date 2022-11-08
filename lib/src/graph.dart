@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import './namespace.dart';
 import './term.dart';
 import './triple.dart';
+import './constants.dart';
 
 class Graph {
   Map<URIRef, Set<Triple>> graphs = {};
