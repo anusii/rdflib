@@ -633,7 +633,17 @@ class Graph {
   void _writePrefixes(StringBuffer output) {
     String line = '';
     for (var c in contexts.keys) {
-      line = '@prefix $c: <${contexts[c]}> .\n';
+      if (c == BaseType.shorthandBase.name) {
+        // shorthand ':' has no prefixed word
+        line = '@prefix : <${contexts[c]}> .\n';
+        print(line);
+      } else if (c == BaseType.defaultBase.name) {
+        // default base syntax
+        line = '@base <${contexts[c]}> .\n';
+      } else {
+        // usual prefix syntax
+        line = '@prefix $c: <${contexts[c]}> .\n';
+      }
       output.write(line);
     }
   }
