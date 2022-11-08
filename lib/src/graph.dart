@@ -383,6 +383,8 @@ class Graph {
 
   /// first need to store prefixes to contexts map
   void _parsePrefix(String prefixLine) {
+    String k = '';
+    String v = '';
     if (!prefixLine.startsWith('@') || !prefixLine.endsWith('.')) {
       throw Exception('Error: Illegal prefix $prefixLine');
     } else if (prefixLine.toLowerCase().startsWith('@prefix') &&
@@ -391,22 +393,28 @@ class Graph {
       List<String> lst = prefixLine.split(' ');
 
       /// not considering the trailing single ':' (be aware of a single ':')
-      String k = lst[1].substring(0, lst[1].length - 1);
-      String v = lst[2].substring(1, lst[2].length - 1);
+      k = lst[1].substring(0, lst[1].length - 1);
+      v = lst[2].substring(1, lst[2].length - 1);
 
       /// single ':'
       if (k.length == 0) {
-        return;
+        k = BaseType.shorthandBase.name;
       }
 
-      /// update contexts, adding to triple will be handled by line
-      contexts[k] = v;
     } else if (prefixLine.toLowerCase().startsWith('@base') &&
         prefixLine.endsWith('.')) {
-      /// TODO: fix @base line
+      List<String> lst = prefixLine.split(' ');
+      k = BaseType.defaultBase.name;
+      v = lst[1].substring(1, lst[1].length - 1);
     } else {
       throw Exception('Error: unable to parse this line $prefixLine');
     }
+    // valid URI should end with / or # in the angle brackets
+    if (!v.endsWith('/') && !v.endsWith('#')) {
+      v += '/';
+    }
+    /// update contexts, adding to triple will be handled by line
+    contexts[k] = v;
   }
 
   /// 1. parse form such as <http://www.w3.org/2002/07/owl#>
