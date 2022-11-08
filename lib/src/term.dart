@@ -76,7 +76,7 @@ class URIRef {
   /// check if a uri if valid based on the discussion in stackoverflow
   ///
   /// ref: https://stackoverflow.com/questions/52975739/dart-flutter-validating-a-string-for-url
-  bool isValidUri(String uri) {
+  static bool isValidUri(String uri) {
     // TODO: find a robust way to validate uri
     var u = Uri.tryParse(uri);
     return u?.hasAbsolutePath != null &&
