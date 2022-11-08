@@ -422,19 +422,34 @@ class Graph {
   URIRef _toFullUriref(String s) {
     /// case 1: <uri>
     if (s.startsWith('<') && s.endsWith('>')) {
-      return URIRef(s.substring(1, s.length - 1));
+      String content = s.substring(1, s.length - 1);
+      /// case 1.1 <uri> is a valid uri
+      if (URIRef.isValidUri(content)) {
+        return URIRef(content);
+      } else {
+        /// case 1.2 <uri> uses base as a default. E.g., <bob> in the following:
+        /// @base <www.example.com/> .
+        /// <bob#me> rdf:type owl:NamedIndividual
+        return URIRef(contexts[BaseType.defaultBase.name]! + content);
+      }
     } else if (s.contains(':')) {
       /// case 2: ':'
       if (':'.allMatches(s).length != 1) {
         throw Exception('Error: $s does not have ":" or too many ":"');
       } else {
+        /// case 2.1 'a:b'
         List<String> lst = s.split(':');
-        String vocab = lst[0];
-        String type = lst[1];
-        if (!contexts.containsKey(vocab)) {
-          throw Exception('Error: $vocab not existed in contexts!');
+        if (lst.length > 1) {
+          String vocab = lst[0];
+          String type = lst[1];
+          if (!contexts.containsKey(vocab)) {
+            throw Exception('Error: $vocab not existed in contexts!');
+          } else {
+            return URIRef(contexts[vocab]! + type);
+          }
         } else {
-          return URIRef(contexts[vocab]! + type);
+          /// case 2.2 ':a'
+          return URIRef(contexts[BaseType.shorthandBase.name]! + lst[0]);
         }
       }
     } else {
