@@ -655,6 +655,13 @@ class Graph {
     for (String abbr in ctx.keys) {
       String ns = ctx[abbr]!;
       if (uriRef.inNamespace(Namespace(ns: ns))) {
+        // if there are duplicates namespaces for different ctx keys, whichever
+        // comes first will take precedence
+        if (abbr == BaseType.defaultBase.name) {
+          return '<${uriRef.value.substring(ns.length)}>';
+        } else if (abbr == BaseType.shorthandBase.name) {
+          return ':${uriRef.value.substring(ns.length)}';
+        }
         return '$abbr:${uriRef.value.substring(ns.length)}';
       }
     }
