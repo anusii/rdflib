@@ -1,7 +1,7 @@
 # RDFLib
 
 [![Pub Package](https://img.shields.io/pub/v/rdflib)](https://pub.dev/packages/rdflib)
-
+[![GitHub Issues](https://img.shields.io/github/issues/anusii/rdflib)](https://github.com/anusii/rdflib/issues)
 [![GitHub License](https://img.shields.io/github/license/anusii/rdflib)](https://raw.githubusercontent.com/anusii/rdflib/main/LICENSE)
 
 > A pure Dart package for working with RDF (resource description framework).
