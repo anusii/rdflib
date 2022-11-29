@@ -400,7 +400,6 @@ class Graph {
       if (k.length == 0) {
         k = BaseType.shorthandBase.name;
       }
-
     } else if (prefixLine.toLowerCase().startsWith('@base') &&
         prefixLine.endsWith('.')) {
       List<String> lst = prefixLine.split(' ');
@@ -413,6 +412,7 @@ class Graph {
     if (!v.endsWith('/') && !v.endsWith('#')) {
       v += '/';
     }
+
     /// update contexts, adding to triple will be handled by line
     contexts[k] = v;
   }
@@ -423,6 +423,7 @@ class Graph {
     /// case 1: <uri>
     if (s.startsWith('<') && s.endsWith('>')) {
       String content = s.substring(1, s.length - 1);
+
       /// case 1.1 <uri> is a valid uri
       if (URIRef.isValidUri(content)) {
         return URIRef(content);
