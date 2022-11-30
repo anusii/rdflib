@@ -21,3 +21,46 @@ final PN_CHARS_BASE = pattern(
 
 // [164s] 	PN_CHARS_U 	::= 	PN_CHARS_BASE | '_'
 final PN_CHARS_U = (PN_CHARS_BASE | pattern('_'));
+
+// [166s] 	PN_CHARS 	::= 	PN_CHARS_U | '-' | [0-9] | #x00B7 | [#x0300-#x036F] | [#x203F-#x2040]
+final PN_CHARS = PN_CHARS_U | pattern('0-9\u00B7\u0300-\u036F\u203F-\u2040\-');
+
+// [167s] 	PN_PREFIX 	::= 	PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
+// '?' zero or one time
+// use starGreedy() to avoid greedy matching all, e.g., (PN_CHARS | '.')* will
+// consume the following PN_CHARS if not careful. In normal regex, a $ will be
+// enough, with petitparser, need to use starGreedy/plusGreedy to make it work
+final PN_PREFIX = PN_CHARS_BASE &
+    ((PN_CHARS | string('.')).starGreedy(PN_CHARS) & PN_CHARS).repeat(0, 1);
+
+// [139s] 	PNAME_NS 	::= 	PN_PREFIX? ':'
+final PNAME_NS = PN_PREFIX.repeat(0, 1) & string(':');
+
+// [170s] 	PERCENT 	::= 	'%' HEX HEX
+final PERCENT = string('%') & HEX.times(2);
+
+// [172s] 	PN_LOCAL_ESC 	::= 	'\' ('_' | '~' | '.' | '-' | '!' | '$' | '&' | "'" | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?' | '#' | '@' | '%')
+// put '-' at last to avoid 'Invalid range' error
+final PN_LOCAL_ESC = pattern('\\') & pattern('_~.!\$&\'()*+,;=/?#@%-');
+
+// [169s] 	PLX 	::= 	PERCENT | PN_LOCAL_ESC
+final PLX = PERCENT | PN_LOCAL_ESC;
+
+// [168s] 	PN_LOCAL 	::= 	(PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+final PN_LOCAL = (PN_CHARS_U | string(':') | pattern('0-9') | PLX) &
+    ((PN_CHARS | pattern(':.') | PLX)
+                .starGreedy(PN_CHARS | string(':') | PLX)
+                .trim() &
+            (PN_CHARS | string(':') | PLX))
+        .repeat(0, 1)
+        .trim();
+
+// [140s] 	PNAME_LN 	::= 	PNAME_NS PN_LOCAL
+final PNAME_LN = PNAME_NS & PN_LOCAL;
+
+// [136s] 	PrefixedName 	::= 	PNAME_LN | PNAME_NS
+final PrefixedName = PNAME_LN | PNAME_NS;
+// Parser();
+
+// [135s] 	iri 	::= 	IRIREF | PrefixedName
+final iri = IRIREF | PrefixedName;
