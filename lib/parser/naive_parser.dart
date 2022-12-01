@@ -153,3 +153,48 @@ final ANON = string('[') & WS.star() & string(']');
 
 // [137s] 	BlankNode 	::= 	BLANK_NODE_LABEL | ANON
 final BlankNode = BLANK_NODE_LABEL | ANON;
+
+// helper function to generate inter-dependent parsers, e.g. [15] collection and [12] object
+Map<String, Parser> genObjCol() {
+  Map<String, Parser> rtn = {};
+  final collection = undefined();
+  final object = undefined();
+  final objectList = undefined();
+  final predicateObjectList = undefined();
+  final blankNodePropertyList = undefined();
+  // [15] 	collection 	::= 	'(' object* ')'
+  collection.set(string('(') & object.star().trim() & string(')'));
+  // [12] 	object 	::= 	iri | BlankNode | collection | blankNodePropertyList | literal
+  object.set(iri | BlankNode | collection | blankNodePropertyList | literal);
+  // [7] 	predicateObjectList 	::= 	verb objectList (';' (verb objectList)?)*
+  predicateObjectList.set(verb &
+      objectList.trim() &
+      (string(';').trim() & (verb & objectList).repeat(0, 1).trim())
+          .star()
+          .trim());
+  // [8] 	objectList 	::= 	object (',' object)*
+  objectList.set(object & (string(',') & object).star().trim());
+  // [14] 	blankNodePropertyList 	::= 	'[' predicateObjectList ']'
+  blankNodePropertyList
+      .set(string('[') & predicateObjectList.trim() & string(']'));
+  rtn['object'] = object;
+  rtn['collection'] = collection;
+  rtn['objectList'] = objectList;
+  rtn['predicateObjectList'] = predicateObjectList;
+  rtn['blankNodePropertyList'] = blankNodePropertyList;
+  return rtn;
+}
+
+final objColMap = genObjCol();
+final object = objColMap['object']!;
+final objectList = objColMap['objectList']!;
+final collection = objColMap['collection']!;
+final predicateObjectList = objColMap['predicateObjectList']!;
+final blankNodePropertyList = objColMap['blankNodePropertyList']!;
+
+// [10] 	subject 	::= 	iri | BlankNode | collection
+final subject = iri | BlankNode | collection;
+
+// [6] 	triples 	::= 	subject predicateObjectList | blankNodePropertyList predicateObjectList?
+final triples = (subject & predicateObjectList.trim()) |
+    (blankNodePropertyList & predicateObjectList.repeat(0, 1).trim());
