@@ -64,3 +64,36 @@ final PrefixedName = PNAME_LN | PNAME_NS;
 
 // [135s] 	iri 	::= 	IRIREF | PrefixedName
 final iri = IRIREF | PrefixedName;
+
+// [159s] 	ECHAR 	::= 	'\' [tbnrf"'\]
+final ECHAR = pattern('\\') & pattern('tbnrf"\'\\');
+
+// [22] 	STRING_LITERAL_QUOTE 	::= 	'"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
+final STRING_LITERAL_QUOTE = pattern('"') &
+    (pattern('^\x22\x5C\x0A\x0D') | ECHAR | UCHAR).star() &
+    pattern('"');
+
+// [23] 	STRING_LITERAL_SINGLE_QUOTE 	::= 	"'" ([^#x27#x5C#xA#xD] | ECHAR | UCHAR)* "'" /* #x27=' #x5C=\ #xA=new line #xD=carriage return */
+final STRING_LITERAL_SINGLE_QUOTE = pattern('\'') &
+    (pattern('^\x27\x5C\x0A\x0D') | ECHAR | UCHAR).star() &
+    pattern('\'');
+
+// [24] 	STRING_LITERAL_LONG_SINGLE_QUOTE 	::= 	"'''" (("'" | "''")? ([^'\] | ECHAR | UCHAR))* "'''"
+final STRING_LITERAL_LONG_SINGLE_QUOTE = pattern('\'').times(3) &
+    ((pattern('\'') | pattern('\'').times(2)).repeat(0, 1) &
+            (pattern('^\'\\') | ECHAR | UCHAR))
+        .star() &
+    pattern('\'').times(3);
+
+// [25] 	STRING_LITERAL_LONG_QUOTE 	::= 	'"""' (('"' | '""')? ([^"\] | ECHAR | UCHAR))* '"""'
+final STRING_LITERAL_LONG_QUOTE = pattern('"').times(3) &
+    ((pattern('"') | pattern('"').times(2)).repeat(0, 1) &
+            (pattern('^"\\') | ECHAR | UCHAR))
+        .star() &
+    pattern('"').times(3);
+
+// [17] 	STRING 	::= 	STRING_LITERAL_QUOTE | STRING_LITERAL_SINGLE_QUOTE | STRING_LITERAL_LONG_SINGLE_QUOTE | STRING_LITERAL_LONG_QUOTE
+final STRING = STRING_LITERAL_QUOTE |
+    STRING_LITERAL_SINGLE_QUOTE |
+    STRING_LITERAL_LONG_SINGLE_QUOTE |
+    STRING_LITERAL_LONG_QUOTE;
