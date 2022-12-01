@@ -97,3 +97,59 @@ final STRING = STRING_LITERAL_QUOTE |
     STRING_LITERAL_SINGLE_QUOTE |
     STRING_LITERAL_LONG_SINGLE_QUOTE |
     STRING_LITERAL_LONG_QUOTE;
+
+// [133s] 	BooleanLiteral 	::= 	'true' | 'false'
+final BooleanLiteral = string('true') | string('false');
+
+// [144s] 	LANGTAG 	::= 	'@' [a-zA-Z]+ ('-' [a-zA-Z0-9]+)*
+final LANGTAG = pattern('@') &
+    pattern('a-zA-Z').plus() &
+    (pattern('-') & pattern('a-zA-Z0-9').plus()).star();
+
+// [128s] 	RDFLiteral 	::= 	STRING (LANGTAG | '^^' iri)?
+final RDFLiteral = STRING & (LANGTAG | string('^^') & iri).repeat(0, 1);
+
+// [19] 	INTEGER 	::= 	[+-]? [0-9]+
+final INTEGER = pattern('+-').repeat(0, 1) & pattern('0-9').plus();
+
+// [20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+
+final DECEMAL = pattern('+-').repeat(0, 1) &
+    pattern('0-9').star() &
+    string('.') &
+    pattern('0-9').plus();
+
+// [154s] 	EXPONENT 	::= 	[eE] [+-]? [0-9]+
+final EXPONENT =
+    pattern('eE') & pattern('+-').repeat(0, 1) & pattern('0-9').plus();
+
+// [21] 	DOUBLE 	::= 	[+-]? ([0-9]+ '.' [0-9]* EXPONENT | '.' [0-9]+ EXPONENT | [0-9]+ EXPONENT)
+final DOUBLE = pattern('+-').repeat(0, 1) &
+    ((pattern('0-9').plus() & string('.') & pattern('0-9').star() & EXPONENT) |
+        (string('.') & pattern('0-9').plus() & EXPONENT) |
+        (pattern('0-9').plus() & EXPONENT));
+
+// [16] 	NumericLiteral 	::= 	INTEGER | DECIMAL | DOUBLE
+final NumerialLiteral = INTEGER | DECEMAL | DOUBLE;
+
+// [13] 	literal 	::= 	RDFLiteral | NumericLiteral | BooleanLiteral
+final literal = RDFLiteral | NumerialLiteral | BooleanLiteral;
+
+// [11] 	predicate 	::= 	iri
+final predicate = iri;
+
+// [9] 	verb 	::= 	predicate | 'a'
+final verb = predicate | string('a');
+
+// [141s] 	BLANK_NODE_LABEL 	::= 	'_:' (PN_CHARS_U | [0-9]) ((PN_CHARS | '.')* PN_CHARS)?
+final BLANK_NODE_LABEL = string('_:') &
+    (PN_CHARS_U | pattern('0-9')) &
+    ((PN_CHARS | string('.')).starGreedy(PN_CHARS) & PN_CHARS).repeat(0, 1);
+
+// [161s] 	WS 	::= 	#x20 | #x9 | #xD | #xA /* #x20=space #x9=character tabulation #xD=carriage return #xA=new line */
+final WS = pattern('\x20\x09\x0D\x0A');
+
+// [162s] 	ANON 	::= 	'[' WS* ']'
+final ANON = string('[') & WS.star() & string(']');
+
+// [137s] 	BlankNode 	::= 	BLANK_NODE_LABEL | ANON
+final BlankNode = BLANK_NODE_LABEL | ANON;
