@@ -214,3 +214,9 @@ final prefixID =
 
 // [3] 	directive 	::= 	prefixID | base | sparqlPrefix | sparqlBase
 final directive = prefixID | base | sparqlPrefix | sparqlBase;
+
+// [2] 	statement 	::= 	directive | triples '.'
+final statement = directive.trim() | (triples & string('.')).trim();
+
+// [1] 	turtleDoc 	::= 	statement*
+final turtleDoc = statement.star();
