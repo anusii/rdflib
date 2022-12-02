@@ -198,3 +198,19 @@ final subject = iri | BlankNode | collection;
 // [6] 	triples 	::= 	subject predicateObjectList | blankNodePropertyList predicateObjectList?
 final triples = (subject & predicateObjectList.trim()) |
     (blankNodePropertyList & predicateObjectList.repeat(0, 1).trim());
+
+// [6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF
+final sparqlPrefix = string('PREFIX') & PNAME_NS & IRIREF;
+
+// [5s] 	sparqlBase 	::= 	"BASE" IRIREF
+final sparqlBase = string('BASE') & IRIREF;
+
+// [5] 	base 	::= 	'@base' IRIREF '.'
+final base = string('@base') & IRIREF & string('.');
+
+// [4] 	prefixID 	::= 	'@prefix' PNAME_NS IRIREF '.'
+final prefixID =
+    string('@prefix') & PNAME_NS.trim() & IRIREF.trim() & string('.').trim();
+
+// [3] 	directive 	::= 	prefixID | base | sparqlPrefix | sparqlBase
+final directive = prefixID | base | sparqlPrefix | sparqlBase;
