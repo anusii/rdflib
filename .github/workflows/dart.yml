@@ -27,9 +27,11 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+      # Uncomment this step to verify the use of 'dart format' on each commit
+      # If it's not formatted, apply the default 'dart format' for root dir
+      - name: Verify formatting and apply linting
+      #  run: dart format --output=none --set-exit-if-changed .
+        run: dart format .
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
