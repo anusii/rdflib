@@ -271,7 +271,7 @@ final sparqlPrefix = string('PREFIX') & PNAME_NS & IRIREF;
 final sparqlBase = string('BASE') & IRIREF;
 
 // [5] 	base 	::= 	'@base' IRIREF '.'
-final base = string('@base') & IRIREF & string('.');
+final base = string('@base') & IRIREF.trim() & string('.');
 
 // [4] 	prefixID 	::= 	'@prefix' PNAME_NS IRIREF '.'
 final prefixID =
