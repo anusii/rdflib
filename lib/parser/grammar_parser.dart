@@ -201,7 +201,7 @@ class ExpressionDefinition extends GrammarDefinition {
 
   // [8] 	objectList 	::= 	object (',' object)*
   Parser objectList() =>
-      ref0(object) & (string(',') & ref0(object)).star().trim();
+      ref0(object) & (string(',').trim() & ref0(object)).star().trim();
 
   // [14] 	blankNodePropertyList 	::= 	'[' predicateObjectList ']'
   Parser blankNodePropertyList() =>
