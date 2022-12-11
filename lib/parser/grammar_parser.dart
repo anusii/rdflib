@@ -44,7 +44,7 @@ class ExpressionDefinition extends GrammarDefinition {
           .repeat(0, 1);
 
   // [139s] 	PNAME_NS 	::= 	PN_PREFIX? ':'
-  Parser PNAME_NS() => ref0(PN_PREFIX).repeat(0, 1) & string(':');
+  Parser PNAME_NS() => ref0(PN_PREFIX).repeat(0, 1).trim() & string(':').trim();
 
   // [170s] 	PERCENT 	::= 	'%' HEX HEX
   Parser PERCENT() => string('%') & ref0(HEX).times(2);
