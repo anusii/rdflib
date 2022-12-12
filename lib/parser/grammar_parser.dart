@@ -44,7 +44,8 @@ class ExpressionDefinition extends GrammarDefinition {
           .repeat(0, 1);
 
   // [139s] 	PNAME_NS 	::= 	PN_PREFIX? ':'
-  Parser PNAME_NS() => ref0(PN_PREFIX).repeat(0, 1).trim() & string(':').trim();
+  // trim at the end cause there might be spaces between prefix and colon
+  Parser PNAME_NS() => ref0(PN_PREFIX).repeat(0, 1) & string(':').trim();
 
   // [170s] 	PERCENT 	::= 	'%' HEX HEX
   Parser PERCENT() => string('%') & ref0(HEX).times(2);
@@ -57,14 +58,13 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser PLX() => ref0(PERCENT) | ref0(PN_LOCAL_ESC);
 
   // [168s] 	PN_LOCAL 	::= 	(PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+  // should not add trim() here as the local string should not contain any whitepaces
   Parser PN_LOCAL() =>
       (ref0(PN_CHARS_U) | string(':') | pattern('0-9') | ref0(PLX)) &
       ((ref0(PN_CHARS) | pattern(':.') | ref0(PLX))
-                  .starGreedy(ref0(PN_CHARS) | string(':') | ref0(PLX))
-                  .trim() &
+                  .starGreedy(ref0(PN_CHARS) | string(':') | ref0(PLX)) &
               (ref0(PN_CHARS) | string(':') | ref0(PLX)))
-          .repeat(0, 1)
-          .trim();
+          .repeat(0, 1);
 
   // [140s] 	PNAME_LN 	::= 	PNAME_NS PN_LOCAL
   Parser PNAME_LN() => ref0(PNAME_NS) & ref0(PN_LOCAL);
@@ -192,10 +192,12 @@ class ExpressionDefinition extends GrammarDefinition {
       ref0(literal);
 
   // [7] 	predicateObjectList 	::= 	verb objectList (';' (verb objectList)?)*
+  // should trim after every element in between the expression
   Parser predicateObjectList() =>
       ref0(verb) &
       ref0(objectList).trim() &
-      (string(';').trim() & (ref0(verb) & ref0(objectList)).repeat(0, 1).trim())
+      (string(';').trim() &
+              (ref0(verb).trim() & ref0(objectList).trim()).repeat(0, 1).trim())
           .star()
           .trim();
 
