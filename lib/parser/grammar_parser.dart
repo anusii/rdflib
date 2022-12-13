@@ -129,7 +129,7 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser INTEGER() => pattern('+-').repeat(0, 1) & pattern('0-9').plus();
 
   // [20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+
-  Parser DECEMAL() =>
+  Parser DECIMAL() =>
       pattern('+-').repeat(0, 1) &
       pattern('0-9').star() &
       string('.') &
@@ -154,7 +154,7 @@ class ExpressionDefinition extends GrammarDefinition {
 
   // [13] 	literal 	::= 	RDFLiteral | NumericLiteral | BooleanLiteral
   Parser literal() =>
-      ref0(RDFLiteral) | ref0(NumerialLiteral) | ref0(BooleanLiteral);
+      ref0(RDFLiteral) | ref0(NumericalLiteral) | ref0(BooleanLiteral);
 
   // [11] 	predicate 	::= 	iri
   Parser predicate() => ref0(iri);
