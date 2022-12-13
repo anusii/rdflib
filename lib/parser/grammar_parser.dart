@@ -381,23 +381,35 @@ List<dynamic> flattenList(List<dynamic> list) {
 }
 
 main() {
-  // local tests for expression definition and evaluator definition classes
+  // local test for a turtle file
+  final evalDef = EvaluatorDefinition();
+  final evalParser = evalDef.build();
+  final sampleAcl = '''
+    @prefix acl: <http://www.w3.org/ns/auth/acl#>.
+    @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 
-  final definition = ExpressionDefinition();
-  final parser = definition.build();
-  final result = parser.parse('''
-<http://example.org/donna> rdf:type foaf:Person ;
-foaf:nick "donna"@en ; foaf:name "Donna Fales"^^xsd:string ;
-    foaf:mbox <mailto:donna@example.org> .
+    <#public>
+        a acl:Authorization;
+        acl:agentClass foaf:Agent;
+        acl:accessTo <./card>;
+        acl:mode acl:Read.
 
-<http://example.org/edward> rdf:type foaf:Person ;
-    foaf:nick "ed"^^xsd:string ; foaf:name "Edward Scissorhands"^^xsd:string ; foaf:mbox "e.scissorhands@example.org"^^xsd:anyURI .
-
-     @base <www.ex.co> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-   @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-  @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-    ''');
-  print(result);
-  print(result.value.length);
+    <#owner>
+        a acl:Authorization;
+        acl:agent <https://solid.udula.net.au/charlie_bruegel/profile/card#me>;
+        acl:accessTo <./card>;
+        acl:mode acl:Read, acl:Write, acl:Control.
+    
+    <jtolkien>
+     a acl:Authorization;
+     acl:agentClass foaf:Agent;
+     acl:accessTo <./card>;
+     acl:mode acl:Write.
+ ''';
+  final evalResult = evalParser.parse(sampleAcl);
+  print('''
+  Parsing result:\n$evalResult
+  ----------------------------
+  Values in the parsed list: ${evalResult.value.length}\n
+''');
 }
