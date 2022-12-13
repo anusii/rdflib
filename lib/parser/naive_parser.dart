@@ -285,3 +285,22 @@ final statement = directive.trim() | (triples & string('.')).trim();
 
 // [1] 	turtleDoc 	::= 	statement*
 final turtleDoc = statement.star();
+
+// Define a function to flatten a nested list
+List<dynamic> flattenList(List<dynamic> list) {
+  // This function will keep track of the current nesting level and add each
+  // element to a new list if it is not a list
+  List<dynamic> result = [];
+
+  for (var element in list) {
+    if (element is List) {
+      // If the element is a list, recursively flatten it
+      result.addAll(flattenList(element));
+    } else {
+      // If the element is not a list, add it to the result list
+      result.add(element);
+    }
+  }
+
+  return result;
+}
