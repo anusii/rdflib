@@ -712,4 +712,9 @@ class Graph {
     }
     return '<${uriRef.value}>';
   }
+
+  String _removeComments(String fileContent) {
+    // remove any line that starts with #
+    return fileContent.replaceAll(RegExp(r'#.*$'), '');
+  }
 }
