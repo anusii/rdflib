@@ -1,6 +1,6 @@
 import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
-import 'package:rdflib/rdflib.dart';
+import '../lib/parser/naive_parser.dart';
 
 main() {
   // test each rule in the grammar one by one in group
