@@ -246,6 +246,140 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser turtleDoc() => ref0(statement).star();
 }
 
+class EvaluatorDefinition extends ExpressionDefinition {
+  // extract IRIREF => <iriref>
+  Parser IRIREF() => super.IRIREF().map((values) {
+        List iriref = values[1] as List;
+        String irirefStr = iriref.join();
+        return '<$irirefStr>';
+      });
+
+  // extract PN_PREFIX => flattened string
+  Parser PN_PREFIX() => super.PN_PREFIX().map((values) {
+        return '${values[0]}${flattenList(values[1]).join()}';
+      });
+
+  // extract PNAME_NS => prefix:
+  Parser PNAME_NS() => super.PNAME_NS().map((values) {
+        return '${values[0].join()}${values[1]}';
+      });
+
+  // extract prefixID => @prefix PNAME_NS IRIREF .
+  Parser prefixID() => super.prefixID().map((values) {
+        // return '${values[0]} ${values[1]} ${values[2]} ${values[3]}';
+        final prefixIdList = values as List;
+        // return prefixIdList.join(' ');
+        return prefixIdList;
+      });
+
+  // extract
+  Parser base() => super.base().map((values) {
+        final baseList = values as List;
+        // return baseList.join(' ');
+        return baseList;
+      });
+
+  // extract PERCENT =>
+  Parser PERCENT() => super.PERCENT().map((values) {
+        final hexList = values[1] as List;
+        return '${values[0]}${hexList.join()}';
+      });
+
+  // extract PN_LOCAL
+  Parser PN_LOCAL() => super.PN_LOCAL().map((values) {
+        final first = values[0];
+        final remainingList = values[1] as List;
+        final remaining = flattenList(remainingList).join();
+        return '$first$remaining';
+      });
+
+  // extract PNAME_LN =>
+  Parser PNAME_LN() => super.PNAME_LN().map((values) {
+        final pNameLocal = '${values[0]}${values[1]}';
+        return pNameLocal;
+      });
+
+  // extract PrefixedName =>
+  Parser PrefixedName() => super.PrefixedName().map((values) {
+        return values;
+      });
+
+  // extract objectList =>
+  Parser objectList() => super.objectList().map((values) {
+        final rtnList = [];
+        final firstObject = values[0];
+        rtnList.add(firstObject);
+        final restObjects = values[1] as List;
+        for (var i = 0; i < restObjects.length; i++) {
+          rtnList.add(restObjects[i][1]);
+        }
+        return rtnList;
+      });
+
+  // extract predicateObjectList =>
+  Parser predicateObjectList() => super.predicateObjectList().map((values) {
+        final rtnList = [];
+        final firstPreObj = [values[0], values[1]];
+        rtnList.add(firstPreObj);
+        final restPreObjs = values[2] as List;
+        for (var i = 0; i < restPreObjs.length; i++) {
+          rtnList.add(restPreObjs[i][1][0]);
+        }
+        return rtnList;
+      });
+
+  // // extract RDFLiteral =>
+  Parser RDFLiteral() => super.RDFLiteral().map((values) {
+        String rtnStr = '';
+        rtnStr += values[0];
+        rtnStr += flattenList(values[1] as List).join();
+        return rtnStr;
+      });
+
+  // extract STRING =>
+  Parser STRING_LITERAL_QUOTE() => super.STRING_LITERAL_QUOTE().map((values) {
+        return (values[1] as List).join();
+      });
+
+  Parser STRING_LITERAL_SINGLE_QUOTE() =>
+      super.STRING_LITERAL_SINGLE_QUOTE().map((values) {
+        return (values[1] as List).join();
+      });
+
+  Parser STRING_LITERAL_LONG_SINGLE_QUOTE() =>
+      super.STRING_LITERAL_LONG_SINGLE_QUOTE().map((values) {
+        return flattenList(values[1] as List).join();
+      });
+
+  Parser STRING_LITERAL_LONG_QUOTE() =>
+      super.STRING_LITERAL_LONG_QUOTE().map((values) {
+        return flattenList(values[1] as List).join();
+      });
+
+  // extract NumericalLiteral
+  Parser NumericalLiteral() => super.NumericalLiteral().map((values) {
+        return flattenList(values).join();
+      });
+}
+
+// helper function to flatten a nested list to a single list recursively
+List<dynamic> flattenList(List<dynamic> list) {
+  // Keep track of current nesting level, add each element to a new list if it's not a list
+  List<dynamic> result = [];
+
+  for (var element in list) {
+    if (element is List) {
+      // If the element is a list, recursively flatten it
+      result.addAll(flattenList(element));
+    } else {
+      // If the element is not a list, add it to the result list
+      result.add(element);
+    }
+  }
+
+  return result;
+}
+
 main() {
   // local tests for expression definition and evaluator definition classes
 
