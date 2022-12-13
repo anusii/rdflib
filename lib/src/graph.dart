@@ -8,10 +8,13 @@ import './namespace.dart';
 import './term.dart';
 import './triple.dart';
 import './constants.dart';
+import '../parser/grammar_parser.dart';
 
 class Graph {
   Map<URIRef, Set<Triple>> graphs = {};
   Map<String, String> contexts = {};
+  Map<URIRef, Map<URIRef, Set>> groups = {};
+  Map<String, URIRef> ctx = {};
   Set triples = {};
 
   /// add triple to the set, also update the graph to include the triple.
@@ -499,6 +502,32 @@ class Graph {
       return Literal(element, datatype: XSD.float);
     }
   }
+
+  /// parse turtle file using grammar rules
+  ///
+  ///
+  void parseTurtle(String fileContent) {
+    // use grammar parser to extract file content to the list
+    final evaluatorDef = EvaluatorDefinition();
+    final evaluatorParser = evaluatorDef.build();
+    final String content = _removeComments(fileContent);
+    List parsedList = evaluatorParser.parse(content).value;
+    for (List tripleList in parsedList) {
+      _saveToContext(tripleList);
+    }
+    for (List tripleList in parsedList) {
+      _saveToGroups(tripleList);
+    }
+  }
+
+  /// placeholder
+  void _saveToGroups(List tripleList) {}
+
+  /// save prefix lists to ctx map
+  void _saveToContext(List tripleList) {}
+
+  /// convert string to corresponding URIRef, or Literal
+  item(String s) {}
 
   /// serialize the graph to certain format and export to file
   ///
