@@ -524,7 +524,16 @@ class Graph {
   void _saveToGroups(List tripleList) {}
 
   /// save prefix lists to ctx map
-  void _saveToContext(List tripleList) {}
+  void _saveToContext(List tripleList) {
+    if (tripleList[0] == '@prefix') {
+      String prefixedName = tripleList[1];
+      URIRef namespace = item(tripleList[2]) as URIRef;
+      ctx[prefixedName] = namespace;
+    } else if (tripleList[0] == '@base' && !ctx.containsKey(':')) {
+      // there might a conflict between '@prefix : <> .' and '@base <> .'
+      ctx[':'] = item(tripleList[1]) as URIRef;
+    }
+  }
 
   /// convert string to corresponding URIRef, or Literal
   item(String s) {
