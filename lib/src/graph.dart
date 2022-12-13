@@ -527,7 +527,55 @@ class Graph {
   void _saveToContext(List tripleList) {}
 
   /// convert string to corresponding URIRef, or Literal
-  item(String s) {}
+  item(String s) {
+    s = s.trim();
+    // 1. <>
+    if (s.startsWith('<') && s.endsWith('>')) {
+      String uri = s.substring(1, s.length - 1);
+      if (URIRef.isValidUri(uri)) {
+        // valid uri is sufficient as URIRef
+        return URIRef(uri);
+      } else {
+        if (ctx.containsKey(':')) {
+          // if context has base, then stitch
+          return URIRef('${ctx[':']}${uri}');
+        } else {
+          return URIRef(uri); // or it's just a string within <>
+        }
+      }
+    }
+    // 2. :abc
+    else if (s.startsWith(':')) {
+      // it's using @base
+      return URIRef('${ctx[":"]!.value}${s.substring(1)}');
+    }
+    // 3. abc:efg
+    else if (s.contains(':')) {
+      // it's using @prefix
+      int firstColonPos = s.indexOf(':');
+      String namespace = s.substring(0, firstColonPos + 1); // including ':'
+      String localname = s.substring(firstColonPos + 1);
+    }
+    // 4. abc^^xsd:string
+    else if (s.contains('^^')) {
+      List<String> lst = s.split('^^');
+      String value = lst[0];
+      String datatype = lst[1];
+      // note: Literal only supports XSD, OWL namespaces currently
+      return Literal(value, datatype: item(datatype));
+    }
+    // 5. abc@en
+    else if (s.contains('@')) {
+      List<String> lst = s.split('@');
+      String value = lst[0];
+      String lang = lst[1];
+      return Literal(value, lang: lang);
+    }
+    // 6. abc
+    else {
+      return Literal(s); // treat it as a normal string
+    }
+  }
 
   /// serialize the graph to certain format and export to file
   ///
