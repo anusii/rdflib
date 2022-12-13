@@ -1,5 +1,4 @@
 import 'package:petitparser/petitparser.dart';
-import 'package:rdflib/rdflib.dart';
 
 class ExpressionDefinition extends GrammarDefinition {
   Parser start() => ref0(turtleDoc).end();
