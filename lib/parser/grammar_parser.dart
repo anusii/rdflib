@@ -150,7 +150,8 @@ class ExpressionDefinition extends GrammarDefinition {
           (pattern('0-9').plus() & ref0(EXPONENT)));
 
   // [16] 	NumericLiteral 	::= 	INTEGER | DECIMAL | DOUBLE
-  Parser NumerialLiteral() => ref0(INTEGER) | ref0(DECEMAL) | ref0(DOUBLE);
+  // rearrange the order as INTEGER will greedy match for the default sequence
+  Parser NumericalLiteral() => ref0(DOUBLE) | ref0(DECIMAL) | ref0(INTEGER);
 
   // [13] 	literal 	::= 	RDFLiteral | NumericLiteral | BooleanLiteral
   Parser literal() =>
