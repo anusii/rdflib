@@ -520,8 +520,35 @@ class Graph {
     }
   }
 
-  /// placeholder
-  void _saveToGroups(List tripleList) {}
+  /// save triples to groups
+  /// each group corresponds to a group of triples ending with .
+  /// parsed triples are saved in the list and in the form of
+  /// [[sub, [pre1, [obj1, obj2, ...]], [pre2, [obj3, ...]], ...], .]
+  /// so the first item is a list of triple content, and the second is just .
+  void _saveToGroups(List tripleList) {
+    // skip namespace prefixes
+    if (tripleList[0] == '@prefix' || tripleList[0] == '@base') {
+      return;
+    }
+    List tripleContent = tripleList[0];
+    URIRef sub = item(tripleContent[0]) as URIRef;
+    if (!groups.containsKey(sub)) {
+      groups[sub] = Map();
+    }
+    List predicateObjectLists = tripleContent[1];
+    for (List predicateObjectList in predicateObjectLists) {
+      // predicate is always an iri
+      // use URIRef as we translate PrefixedName to full form of URIREF
+      URIRef pre;
+      pre = item(predicateObjectList[0]);
+      // use a set to store the triples
+      groups[sub]![pre] = Set();
+      List objectList = predicateObjectList[1];
+      for (String obj in objectList) {
+        groups[sub]![pre]!.add(item(obj));
+      }
+    }
+  }
 
   /// save prefix lists to ctx map
   void _saveToContext(List tripleList) {
