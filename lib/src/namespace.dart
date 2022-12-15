@@ -215,3 +215,5 @@ final Map<String, String> standardPrefixes = {
   'rdf': _rdfAnchor,
   'rdfs': _rdfsAnchor,
 };
+
+final a = RDF.type; // constant a is a shorthand predicate for rdf:type
