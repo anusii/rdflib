@@ -565,8 +565,12 @@ class Graph {
   /// convert string to corresponding URIRef, or Literal
   item(String s) {
     s = s.trim();
+    // 0. a is short for rdf:type
+    if (s == 'a') {
+      return a;
+    }
     // 1. <>
-    if (s.startsWith('<') && s.endsWith('>')) {
+    else if (s.startsWith('<') && s.endsWith('>')) {
       String uri = s.substring(1, s.length - 1);
       if (URIRef.isValidUri(uri)) {
         // valid uri is sufficient as URIRef
@@ -574,11 +578,20 @@ class Graph {
       } else {
         if (ctx.containsKey(':')) {
           // if context has base, then stitch
-          return URIRef('${ctx[':']}${uri}');
+          return URIRef('${ctx[':']!.value}${uri}');
         } else {
           return URIRef(uri); // or it's just a string within <>
         }
       }
+    }
+    // 4. abc^^xsd:string
+    // note this needs to come before :abc or abc:efg cases
+    else if (s.contains('^^')) {
+      List<String> lst = s.split('^^');
+      String value = lst[0];
+      String datatype = lst[1];
+      // note: Literal only supports XSD, OWL namespaces currently
+      return Literal(value, datatype: item(datatype));
     }
     // 2. :abc
     else if (s.startsWith(':')) {
@@ -591,14 +604,7 @@ class Graph {
       int firstColonPos = s.indexOf(':');
       String namespace = s.substring(0, firstColonPos + 1); // including ':'
       String localname = s.substring(firstColonPos + 1);
-    }
-    // 4. abc^^xsd:string
-    else if (s.contains('^^')) {
-      List<String> lst = s.split('^^');
-      String value = lst[0];
-      String datatype = lst[1];
-      // note: Literal only supports XSD, OWL namespaces currently
-      return Literal(value, datatype: item(datatype));
+      return URIRef('${ctx[namespace]?.value}$localname');
     }
     // 5. abc@en
     else if (s.contains('@')) {
