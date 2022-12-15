@@ -16,6 +16,7 @@ class Graph {
   Map<URIRef, Map<URIRef, Set>> groups = {};
   Map<String, URIRef> ctx = {};
   Set triples = {};
+  String serializedString = ''; // for storing serialized string after parsing
 
   /// add triple to the set, also update the graph to include the triple.
   ///
@@ -635,7 +636,8 @@ class Graph {
       {String format = 'ttl',
       String? dest,
       String? encrypt,
-      String? passphrase}) {
+      String? passphrase,
+      String? abbr}) {
     /// encrypt and passphrase should both exist or not exist
     /// TODO: passphrase strength checker
     if (encrypt != null && (passphrase == null || passphrase.trim() == '')) {
@@ -647,6 +649,16 @@ class Graph {
     }
 
     String indent = ' ' * 4;
+
+    // new abbr option to work with new method parseTurtle
+    if (abbr != null) {
+      if (serializedString != '') {
+        serializedString = '';
+      }
+      serializedString += _serializedContext();
+      serializedString += _serializedGroups();
+    }
+
     if (dest != null) {
       var output = StringBuffer();
       // 1. read and write every prefix
@@ -809,6 +821,46 @@ class Graph {
       }
       output.write(line);
     }
+  }
+
+  /// get the well-formatted serialized prefixes
+  String _serializedContext() {
+    String rtnStr = '';
+    for (var key in ctx.keys) {
+      // this means @base will be converted to @prefix : for now
+      rtnStr += '@prefix $key <${ctx[key]?.value}> .\n';
+    }
+    // add a new empty line before all the triples
+    rtnStr += '\n';
+    return rtnStr;
+  }
+
+  /// get the well-formatted serialized triples with commas and semi-colons
+  String _serializedGroups() {
+    String rtnStr = '';
+    // right now subject is in form of URIRef
+    for (URIRef sub in groups.keys) {
+      String subStr = _abbr(sub);
+      rtnStr += '$subStr\n';
+      for (URIRef pre in groups[sub]!.keys) {
+        // leave an indent
+        rtnStr += ' ' * 4;
+        String preStr = _abbr(pre);
+        rtnStr += '$preStr ';
+        for (var obj in groups[sub]![pre]!) {
+          String objStr = _abbr(obj);
+          rtnStr += '$objStr, ';
+        }
+        // remove the last ,
+        rtnStr = rtnStr.substring(0, rtnStr.length - 2);
+        // start a new line
+        rtnStr += ' ;\n';
+      }
+      // remove the last ;\n
+      rtnStr = rtnStr.substring(0, rtnStr.length - 2);
+      rtnStr += '.\n';
+    }
+    return rtnStr;
   }
 
   /// abbreviate uriref in namespace to bound short name for better readability
