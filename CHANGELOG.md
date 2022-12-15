@@ -1,10 +1,20 @@
+## 0.2.0
+
+- `grammar_parser.dart`: customize evaluators for different parsed result
+    - Support every rule specified in
+      the [documentation](https://www.w3.org/TR/turtle/#sec-grammar-grammar))
+    - Will support parsing and ignoring comment `#` in the future
+- `graph.dart`: add a new parsing function to utilize new grammar parser
+    - Support serializing full form of triples to shorter and simpler forms
+    - Will support parsing with file path in the future
+
 ## 0.1.10
 
 - Use dart [`petitparser`](https://github.com/petitparser/dart-petitparser) package to rewrite a few
   of the parsing functions of turtle file base on
   the [rules](https://www.w3.org/TR/turtle/#sec-grammar-grammar)
 - `naive_parser.dart`: support parsing for `HEX`, `UCHAR`, `IRIREF`, `PN_CHARS_BASE`
-  - Include test cases for the above rules in `test/naive_parser_test.dart`
+    - Include test cases for the above rules in `test/naive_parser_test.dart`
 - `grammar_parser.dart`: support modular grammar definitions for the above rules
 
 ## 0.1.9
