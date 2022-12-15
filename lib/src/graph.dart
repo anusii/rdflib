@@ -764,6 +764,35 @@ class Graph {
     }
   }
 
+  /// abbreviate URIRef or Literal to shorthand form
+  /// e.g. URIRef(http://www.w3.org/2001/XMLSchema#numeric) -> xsd:numeric
+  /// Literal(56.7, datatype: URIRef(http://www.w3.org/2001/XMLSchema#float)) -> "56.7"^^xsd:float
+  String _abbr(dynamic dy) {
+    if (dy.runtimeType == URIRef) {
+      if (dy == RDF.type) {
+        return 'a';
+      }
+      dy = dy as URIRef;
+      for (String abbr in ctx.keys) {
+        URIRef ns = ctx[abbr]!;
+        if (dy.inNamespace(Namespace(ns: ns.value))) {
+          if (abbr != ':') {
+            return '$abbr${dy.value.substring(ns.value.length)}';
+          } else {
+            // if it's a shorthand form, just surround it with <>
+            return '<${dy.value.substring(ns.value.length)}>';
+          }
+        }
+      }
+      return '<${dy.value}>';
+    } else if (dy.runtimeType == Literal) {
+      dy = dy as Literal;
+      return dy.toTtl();
+    }
+    // default return its string back
+    return dy.toString();
+  }
+
   /// read and write prefixes
   void _writePrefixes(StringBuffer output) {
     String line = '';
