@@ -800,7 +800,6 @@ class Graph {
       if (c == BaseType.shorthandBase.name) {
         // shorthand ':' has no prefixed word
         line = '@prefix : <${contexts[c]}> .\n';
-        print(line);
       } else if (c == BaseType.defaultBase.name) {
         // default base syntax
         line = '@base <${contexts[c]}> .\n';
@@ -832,8 +831,8 @@ class Graph {
     return '<${uriRef.value}>';
   }
 
+  /// TODO: replace any lines that has #<space> with content shown before
   String _removeComments(String fileContent) {
-    // remove any line that starts with #
-    return fileContent.replaceAll(RegExp(r'#.*$'), '');
+    return fileContent;
   }
 }
