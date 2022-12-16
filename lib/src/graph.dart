@@ -883,8 +883,19 @@ class Graph {
     return '<${uriRef.value}>';
   }
 
-  /// TODO: replace any lines that has #<space> with content shown before
+  /// replace any lines that has #<space> with content shown before
+  /// current implementation is to match and replace line by line
   String _removeComments(String fileContent) {
-    return fileContent;
+    String rtnStr = '';
+    List<String> lines = fileContent.split('\n');
+    for (var line in lines) {
+      // See also: https://www.w3.org/TR/turtle/#sec-grammar-comments
+      // comments in Turtle take the form of '#', outside an IRIREF or String,
+      // and continue to the end of line
+      // note to include a whitespace to exclude cases like <www.ex.org/bob#me>
+      rtnStr += line.replaceAll(RegExp(r'\s*#\s.*$'), '');
+      rtnStr += '\n';
+    }
+    return rtnStr;
   }
 }
