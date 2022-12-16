@@ -84,6 +84,10 @@ class URIRef {
         u!.scheme.startsWith('http');
   }
 
+  /// use value as the main identifier
+  @override
+  int get hashCode => value.hashCode;
+
   /// two URIRef are equal if they have the same value
   @override
   bool operator ==(Object other) {
