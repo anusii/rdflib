@@ -144,8 +144,30 @@ main() {
     ns1:hasSeeAndDoOption <http://silo.net.au/data/SOLID-Health#SeeAndDoOption-p43623-20220727T120913-fitnessDrive> .
   ''';
 
+  String turtleAclExample = '''
+  @prefix : <#>.
+@prefix acl: <http://www.w3.org/ns/auth/acl#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix c: <https://solid.udula.net.au/charlie_bruegel/profile/card#>.
+@prefix c0: <https://solid.udula.net.au/leslie_smith/profile/card#>.
+@prefix c1: <https://solid.ecosysl.net/phitest00/profile/card#>.
+
+:ControlReadWrite
+    a acl:Authorization;
+    acl:accessTo <employment>;
+    acl:agent c:me;
+    acl:mode acl:Control, acl:Read, acl:Write.
+:ReadWrite
+    a acl:Authorization;
+    acl:accessTo <employment>;
+    acl:agent c0:me, c1:me;
+    acl:mode acl:Read, acl:Write.
+  ''';
+
   // test an example string with valid ttl content
   Graph g = Graph();
+
+  // g.parseTurtle(turtleAclExample);
 
   // g.parseTurtle(turtleRealExample);
 
