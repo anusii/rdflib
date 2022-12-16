@@ -18,6 +18,20 @@ class Graph {
   Set triples = {};
   String serializedString = ''; // for storing serialized string after parsing
 
+  /// add a triple to group using its string form
+  ///
+  void addTripleToGroups(String s, String p, String o) {
+    URIRef sub = item(s) as URIRef;
+    if (!groups.containsKey(sub)) {
+      groups[sub] = Map();
+    }
+    URIRef pre = item(p) as URIRef;
+    if (!groups[sub]!.containsKey(pre)) {
+      groups[sub]![pre] = Set();
+    }
+    groups[sub]![pre]!.add(item(o));
+  }
+
   /// add triple to the set, also update the graph to include the triple.
   ///
   /// using a triples set can avoid duplicated records
