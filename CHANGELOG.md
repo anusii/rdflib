@@ -1,3 +1,11 @@
+## 0.2.1
+
+- `graph.dart`: 
+  - remove comments before parsing
+  - add function to add a triple to groups by passing in subject, predicate and object as strings
+  - update prefixes context for 'a' (rdf:type) 
+  - fix a bug of causing duplicated triples added to the graph
+
 ## 0.2.0
 
 - `grammar_parser.dart`: customize evaluators for different parsed result
