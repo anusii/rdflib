@@ -582,6 +582,7 @@ class Graph {
     s = s.trim();
     // 0. a is short for rdf:type
     if (s == 'a') {
+      _saveToContext(['@prefix', 'rdf:', '<${RDF.rdf}>']);
       return a;
     }
     // 1. <>
