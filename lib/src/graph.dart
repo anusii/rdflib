@@ -577,7 +577,7 @@ class Graph {
       ctx[prefixedName] = namespace;
     } else if (tripleList[0] == '@base' && !ctx.containsKey(':')) {
       // there might a conflict between '@prefix : <> .' and '@base <> .'
-      ctx[':'] = item(tripleList[1]) as URIRef;
+      ctx[BASE] = item(tripleList[1]) as URIRef;
     }
   }
 
@@ -807,11 +807,17 @@ class Graph {
       for (String abbr in ctx.keys) {
         URIRef ns = ctx[abbr]!;
         if (dy.inNamespace(Namespace(ns: ns.value))) {
-          if (abbr != ':') {
+          if (abbr == BASE) {
+            // @base <www.example.org/> .
+            // <bob#me> a rdf:Person .
+            return '<${dy.value.substring(ns.value.length)}';
+          } else if (abbr != ':') {
             return '$abbr${dy.value.substring(ns.value.length)}';
           } else {
             // if it's a shorthand form, just surround it with <>
-            return '<${dy.value.substring(ns.value.length)}>';
+            // @prefix : <www.example2.org/>
+            // :alice a rdf:Person
+            return ':${dy.value.substring(ns.value.length)}';
           }
         }
       }
@@ -846,8 +852,12 @@ class Graph {
   String _serializedContext() {
     String rtnStr = '';
     for (var key in ctx.keys) {
-      // this means @base will be converted to @prefix : for now
-      rtnStr += '@prefix $key <${ctx[key]?.value}> .\n';
+      // note the difference between @base and @prefix
+      if (key == BASE) {
+        rtnStr += '@base <${ctx[key]?.value}> .\n';
+      } else {
+        rtnStr += '@prefix $key <${ctx[key]?.value}> .\n';
+      }
     }
     // add a new empty line before all the triples
     rtnStr += '\n';
