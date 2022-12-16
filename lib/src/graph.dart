@@ -29,7 +29,10 @@ class Graph {
     if (!groups[sub]!.containsKey(pre)) {
       groups[sub]![pre] = Set();
     }
-    groups[sub]![pre]!.add(item(o));
+    var obj = item(o);
+    groups[sub]![pre]!.add(obj);
+    // update the triples set as well
+    triples.add(Triple(sub: sub, pre: pre, obj: obj));
   }
 
   /// add triple to the set, also update the graph to include the triple.
@@ -561,6 +564,7 @@ class Graph {
       List objectList = predicateObjectList[1];
       for (String obj in objectList) {
         groups[sub]![pre]!.add(item(obj));
+        triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
       }
     }
   }
