@@ -173,6 +173,10 @@ class Literal {
     return DateTime.tryParse(s) != null && !s.endsWith('Z');
   }
 
+  /// use toString() for distinguish between different Literals
+  @override
+  int get hashCode => toString().hashCode;
+
   /// for checking if two triples are equal when adding them to the set
   @override
   bool operator ==(Object other) {
