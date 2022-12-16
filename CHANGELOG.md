@@ -1,3 +1,8 @@
+## 0.2.2
+
+- `graph.dart`
+  - fix a bug of parsing and serializing `@base` and `:`
+
 ## 0.2.1
 
 - `graph.dart`: 
