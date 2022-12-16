@@ -147,8 +147,16 @@ main() {
   // test an example string with valid ttl content
   Graph g = Graph();
 
-  // insert different strings here for test
-  g.parseTurtle(turtleRealExample);
+  // g.parseTurtle(turtleRealExample);
+
+  g.parseTurtle(turtleSimple);
+  g.addTripleToGroups('ab:xy', 'rdf:type', '3');
+
+  // should not add duplicate triples
+  g.addTripleToGroups('<xyz>', 'ab:when', 'yesterday');
+  g.addTripleToGroups('<xyz>', 'ab:when', 'yesterday');
+  g.addTripleToGroups('<xyz>', 'ab:when', 'yesterday');
+  g.addTripleToGroups('<xyz>', 'ab:when', 'today');
 
   String delim = '-' * 30 + '\n';
   print('${delim}Prefixes:\n${g.ctx}\n');
