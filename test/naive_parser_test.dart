@@ -276,4 +276,77 @@ main() {
       });
     });
   });
+
+  group(
+      """[168s] 	PN_LOCAL 	::= 	(PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+""", () {
+    Map<String, bool> testStrings = {
+      '_': true,
+      ':': true,
+      '7': true,
+      '%a9': true,
+      '%': false,
+      '\$': false,
+      'z::': true,
+      'z\u203dabc': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = PN_LOCAL.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('PN_LOCAL $element - actual: $actual, expected: $expected');
+      test('PN_LOCAL case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[140s] 	PNAME_LN 	::= 	PNAME_NS PN_LOCAL""", () {
+    Map<String, bool> testStrings = {
+      '::': true,
+      'rdf:type': true,
+      ':xyz': true,
+      'www': false,
+      'www:': false,
+      'Z10.9a:%b23c': true,
+      '_:': false,
+      '_:burg': false,
+      '_:_': false,
+      'burg:_do': true,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = PNAME_LN.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('PNAME_LN $element - actual: $actual, expected: $expected');
+      test('PNAME_LN case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""// [136s] 	PrefixedName 	::= 	PNAME_LN | PNAME_NS""", () {
+    Map<String, bool> testStrings = {
+      '::': true,
+      'rdf:type': true,
+      ':xyz': true,
+      'www': false,
+      'Z10.9a:%b23c': true,
+      '_:': false,
+      '_:burg': false,
+      '_:_': false,
+      'burg:_do': true,
+      'd:': true,
+      'j:': true,
+      '': false,
+      't': false,
+      'www:': true,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = PrefixedName.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('PrefixedName $element - actual: $actual, expected: $expected');
+      test('PrefixedName case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
 }
