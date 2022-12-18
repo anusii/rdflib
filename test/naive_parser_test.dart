@@ -394,7 +394,7 @@ main() {
       '\\\\': true,
       '\U': false,
       'r': false,
-      '\\\"':true,
+      '\\\"': true,
       '\"': false,
       '\"\"': false,
       '\u0355': false,
@@ -415,7 +415,8 @@ main() {
     });
   });
 
-  group("""STRING_LITERAL_QUOTE 	::= 	'"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
+  group(
+      """STRING_LITERAL_QUOTE 	::= 	'"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
 """, () {
     Map<String, bool> testStrings = {
       '\"\"': true,
@@ -432,7 +433,8 @@ main() {
     testStrings.keys.forEach((element) {
       bool actual = STRING_LITERAL_QUOTE.end().accept(element);
       bool expected = testStrings[element]!;
-      print('STRING_LITERAL_QUOTE $element - actual: $actual, expected: $expected');
+      print(
+          'STRING_LITERAL_QUOTE $element - actual: $actual, expected: $expected');
       test('STRING_LITERAL_QUOTE case $element', () {
         expect(actual, expected);
       });
