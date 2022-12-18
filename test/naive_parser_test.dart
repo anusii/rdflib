@@ -323,7 +323,7 @@ main() {
     });
   });
 
-  group("""// [136s] 	PrefixedName 	::= 	PNAME_LN | PNAME_NS""", () {
+  group("""[136s] 	PrefixedName 	::= 	PNAME_LN | PNAME_NS""", () {
     Map<String, bool> testStrings = {
       '::': true,
       'rdf:type': true,
@@ -345,6 +345,95 @@ main() {
       bool expected = testStrings[element]!;
       print('PrefixedName $element - actual: $actual, expected: $expected');
       test('PrefixedName case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[135s] 	iri 	::= 	IRIREF | PrefixedName""", () {
+    Map<String, bool> testStrings = {
+      '::': true,
+      'rdf:type': true,
+      ':xyz': true,
+      'www': false,
+      'Z10.9a:%b23c': true,
+      '_:': false,
+      '_:burg': false,
+      '_:_': false,
+      'burg:_do': true,
+      'd:': true,
+      'j:': true,
+      '': false,
+      't': false,
+      'www:': true,
+      '<>': true,
+      '<': false,
+      '>': false,
+      '<<>': false,
+      '<{}>': false,
+      '<bob>': true,
+      '<bob#me>': true,
+      '<\u0010>': false,
+      '<www.example.com/alice#me>': true,
+      '<www.example.com/alice#me>.': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = iri.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('iri $element - actual: $actual, expected: $expected');
+      test('iri case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""ECHAR 	::= 	'\' [tbnrf"'\]""", () {
+    Map<String, bool> testStrings = {
+      '\\': false,
+      '\R': false,
+      '\\\\': true,
+      '\U': false,
+      'r': false,
+      '\\\"':true,
+      '\"': false,
+      '\"\"': false,
+      '\u0355': false,
+      '_': false,
+      '\\f': true,
+      '\\r': true,
+      '\\t': true,
+      '\\n': true,
+      '\\b': true,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = ECHAR.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('ECHAR $element - actual: $actual, expected: $expected');
+      test('ECHAR case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""STRING_LITERAL_QUOTE 	::= 	'"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
+""", () {
+    Map<String, bool> testStrings = {
+      '\"\"': true,
+      '\"': false,
+      '\'\'': false,
+      '\"\\n\\n\\b\"': true,
+      '\"\n\n\b\"': false,
+      '': false,
+      '\"\ua91f\u4559d\"': true,
+      '\"alice\"': true,
+      '\"charles\x22\"': false,
+      '\"_\"': true
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = STRING_LITERAL_QUOTE.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('STRING_LITERAL_QUOTE $element - actual: $actual, expected: $expected');
+      test('STRING_LITERAL_QUOTE case $element', () {
         expect(actual, expected);
       });
     });
