@@ -527,7 +527,9 @@ main() {
     });
   });
 
-  group("""// [17] 	STRING 	::= 	STRING_LITERAL_QUOTE | STRING_LITERAL_SINGLE_QUOTE | STRING_LITERAL_LONG_SINGLE_QUOTE | STRING_LITERAL_LONG_QUOTE""", () {
+  group(
+      """// [17] 	STRING 	::= 	STRING_LITERAL_QUOTE | STRING_LITERAL_SINGLE_QUOTE | STRING_LITERAL_LONG_SINGLE_QUOTE | STRING_LITERAL_LONG_QUOTE""",
+      () {
     Map<String, bool> testStrings = {
       '\'\'': true,
       '""': true,
@@ -542,6 +544,63 @@ main() {
       bool expected = testStrings[element]!;
       print('STRING $element - actual: $actual, expected: $expected');
       test('STRING case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[133s] 	BooleanLiteral 	::= 	'true' | 'false'""", () {
+    Map<String, bool> testStrings = {
+      '': false,
+      'true': true,
+      'false': true,
+      '1': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = BooleanLiteral.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('BooleanLiteral $element - actual: $actual, expected: $expected');
+      test('BooleanLiteral case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[144s] 	LANGTAG 	::= 	'@' [a-zA-Z]+ ('-' [a-zA-Z0-9]+)*""", () {
+    Map<String, bool> testStrings = {
+      '': false,
+      '@': false,
+      '@q': true,
+      '@q-w': true,
+      '@q-': false,
+      '@q-w-12': true,
+      '@q-x-9t-': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = LANGTAG.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('LANGTAG $element - actual: $actual, expected: $expected');
+      test('LANGTAG case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[128s] 	RDFLiteral 	::= 	STRING (LANGTAG | '^^' iri)?""", () {
+    Map<String, bool> testStrings = {
+      '""': true,
+      '': false,
+      '"abc"@en': true,
+      '"xyz"^^<>': true,
+      "'xyz'^^<www.fa.cup>": true,
+      '"""asd"""^^:zzz': true,
+      '""asd"""^^:zzz': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = RDFLiteral.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('RDFLiteral $element - actual: $actual, expected: $expected');
+      test('RDFLiteral case $element', () {
         expect(actual, expected);
       });
     });
