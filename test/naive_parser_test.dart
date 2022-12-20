@@ -168,6 +168,7 @@ main() {
       'd-': true,
       'd.': false,
       'Y507-': true,
+      'Y 507-': false,
       'X8.': false,
       'Z10.9a': true,
       '\u00F6\u0299.\u0300': true,
@@ -611,6 +612,7 @@ main() {
       '0': true,
       '7': true,
       '-590': true,
+      '- 590': false,
       '007': true,
       '-007': true,
       '-1670.5': false,
@@ -636,6 +638,7 @@ main() {
       '1.': false,
       '23.98': true,
       '-42.3': true,
+      '- 42.3': false,
       '+05670.12': true,
       '+-3.2': false,
     };
@@ -657,6 +660,7 @@ main() {
       'e-16': true,
       'E+3.5': false,
       'E+9': true,
+      'E+ 9': false,
       'E1': true,
     };
     testStrings.keys.forEach((element) {
@@ -678,6 +682,7 @@ main() {
       '+.5': false,
       '-.37': false,
       '-.37e1': true,
+      '- .37e1': false,
       '-.': false,
       '+108.': false,
       '+108.E3': true,
@@ -705,6 +710,7 @@ main() {
       '.0': true,
       '.5E10': true,
       '+000': true,
+      '+ 007': false,
       '-.05': true,
       '9.8': true,
       '9.8E3.1': false,
@@ -881,6 +887,172 @@ main() {
       bool expected = testStrings[element]!;
       print('BlankNode $element - actual: $actual, expected: $expected');
       test('BlankNode case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group(
+      """[12] 	object 	::= 	iri | BlankNode | collection | blankNodePropertyList | literal""",
+      () {
+    Map<String, bool> testStrings = {
+      ' ': false,
+      '::': true,
+      'a': false,
+      'rdf:type': true,
+      ':xyz': true,
+      'www': false,
+      'Z10.9a:%b23c': true,
+      '_:': false,
+      '_:burg': true,
+      '_:_': true,
+      'burg:_do': true,
+      'd:': true,
+      'j:': true,
+      '': false,
+      't': false,
+      'www:': true,
+      '<>': true,
+      '<': false,
+      '>': false,
+      '<<>': false,
+      '<{}>': false,
+      '<xyz.com>': true,
+      '<bob#me>': true,
+      '<\u0010>': false,
+      '<www.example.com/alice#me>': true,
+      '<www.example.com/alice#me>.': false,
+      '_:0': true,
+      '_:0.a': true,
+      '_:hello.dart': true,
+      '_:.ignore': false,
+      '_:_denied': true,
+      '_:_accepted.': false,
+      '_:_accepted.sub': true,
+      '[\x20]': true,
+      '[   ]': true,
+      '[\x09\x0A]': true,
+      '[]': true,
+      '[] ': false,
+      '[\x20] ': false,
+      '  ': false,
+      '[  ': false,
+      '5.8': true,
+      '"Zero"': true,
+      'false': true,
+      '\'true\'@en': true,
+      '"antarctica"^^<www.wikipedia.org>': true,
+      '-1E0': true,
+      ' ': false,
+      'zero': false,
+      'true': true,
+      '"true"': true,
+      'true@en': false,
+      '()': true,
+      '(::)': true,
+      '( rdf:type awe:ful <madeup.com>)': true,
+      '(:xyz)': true,
+      '(Z10.9a:%b23c_:a)': true,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = object.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('object $element - actual: $actual, expected: $expected');
+      test('object case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[15] 	collection 	::= 	'(' object* ')'""", () {
+    Map<String, bool> testStrings = {
+      '()': true,
+      '(::)': true,
+      '( rdf:type )': true,
+      '(:xyz)': true,
+      'www': false,
+      '(Z10.9a:%b23c_:a)': true,
+      '(_:)': false,
+      '(_:burg)': true,
+      '_:_': false,
+      '(burg:_do)': true,
+      '(d: )': true,
+      '( j:x:)': true,
+      '': false,
+      't': false,
+      '(www:  )': true,
+      '(<><>)': true,
+      '<': false,
+      '>': false,
+      '<<>': false,
+      '<{}>': false,
+      '(<bob> :me)': true,
+      '( <bob>:me  )': true,
+      '(<bob#me><alice#me><charlie#me>)': true,
+      '<\u0010>': false,
+      '(<www.example.com/alice#me>)': true,
+      '<www.example.com/alice#me>.': false,
+      '(_:0)': true,
+      '(_:__:0.a)': true,
+      '(<world>_:hello.dart)': true,
+      '(_:.ignore)': false,
+      '(_:_denied<xyz#>rdf:na)': true,
+      '_:_accepted.': false,
+      '(<tobeconfirmed.org>_:_accepted.sub)': true,
+      '([\x20][])': true,
+      '([   ]<whathapped#me>)': true,
+      '([\x09\x0A]_:white)': true,
+      '([])': true,
+      '[] ': false,
+      '[\x20] ': false,
+      '  ': false,
+      '[  ': false,
+      '(5.8)': true,
+      '(5.8 9.5E3"howtointerpretthese"^^awe:some)': true, // ?
+      '("Zero"<0>rdf:zero)': true,
+      '( false)': true,
+      '( \'true\'@en)': true,
+      '("antarctica"^^<www.wikipedia.org><anotherone>rdf:yetanotherone )': true,
+      '(-1E0)': true,
+      ' ': false,
+      'zero': false,
+      '(true false)': true,
+      '("true"true )': true,
+      '(true@en)': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = collection.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('collection $element - actual: $actual, expected: $expected');
+      test('collection case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[8] 	objectList 	::= 	object (',' object)*""", () {
+    Map<String, bool> testStrings = {
+      'rdf:example, <xyz.com>': true,
+      '_:burg, _:_, x:, "a", <empty>, <whoiswho> ': true,
+      '_:burg, _:_, x:, a, <empty>': false,
+      '<www.example.com/alice#me>, [], _:2': true,
+      '_:_denied, _:_accepted.sub, hello:me': true,
+      '[\x09\x0A], :whitespaces, "now", (:c1 :c3), 9.8': true,
+      'true': true,
+      '"true"': true,
+      '()': true,
+      '( rdf:type awe:ful <madeup.com>)': true,
+      '(:xyz)': true,
+      '(Z10.9a:%b23c_:a)': true,
+      'rdf:ex; "abc"': false,
+      '_:example .': false,
+      '1^^xdf:odd': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = objectList.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('objectList $element - actual: $actual, expected: $expected');
+      test('objectList case $element', () {
         expect(actual, expected);
       });
     });

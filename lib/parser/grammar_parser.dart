@@ -224,7 +224,8 @@ class ExpressionDefinition extends GrammarDefinition {
           ref0(predicateObjectList).repeat(0, 1).trim());
 
   // [6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF
-  Parser sparqlPrefix() => string('PREFIX') & ref0(PNAME_NS).trim() & ref0(IRIREF);
+  Parser sparqlPrefix() =>
+      string('PREFIX') & ref0(PNAME_NS).trim() & ref0(IRIREF);
 
   // [5s] 	sparqlBase 	::= 	"BASE" IRIREF
   Parser sparqlBase() => string('BASE') & ref0(IRIREF).trim();
