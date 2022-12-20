@@ -181,7 +181,12 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser BlankNode() => ref0(BLANK_NODE_LABEL) | ref0(ANON);
 
   // [15] 	collection 	::= 	'(' object* ')'
-  Parser collection() => string('(') & ref0(object).star().trim() & string(')');
+  // need clarification in whitespaces between two objects.
+  // based on the example here: https://www.w3.org/TR/turtle/#collections,
+  // there can be whitespaces, but it's not consistent.
+  // e.g. in [20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+
+  // the [0-9]* part can't have any whitespaces in between
+  Parser collection() => string('(') & ref0(object).trim().star() & string(')');
 
   // [12] 	object 	::= 	iri | BlankNode | collection | blankNodePropertyList | literal
   Parser object() =>
@@ -219,10 +224,10 @@ class ExpressionDefinition extends GrammarDefinition {
           ref0(predicateObjectList).repeat(0, 1).trim());
 
   // [6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF
-  Parser sparqlPrefix() => string('PREFIX') & ref0(PNAME_NS) & ref0(IRIREF);
+  Parser sparqlPrefix() => string('PREFIX') & ref0(PNAME_NS).trim() & ref0(IRIREF);
 
   // [5s] 	sparqlBase 	::= 	"BASE" IRIREF
-  Parser sparqlBase() => string('BASE') & ref0(IRIREF);
+  Parser sparqlBase() => string('BASE') & ref0(IRIREF).trim();
 
   // [5] 	base 	::= 	'@base' IRIREF '.'
   Parser base() => string('@base') & ref0(IRIREF).trim() & string('.');
