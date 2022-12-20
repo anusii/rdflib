@@ -387,37 +387,3 @@ List<dynamic> flattenList(List<dynamic> list) {
 
   return result;
 }
-
-main() {
-  // local test for a turtle file
-  final evalDef = EvaluatorDefinition();
-  final evalParser = evalDef.build();
-  final sampleAcl = '''
-    @prefix acl: <http://www.w3.org/ns/auth/acl#>.
-    @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-
-    <#public>
-        a acl:Authorization;
-        acl:agentClass foaf:Agent;
-        acl:accessTo <./card>;
-        acl:mode acl:Read.
-
-    <#owner>
-        a acl:Authorization;
-        acl:agent <https://solid.udula.net.au/charlie_bruegel/profile/card#me>;
-        acl:accessTo <./card>;
-        acl:mode acl:Read, acl:Write, acl:Control.
-    
-    <jtolkien>
-     a acl:Authorization;
-     acl:agentClass foaf:Agent;
-     acl:accessTo <./card>;
-     acl:mode acl:Write.
- ''';
-  final evalResult = evalParser.parse(sampleAcl);
-  print('''
-  Parsing result:\n$evalResult
-  ----------------------------
-  Values in the parsed list: ${evalResult.value.length}\n
-''');
-}
