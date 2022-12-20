@@ -178,7 +178,7 @@ final RDFLiteral = STRING & (LANGTAG | string('^^') & iri).repeat(0, 1);
 final INTEGER = pattern('+-').repeat(0, 1) & pattern('0-9').plus();
 
 // [20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+
-final DECEMAL = pattern('+-').repeat(0, 1) &
+final DECIMAL = pattern('+-').repeat(0, 1) &
     pattern('0-9').star() &
     string('.') &
     pattern('0-9').plus();
@@ -194,10 +194,11 @@ final DOUBLE = pattern('+-').repeat(0, 1) &
         (pattern('0-9').plus() & EXPONENT));
 
 // [16] 	NumericLiteral 	::= 	INTEGER | DECIMAL | DOUBLE
-final NumerialLiteral = INTEGER | DECEMAL | DOUBLE;
+// rearrange the order as INTEGER will greedy match for the default sequence
+final NumericalLiteral = DOUBLE | DECIMAL | INTEGER;
 
 // [13] 	literal 	::= 	RDFLiteral | NumericLiteral | BooleanLiteral
-final literal = RDFLiteral | NumerialLiteral | BooleanLiteral;
+final literal = RDFLiteral | NumericalLiteral | BooleanLiteral;
 
 // [11] 	predicate 	::= 	iri
 final predicate = iri;
