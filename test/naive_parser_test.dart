@@ -605,4 +605,120 @@ main() {
       });
     });
   });
+
+  group("""[19] 	INTEGER 	::= 	[+-]? [0-9]+""", () {
+    Map<String, bool> testStrings = {
+      '0': true,
+      '7': true,
+      '-590': true,
+      '007': true,
+      '-007': true,
+      '-1670.5': false,
+      '90.8': false,
+      '+23': true,
+      '+2E3': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = INTEGER.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('INTEGER $element - actual: $actual, expected: $expected');
+      test('INTEGER case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+""", () {
+    Map<String, bool> testStrings = {
+      '00.00': true,
+      '9.5': true,
+      '.369': true,
+      '1.': false,
+      '23.98': true,
+      '-42.3': true,
+      '+05670.12': true,
+      '+-3.2': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = DECIMAL.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('DECIMAL $element - actual: $actual, expected: $expected');
+      test('DECIMAL case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[154s] 	EXPONENT 	::= 	[eE] [+-]? [0-9]+""", () {
+    Map<String, bool> testStrings = {
+      'e00': true,
+      'E3': true,
+      '+3': false,
+      'e-16': true,
+      'E+3.5': false,
+      'E+9': true,
+      'E1': true,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = EXPONENT.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('EXPONENT $element - actual: $actual, expected: $expected');
+      test('EXPONENT case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group(
+      """DOUBLE 	::= 	[+-]? ([0-9]+ '.' [0-9]* EXPONENT | '.' [0-9]+ EXPONENT | [0-9]+ EXPONENT)""",
+      () {
+    Map<String, bool> testStrings = {
+      '+9.8': false,
+      '-36.912': false,
+      '+.5': false,
+      '-.37': false,
+      '-.37e1': true,
+      '-.': false,
+      '+108.': false,
+      '+108.E3': true,
+      '6.02E23': true,
+      '1.6e-10': true,
+      '.390E2': true,
+      '54e3': true,
+      '32E7.2': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = DOUBLE.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('DOUBLE $element - actual: $actual, expected: $expected');
+      test('DOUBLE case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[16] 	NumericLiteral 	::= 	INTEGER | DECIMAL | DOUBLE""", () {
+    Map<String, bool> testStrings = {
+      '0': true,
+      '0.': false,
+      '0.0': true,
+      '.0': true,
+      '.5E10': true,
+      '+000': true,
+      '-.05': true,
+      '9.8': true,
+      '9.8E3.1': false,
+      '': false,
+      '-0.': false,
+      'e26': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = NumericalLiteral.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('NumericalLiteral $element - actual: $actual, expected: $expected');
+      test('NumericalLiteral case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
 }
