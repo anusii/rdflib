@@ -1086,14 +1086,15 @@ main() {
     });
   });
 
-  group("""[14] 	blankNodePropertyList 	::= 	'[' predicateObjectList ']'""", () {
+  group("""[14] 	blankNodePropertyList 	::= 	'[' predicateObjectList ']'""",
+      () {
     Map<String, bool> testStrings = {
       '[a rdf:example, <xyz.com>]': true,
       '[ <2023> _:burg, _:_, x:, "a", <empty>, <whoiswho> ]': true,
       '[ a <www.example.com/alice#me>, [], _:2 ]': true,
       '[  <check#status> :_denied, _:_accepted.sub, hello:me; ;; ;]': true,
       '[abc:time [   ], :whitespaces, "now", (:c1 :c3), 9.8; a rdf:number, owl:vocabulary ; ]':
-      true,
+          true,
       '[a rdf:example, <xyz.com> .]': false,
       '[<2023> _:burg, _:_, x:, "a", <empty>, <whoiswho>, ]': false,
       '[ \na <thing>; \n]': true,
@@ -1105,7 +1106,8 @@ main() {
     testStrings.keys.forEach((element) {
       bool actual = blankNodePropertyList.end().accept(element);
       bool expected = testStrings[element]!;
-      print('blankNodePropertyList $element - actual: $actual, expected: $expected');
+      print(
+          'blankNodePropertyList $element - actual: $actual, expected: $expected');
       test('blankNodePropertyList case $element', () {
         expect(actual, expected);
       });
@@ -1144,6 +1146,35 @@ main() {
       bool expected = testStrings[element]!;
       print('subject $element - actual: $actual, expected: $expected');
       test('subject case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group(
+      """[6] 	triples 	::= 	subject predicateObjectList | blankNodePropertyList predicateObjectList?""",
+      () {
+    Map<String, bool> testStrings = {
+      'rdf:type a rdf:example, <xyz.com>': true,
+      ':Control \n    <2023> _:burg, _:_, x:, "a", <empty>, <whoiswho> ': true,
+      'L10.9a:%b23c a <www.example.com/alice#me>, [], _:2': true,
+      'burg:_do <check#status> :_denied, _:_accepted.sub, hello:me; ;; ;': true,
+      'www: abc:time [   ], :whitespaces, "now", (:c1 :c3), 9.8; a rdf:number, owl:vocabulary ;':
+          true,
+      '<./> a <folder>;': true,
+      '<bob#me> a <person>, <staff>;;;': true,
+      '<www.example.com/alice#me> located: "ACT"^^earth:australia': true,
+      '_:0.a a <unknown>': true,
+      'rdf:type a rdf:example, <xyz.com>, ': false,
+      ':Control \n  <2023> _:burg, _:_, x:, "a", <empty>, <whoiswho> .': false,
+      '<./> a <folder> "directory";': false,
+      '<bob#me> xyz:loves ': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = triples.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('triples $element - actual: $actual, expected: $expected');
+      test('triples case $element', () {
         expect(actual, expected);
       });
     });
