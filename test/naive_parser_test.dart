@@ -1220,4 +1220,46 @@ main() {
       });
     });
   });
+
+  group("""[6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF""", () {
+    Map<String, bool> testStrings = {
+      'Prefix : <>': true,
+      'PREFIX : <>': true,
+      'PREFIX root: </>': true,
+      'PREFIx version5.0: <www.v5.org/>': true,
+      '@PREFIx v5: <www.v5.org/>': false,
+      'Prefix : <> .': false,
+      'PREFIX : <https://xyz.com>>': false,
+      'PREFIX root:dir </>': false,
+      'PREFIX version5.0 <www.v5.org/>': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = sparqlPrefix.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('sparqlPrefix $element - actual: $actual, expected: $expected');
+      test('sparqlPrefix case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
+
+  group("""[5s] 	sparqlBase 	::= 	"BASE" IRIREF""", () {
+    Map<String, bool> testStrings = {
+      'bAse <>': true,
+      'BasE <www.example.com>': true,
+      'Base <./> ': true,
+      'BASE <https://act.org> ': true,
+      'base <> .': false,
+      '@Base <./> ': false,
+      'BASE https://act.org ': false,
+    };
+    testStrings.keys.forEach((element) {
+      bool actual = sparqlBase.end().accept(element);
+      bool expected = testStrings[element]!;
+      print('sparqlBase $element - actual: $actual, expected: $expected');
+      test('sparqlBase case $element', () {
+        expect(actual, expected);
+      });
+    });
+  });
 }
