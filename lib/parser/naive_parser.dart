@@ -229,17 +229,18 @@ Map<String, Parser> genObjCol() {
   final predicateObjectList = undefined();
   final blankNodePropertyList = undefined();
   // [15] 	collection 	::= 	'(' object* ')'
-  collection.set(string('(') & object.star().trim() & string(')'));
+  collection.set(string('(') & object.trim().star() & string(')'));
   // [12] 	object 	::= 	iri | BlankNode | collection | blankNodePropertyList | literal
   object.set(iri | BlankNode | collection | blankNodePropertyList | literal);
   // [7] 	predicateObjectList 	::= 	verb objectList (';' (verb objectList)?)*
   predicateObjectList.set(verb &
       objectList.trim() &
-      (string(';').trim() & (verb & objectList).repeat(0, 1).trim())
+      (string(';').trim() &
+              (verb.trim() & objectList.trim()).repeat(0, 1).trim())
           .star()
           .trim());
   // [8] 	objectList 	::= 	object (',' object)*
-  objectList.set(object & (string(',') & object).star().trim());
+  objectList.set(object & (string(',').trim() & object).star().trim());
   // [14] 	blankNodePropertyList 	::= 	'[' predicateObjectList ']'
   blankNodePropertyList
       .set(string('[') & predicateObjectList.trim() & string(']'));
@@ -266,10 +267,10 @@ final triples = (subject & predicateObjectList.trim()) |
     (blankNodePropertyList & predicateObjectList.repeat(0, 1).trim());
 
 // [6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF
-final sparqlPrefix = string('PREFIX') & PNAME_NS & IRIREF;
+final sparqlPrefix = string('PREFIX') & PNAME_NS.trim() & IRIREF;
 
 // [5s] 	sparqlBase 	::= 	"BASE" IRIREF
-final sparqlBase = string('BASE') & IRIREF;
+final sparqlBase = string('BASE') & IRIREF.trim();
 
 // [5] 	base 	::= 	'@base' IRIREF '.'
 final base = string('@base') & IRIREF.trim() & string('.');
