@@ -23,13 +23,13 @@ class Triple {
   }
 
   @override
-  int get hashCode => '$sub $pre $obj .'.hashCode;
+  int get hashCode => '$sub $pre $obj'.hashCode;
 
   @override
   String toString() {
     if (obj.runtimeType == String) {
-      return '$sub $pre "$obj" .';
+      return 'Triple<sub: ${sub.value}, pre: ${pre.value}, obj: "$obj">';
     }
-    return '$sub $pre $obj .';
+    return 'Triple<sub: ${sub.value}, pre: ${pre.value}, obj: $obj>';
   }
 }
