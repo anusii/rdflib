@@ -616,6 +616,9 @@ class Graph {
     // 2. :abc
     else if (s.startsWith(':')) {
       // it's using @base
+      if (ctx[':'] == null) {
+        throw Exception('Base is not defined yet. (caused by $s)');
+      }
       return URIRef('${ctx[":"]!.value}${s.substring(1)}');
     }
     // 3. abc:efg
@@ -624,6 +627,12 @@ class Graph {
       int firstColonPos = s.indexOf(':');
       String namespace = s.substring(0, firstColonPos + 1); // including ':'
       String localname = s.substring(firstColonPos + 1);
+      // If the namespace is not defined, we can't
+      if (ctx[namespace] == null) {
+        throw Exception(
+            'Namespace ${namespace.substring(0, namespace.length - 1)} is used '
+            'but not defined. (caused by $s)');
+      }
       return URIRef('${ctx[namespace]?.value}$localname');
     }
     // 5. abc@en
