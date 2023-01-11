@@ -1,4 +1,5 @@
 import './term.dart';
+import 'constants.dart';
 
 class Namespace {
   final String ns;
@@ -14,13 +15,12 @@ class Namespace {
   }
 }
 
-const String _rdfAnchor = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-final URIRef _rdf = URIRef.fullUri(_rdfAnchor);
+final URIRef _rdf = URIRef.fullUri(rdfAnchor);
 
 /// RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.
 class RDF extends Namespace {
-  final ns = _rdfAnchor;
-  static final String rdf = _rdfAnchor;
+  final ns = rdfAnchor;
+  static final String rdf = rdfAnchor;
 
   /// http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   static final URIRef nil = _rdf.slash('nil');
@@ -55,13 +55,12 @@ class RDF extends Namespace {
   RDF({ns}) : super(ns: ns);
 }
 
-const String _foafAnchor = 'http://xmlns.com/foaf/0.1/';
-final URIRef _foaf = URIRef.fullUri(_foafAnchor);
+final URIRef _foaf = URIRef.fullUri(foafAnchor);
 
 /// Friend of a Friend (FOAF) RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language.
 class FOAF extends Namespace {
-  final ns = _foafAnchor;
-  static final String foaf = _foafAnchor;
+  final ns = foafAnchor;
+  static final String foaf = foafAnchor;
 
   static final URIRef Person = _foaf.slash('Person');
   static final URIRef nick = _foaf.slash('nick');
@@ -71,13 +70,12 @@ class FOAF extends Namespace {
   FOAF({required super.ns});
 }
 
-const String _xsdAnchor = 'http://www.w3.org/2001/XMLSchema#';
-final URIRef _xsd = URIRef.fullUri(_xsdAnchor);
+final URIRef _xsd = URIRef.fullUri(xsdAnchor);
 
 /// W3C XML Schema Definition Language (XSD) 1.1
 class XSD extends Namespace {
-  final ns = _xsdAnchor;
-  static final String xsd = _xsdAnchor;
+  final ns = xsdAnchor;
+  static final String xsd = xsdAnchor;
 
   /// https://www.w3.org/TR/xmlschema11-2/#<fundamental facets>
   static final URIRef ordered = _xsd.slash('ordered');
@@ -162,13 +160,12 @@ class XSD extends Namespace {
   XSD({required super.ns});
 }
 
-const String _rdfsAnchor = 'http://www.w3.org/2000/01/rdf-schema#';
-final URIRef _rdfs = URIRef.fullUri(_rdfsAnchor);
+final URIRef _rdfs = URIRef.fullUri(rdfsAnchor);
 
 /// RDFS Schema
 class RDFS extends Namespace {
-  final ns = _rdfsAnchor;
-  static final String rdfs = _rdfsAnchor;
+  final ns = rdfsAnchor;
+  static final String rdfs = rdfsAnchor;
 
   RDFS({required super.ns});
 
@@ -180,13 +177,12 @@ class RDFS extends Namespace {
   static final URIRef seeAlso = _rdfs.slash('seeAlso');
 }
 
-const String _owlAnchor = 'http://www.w3.org/2002/07/owl#';
-final URIRef _owl = URIRef.fullUri(_owlAnchor);
+final URIRef _owl = URIRef.fullUri(owlAnchor);
 
 /// OWL vocabulary
 class OWL extends Namespace {
-  final String ns = _owlAnchor;
-  static final String owl = _owlAnchor;
+  final String ns = owlAnchor;
+  static final String owl = owlAnchor;
 
   OWL({required super.ns});
 
@@ -210,10 +206,10 @@ class OWL extends Namespace {
 /// include standard prefixes for namespace checking and shortening for export
 /// to other formats
 final Map<String, String> standardPrefixes = {
-  'xsd': _xsdAnchor,
-  'owl': _owlAnchor,
-  'rdf': _rdfAnchor,
-  'rdfs': _rdfsAnchor,
+  'xsd': xsdAnchor,
+  'owl': owlAnchor,
+  'rdf': rdfAnchor,
+  'rdfs': rdfsAnchor,
 };
 
 final a = RDF.type; // constant a is a shorthand predicate for rdf:type
