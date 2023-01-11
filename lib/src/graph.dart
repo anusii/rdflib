@@ -62,6 +62,13 @@ class Graph {
       var obj = (o.runtimeType == String) ? item(o) : o;
       if (obj.runtimeType == URIRef) {
         _updateCtx(obj, ctx);
+      } else if (obj.runtimeType == Literal) {
+        Literal objLiteral = obj as Literal;
+        if (objLiteral.datatype != null) {
+          _updateCtx(objLiteral.datatype!, ctx);
+        }
+      } else if (obj.runtimeType == String) {
+        _updateCtx(XSD.string, ctx);
       }
       groups[sub]![pre]!.add(obj);
       // update the triples set as well
