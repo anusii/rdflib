@@ -20,19 +20,68 @@ class Graph {
 
   /// add a triple to group using its string form
   ///
-  void addTripleToGroups(String s, String p, String o) {
-    URIRef sub = item(s) as URIRef;
-    if (!groups.containsKey(sub)) {
-      groups[sub] = Map();
+  /// Note:
+  /// 1. Because the triple is a set, no duplicates are allowed.
+  /// 2. If the added triple contains undefined namespace (except for standard
+  /// namespaces such as XSD, OWL, RDF, FOAF, RDFS), it would be ignored.
+  /// When using item(), if the namespace is undefined, then it will cause an
+  ///  exception and the triple will not be added. To avoid this, first use
+  ///  [Graph.addPrefixToCtx] to update the prefixed namespace context, then
+  /// use [Graph.addTripleToGroups]
+  /// 3. If it's a standard namespace, the context set [ctx] will be updated
+  /// automatically by [Graph._updateCtx].
+  ///
+  /// Example:
+  /// ```dart
+  /// Graph g = Graph();
+  ///
+  /// final donna = URIRef('http://example.org/donna');
+  /// g.addTripleToGroups(donna, RDF.type, FOAF.Person);
+  /// g.addTripleToGroups(donna, FOAF.nick, Literal('donna', lang: 'en'));
+  /// g.addTripleToGroups(donna, FOAF.name, Literal('Donna Fales'));
+  /// g.addTripleToGroups(donna, FOAF.mbox, URIRef('mailto:donna@example.org'));
+  ///
+  /// for (Triple t in g.triples) {
+  ///   print(t);
+  /// }
+  /// ```
+  void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
+    // TODO: subject as a BlankNode
+    try {
+      URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
+      _updateCtx(sub, ctx);
+      if (!groups.containsKey(sub)) {
+        groups[sub] = Map();
+      }
+      URIRef pre = (p.runtimeType == URIRef) ? p : item(p) as URIRef;
+      _updateCtx(pre, ctx);
+      if (!groups[sub]!.containsKey(pre)) {
+        groups[sub]![pre] = Set();
+      }
+      // var obj = (o.runtimeType == URIRef) ? o : item(o);
+      var obj = (o.runtimeType == String) ? item(o) : o;
+      if (obj.runtimeType == URIRef) {
+        _updateCtx(obj, ctx);
+      }
+      groups[sub]![pre]!.add(obj);
+      // update the triples set as well
+      triples.add(Triple(sub: sub, pre: pre, obj: obj));
+    } catch (e) {
+      print('Error occurred when adding triple ($s, $p, $o), '
+          'groups not updated. Error detail: $e');
     }
-    URIRef pre = item(p) as URIRef;
-    if (!groups[sub]!.containsKey(pre)) {
-      groups[sub]![pre] = Set();
+  }
+
+  /// Adds a prefix to context using its string forms
+  ///
+  /// Overwrites the previous prefix name if it already exists in context
+  void addPrefixToCtx(String prefixName, URIRef uriRef) {
+    // Append ':' in the end for consistency and serialization as all keys in
+    // [ctx] ends with ':' (except for 'BASE' key).
+    if (!prefixName.endsWith(':')) {
+      prefixName += ':';
     }
-    var obj = item(o);
-    groups[sub]![pre]!.add(obj);
-    // update the triples set as well
-    triples.add(Triple(sub: sub, pre: pre, obj: obj));
+    ctx[prefixName] = uriRef;
   }
 
   /// add triple to the set, also update the graph to include the triple.
