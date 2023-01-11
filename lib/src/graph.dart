@@ -174,6 +174,20 @@ class Graph {
     }
   }
 
+  /// Updates the context with the new URIRef instance for standard prefixes.
+  ///
+  /// Note:
+  /// It's only useful for adding standard prefixes (see namespaces.dart). Use
+  /// [Graph.addPrefixToCtx] for explicit updating [Graph.ctx].
+  void _updateCtx(URIRef u, Map ctx) {
+    for (String sp in standardPrefixes.keys) {
+      if (u.inNamespace(Namespace(ns: standardPrefixes[sp]!)) &&
+          !ctx.containsKey('$sp:')) {
+        ctx['$sp:'] = URIRef(standardPrefixes[sp]!);
+      }
+    }
+  }
+
   /// bind a namespace to a prefix for readability
   ///
   /// throws an [Exception] if trying to bind the same name twice
