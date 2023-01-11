@@ -195,15 +195,23 @@ class Graph {
     }
   }
 
-  /// bind a namespace to a prefix for readability
+  /// Binds a namespace to a prefix for better readability when serializing
   ///
-  /// throws an [Exception] if trying to bind the same name twice
-  /// [ns] uses its own property to initialize: eg, FOAF(ns: FOAF.foaf)
+  /// Throws an [Exception] if trying to bind the name that already exists.
+  /// Example:
+  /// ```dart
+  /// Graph g = Graph();
+  /// g.bind('example', Namespace('http://example.org/');
+  /// ```
   void bind(String name, Namespace ns) {
-    if (!contexts.containsKey(name)) {
-      contexts[name] = ns.ns;
+    // For consistency, the key in [Graph.ctx] ends with ':'
+    if (!name.endsWith(':')) {
+      name += ':';
+    }
+    if (!ctx.containsKey(name)) {
+      ctx[name] = ns.uriRef!;
     } else {
-      throw Exception("$name already exists!");
+      throw Exception("$name already exists in prefixed namespaces!");
     }
   }
 
