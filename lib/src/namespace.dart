@@ -206,6 +206,7 @@ class OWL extends Namespace {
 /// include standard prefixes for namespace checking and shortening for export
 /// to other formats
 final Map<String, String> standardPrefixes = {
+  'foaf': foafAnchor,
   'xsd': xsdAnchor,
   'owl': owlAnchor,
   'rdf': rdfAnchor,
