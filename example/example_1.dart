@@ -1,6 +1,8 @@
 import 'package:rdflib/rdflib.dart';
 
 main() {
+  // the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
+
   // Initialize a Graph
   Graph g = Graph();
 
@@ -23,7 +25,7 @@ main() {
   g.addTripleToGroups(ed, FOAF.nick, Literal('ed', datatype: XSD.string));
   g.addTripleToGroups(ed, FOAF.name, Literal('Edward Scissorhands'));
   g.addTripleToGroups(
-      ed, FOAF.mbox, Literal('mailto:donna@example.org', datatype: XSD.anyURI));
+      ed, FOAF.mbox, Literal('mailto:ed@example.org', datatype: XSD.anyURI));
 
   // Bind the long namespace to shorter string for better readability
   g.bind('example', Namespace(ns: 'http://example.org/'));
@@ -37,5 +39,13 @@ main() {
   print('-------\nTriples updated in the graph:');
   for (Triple t in g.triples) {
     print(t);
+  }
+
+  // Print out each person's mailbox value
+  print('-------\nMailboxes:');
+  for (var sub in g.subjects(a, FOAF.Person)) {
+    for (var mbox in g.objects(sub, FOAF.mbox)) {
+      print('${sub}\'s mailbox: ${mbox.value}');
+    }
   }
 }

@@ -1,6 +1,0 @@
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-rdf:subject rdf:type "encrypted"^^xsd:string ;
-    xsd:token "98d234db7e91f5ba026a25d0d6f17bc5ee0a347ea2216b0c9de06d43536d49f4"^^xsd:string ;
-    rdf:value "aPllkxh/K5UKoT8RvpqkEjMyVVNgj0R3nsQKRD534dL1eP/h7jR+Kqt/ytV5Erq5pU6r8Ybhxvq13PRqKT/iTQYGl4UhvrS08krrbiTQbq4Je4ELY7i6T0OpxLVxFAvCWwBmXLOvEhGR3lQb6XbOrllBTLm78ccfXhRbp6ufbk1vbRR4XJNSoJJpYNw2muE5tAPVfKePktVnSL/ap/2p9jWgfa+w4caRaWb8t1RTkfoPU/yV+/knuz0BdoITDmNOpjfHRKXTtZMQkEZVDWXwyXuFAEsZ7EDQ7bk48TOvCXeJTAYPWZjyu/nhie5hf3GZ8Dc0JDc8gyQIfmZhQyTnxaMVq+6/qdnaIRDcJyjVZ3Zsnu9HDi1CgFpIVYUqxnNRm5OUDEsaFQkUmO5XCjQ40PZN4O7FNDNSOWFMTNdNQKPxIVL0SUjgxr4iJa5jQaPsug6V1/fai4Ts6aKcUlne2muF/P/RopIJRn0le0piNX7eDz0hnyi70uDldxejRnm/CNBXfI8Xt0ywxRan1/HGdMhPhnM2wC4xubNBbpZKkMEtVF6siLwJV1g43HXP558L3XJio8xZXHdJffXrl84FDn2mQgBVRj6ynyHgdBeZh83yz80FlHQO9hFw2OMVwX9SHonpRiXPdwstrJe/9tXSU3PFWzZUzS8IxY1kF01jM9N8ktSsTqgTMV+wb0Pf+kzk"^^xsd:string .
