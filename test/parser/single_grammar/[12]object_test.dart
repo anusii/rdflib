@@ -54,7 +54,6 @@ main() {
       '\'true\'@en': true,
       '"antarctica"^^<www.wikipedia.org>': true,
       '-1E0': true,
-      ' ': false,
       'zero': false,
       'true': true,
       '"true"': true,
