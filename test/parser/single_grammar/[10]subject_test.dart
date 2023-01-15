@@ -29,6 +29,7 @@ main() {
       '(<www.example.com/alice#me>)': true,
       'a': false,
       '"item"@en': false,
+      '<#i>': true,
     };
     testStrings.keys.forEach((element) {
       bool actual = subject.end().accept(element);

@@ -1,3 +1,4 @@
+import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 import '../../../lib/parser/naive_parser.dart';
@@ -10,6 +11,8 @@ main() {
       '_': true,
       ':': true,
       '7': true,
+      'i': true,
+      'ij': true,
       '%a9': true,
       '%': false,
       '\$': false,
@@ -25,4 +28,5 @@ main() {
       });
     });
   });
+  trace(PN_LOCAL).parse('ij');
 }
