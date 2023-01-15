@@ -12,12 +12,10 @@
 - Create a graph to store triples without duplicates
 - Find triples based on criteria
 - Export graph to turtle `ttl` format (default)
-    - Export to encrypted turtle `ttl` file with `AES` encryption
 - Bind long namespace with customized shortened name for readability
 - Include [reserved vocabulary](https://www.w3.org/TR/owl-syntax/#IRIs) of OWL 2
-- Parse local turtle `ttl` file and store triples in the graph in memory
-    - Parse encrypted turtle `ttl` file which is encrypted using `AES`
-    - Parse long text string stored in memory
+- Parse [turtle format](https://www.w3.org/TR/turtle/#sec-grammar-grammar) string effectively and
+  store triples in the graph in memory
 
 ## Getting started
 
@@ -31,7 +29,7 @@ dart create test_rdflib
 cd test_rdflib
 # install rdflib as the dependency with dart pub add
 dart pub add rdflib
-# copy the following code to /bin/test_rdflib.dart
+# copy the following code examples to ~/bin/test_rdflib.dart
 # run the file with dart
 dart run
 ```
@@ -49,223 +47,188 @@ The following code snippet shows how to:
 2. Create and store `triple`s with different data types;
 3. Find entities based on customized criteria;
 4. Bind shorted string to long `namespace`;
-5. Export graph data to turtle file;
 
 ```dart
-import 'dart:io';
 import 'package:rdflib/rdflib.dart';
 
-main() async {
-  /// the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
+main() {
+  // the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
+
+  // Initialize a Graph
   Graph g = Graph();
 
-  URIRef example = URIRef.fullUri('http://example.org');
+  // Create a new URIRef instance for a person
+  final donna = URIRef('http://example.org/donna');
 
-  // subject and predicate should be a valid URIRef instance
-  URIRef donna = example.slash('donna');
+  // Add triples to the Graph using [Graph.addTriplesToGroups] method
+  g.addTripleToGroups(donna, RDF.type, FOAF.Person);
+  g.addTripleToGroups(donna, FOAF.nick, Literal('donna', lang: 'en'));
+  g.addTripleToGroups(donna, FOAF.name, Literal('Donna Fales'));
+  g.addTripleToGroups(donna, FOAF.mbox, URIRef('mailto:donna@example.org'));
+  // Adding a duplicate triple should be ignored
+  g.addTripleToGroups(donna, FOAF.mbox, URIRef('mailto:donna@example.org'));
 
-  g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
+  // Create another URIRef instance
+  final ed = URIRef('http://example.org/edward');
 
-  // add duplicated record
-  g.add(Triple(sub: donna, pre: RDF.type, obj: FOAF.Person));
-  g.add(Triple(sub: donna, pre: FOAF.nick, obj: Literal('donna', lang: 'en')));
-  g.add(Triple(sub: donna, pre: FOAF.name, obj: Literal('Donna Fales')));
+  // Add triples to the Graph
+  g.addTripleToGroups(ed, RDF.type, FOAF.Person);
+  g.addTripleToGroups(ed, FOAF.nick, Literal('ed', datatype: XSD.string));
+  g.addTripleToGroups(ed, FOAF.name, Literal('Edward Scissorhands'));
+  g.addTripleToGroups(
+      ed, FOAF.mbox, Literal('mailto:ed@example.org', datatype: XSD.anyURI));
 
-  // add duplicated record
-  g.add(Triple(sub: donna, pre: FOAF.name, obj: Literal('Donna Fales')));
-  g.add(Triple(
-      sub: donna,
-      pre: FOAF.mbox,
-      obj: URIRef.fullUri('mailto:donna@example.org')));
+  // Bind the long namespace to shorter string for better readability
+  g.bind('example', Namespace(ns: 'http://example.org/'));
 
-  // add another in the graph
-  URIRef ed = example.slash('edward');
-  g.add(Triple(sub: ed, pre: RDF.type, obj: FOAF.Person));
-  g.add(Triple(
-      sub: ed, pre: FOAF.nick, obj: Literal('ed', datatype: XSD.string)));
-  g.add(Triple(sub: ed, pre: FOAF.name, obj: 'Edward Scissorhands'));
-  g.add(Triple(
-      sub: ed,
-      pre: FOAF.mbox,
-      obj: Literal('e.scissorhands@example.org', datatype: XSD.anyURI)));
+  // Serialize the Graph to the standard turtle format, and the result is stored
+  // in [Graph.serializedString]
+  g.serialize(format: 'ttl', abbr: 'short');
+  print('-------\nSerialized content:\n${g.serializedString}');
 
-  // TEST triples should print correctly
-  print('-' * 30);
+  // Print out every added triple in the graph by iterating through the set
+  print('-------\nTriples updated in the graph:');
   for (Triple t in g.triples) {
-    // duplicated records will not be added and printed out
     print(t);
   }
 
-  print('-' * 30);
-
-  // TEST correct subjects/objects should print out
-  for (URIRef s in g.subjects(RDF.type, FOAF.Person)) {
-    for (var o in g.objects(s, FOAF.mbox)) {
-      // should print out URIRef(mailto:donna@example.org) and
-      // Literal(e.scissorhands@example.org, datatype: URIRef(http://www.w3.org/2001/XMLSchema#anyURI))
-      print(o);
+  // Print out each person's mailbox value
+  print('-------\nMailboxes:');
+  for (var sub in g.subjects(a, FOAF.Person)) {
+    for (var mbox in g.objects(sub, FOAF.mbox)) {
+      print('${sub}\'s mailbox: ${mbox.value}');
     }
   }
-
-  // bind 'foaf' to FOAF for easy readout
-  g.bind('foaf', FOAF(ns: FOAF.foaf));
-
-  /// uncomment the following line to test binding a customized namespace
-  /// g.bind('example', Namespace(ns: 'http://example.org/'));
-
-  // export graph to turtle format, create directory if it doesn't exist
-  String currentPath = Directory.current.path;
-  String examplePath = '$currentPath/example';
-  if (!await Directory(examplePath).exists()) {
-    await Directory(examplePath).create(recursive: true);
-  }
-  g.serialize(format: 'ttl', dest: '$examplePath/ex1.ttl');
-  // can also export to an encrypted file (will add .enc before .ttl in file name)
-  g.serialize(
-      format: 'ttl',
-      dest: '$examplePath/ex1.ttl',
-      encrypt: 'AES',
-      passphrase: 'helloworld!');
 }
 ```
 
 ### 2. [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
 
 ```dart
-import '../lib/rdflib.dart';
+import 'package:rdflib/rdflib.dart';
 
 main() {
+  // Initialize a Graph
   Graph g = Graph();
 
+  // Define namespaces for later use
   Namespace shData = Namespace(ns: 'http://silo.net.au/data/SOLID-Health#');
   Namespace shOnto =
   Namespace(ns: 'http://sii.cecs.anu.edu.au/onto/SOLID-Health#');
 
+  // Create a subject
   URIRef newAssessTab = shData.withAttr('AssessmentTab-p43623-20220727T120913');
-  g.addNamedIndividual(newAssessTab);
 
-  // Literal string
-  g.add(Triple(
-      sub: newAssessTab, pre: RDF.type, obj: shOnto.withAttr('AssessmentTab')));
+  // Add the entity to the Graph, equivalent to
+  // g.addTripleToGroups(newAssessTab, rdf.typ, owl:NamedIndividual)
+  g.addNamedIndividualToGroups(newAssessTab);
 
-  // Literal string
-  g.add(Triple(
-      sub: newAssessTab,
-      pre: shOnto.withAttr('asthmaControl'),
-      obj: Literal('Poor Control')));
+  // Add using a Triple type
+  Triple t1 = Triple(
+      sub: newAssessTab, pre: RDF.type, obj: shOnto.withAttr('AssessmentTab'));
+  g.addTripleToGroups(t1.sub, t1.pre, t1.obj);
 
-  // Literal integer
-  g.add(Triple(
-      sub: newAssessTab,
-      pre: shOnto.withAttr('diastolicBloodPressure'),
-      obj: Literal('75')));
-
-  // Literal float/double
-  g.add(Triple(
-      sub: newAssessTab,
-      pre: shOnto.withAttr('systolicBloodPressure'),
-      obj: Literal('125.0')));
+  // Add directly using sub, pre, and obj
+  g.addTripleToGroups(
+      newAssessTab, shData.withAttr('asthmaControl'), 'Poor Control');
+  g.addTripleToGroups(
+      newAssessTab, shOnto.withAttr('diastolicBloodPressure'), '75');
+  g.addTripleToGroups(
+      newAssessTab, shOnto.withAttr('systolicBloodPressure'), Literal('125.0'));
 
   URIRef newSeeAndDoTab = shData.withAttr('SeeAndDoTab-p43623-20220727T120913');
   URIRef newSeeAndDoOption =
   shData.withAttr('SeeAndDoOption-p43623-20220727T120913-fitnessDrive');
 
-  g.addNamedIndividual(newSeeAndDoTab);
-  g.addNamedIndividual(newSeeAndDoOption);
-  // link two triple individuals
+  g.addNamedIndividualToGroups(newSeeAndDoTab);
+  g.addNamedIndividualToGroups(newSeeAndDoOption);
+
+  // Link two triple individuals by a relation
   g.addObjectProperty(
       newSeeAndDoTab, shOnto.withAttr('hasSeeAndDoOption'), newSeeAndDoOption);
 
-  /// binding for readability
+  // Bind to shorter abbreviations for readability
   g.bind('sh-data', shData);
   g.bind('sh-onto', shOnto);
 
-  g.serialize(dest: 'example/ex2.ttl');
+  // Serialize the graph for output
+  g.serialize(format: 'ttl', abbr: 'short');
+  print(g.serializedString);
 }
+
 ```
 
 ### 3. Parsing local turtle file
 
 ```dart
+import 'dart:io';
+
 import 'package:rdflib/rdflib.dart';
 
 main() async {
-  String filePath = 'example/ex1.ttl';
+  String filePath = 'example/sample_ttl_1.ttl';
+  // Read file content to a local String
+  String fileContents = await File(filePath).readAsStringSync();
+  print('-------Original file-------\n$fileContents');
+
   // create a graph to read turtle file and store info
   Graph g = Graph();
-  // wait for it to complete parsing
-  await g.parse(filePath);
-  // full format of triples (will use shorthand in serialization/export)
+
+  // Parse with the new method [Graph.parseTurtle] instead of [Graph.parse] (deprecated)
+  g.parseTurtle(fileContents);
+
+  // Serialize the Graph for output
+  g.serialize(format: 'ttl', abbr: 'short');
+  print('-------Serialized String--------\n${g.serializedString}');
+
+  // Print out full format of triples (will use shorthand in serialization/export)
+  print('--------All triples in the graph-------');
   for (Triple t in g.triples) {
     print(t);
   }
-  // export it to a new file (should be equivalent to the original one)
-  g.serialize(format: 'ttl', dest: 'example/ex3.ttl');
 }
+
 ```
 
-#### 3.1 Parsing encrypted local turtle file
+### 4. Updating ACL file
 
 ```dart
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
 import 'package:rdflib/rdflib.dart';
 
 main() async {
-  /// create a new graph to hold the data
+  // https://github.com/anusii/rdflib/blob/main/example/sample_acl_1.acl
+  // https://raw.githubusercontent.com/anusii/rdflib/main/example/sample_acl_1.acl
+  var url = Uri.https('raw.githubusercontent.com',
+      'anusii/rdflib/main/example/sample_acl_1.acl');
+  // Get the contents of the acl file
+  var res = await http.get(url);
+  String aclContents = res.body;
+  print('-------Original ACL Contents-------\n${res.body}\n');
+
+  // Initialize a Graph to store all the info
   Graph g = Graph();
+  // Parse the contents and update the triples
+  g.parseTurtle(aclContents);
+  g.serialize(format: 'ttl', abbr: 'short');
+  print('-------Serialized ACL Contents------\n${g.serializedString}\n');
 
-  /// need to use await keyword
-  await g.parseEncrypted('example/ex1.enc.ttl', passphrase: 'helloworld!');
-  print('Contexts:\n${g.contexts}');
-  print('Data:\n${g.triples}');
-
-  /// serialize it to specified location, should be equivalent to original file
-  g.serialize(format: 'ttl', dest: 'example/ex1.dec.ttl');
+  // Add 'zack' to the ACL file
+  g.addTripleToGroups('<#zack>', a, 'acl:Authorization');
+  // Specify which document/fold
+  g.addTripleToGroups('<#zack>', 'acl:accessTo', '<./README>');
+  // Specify the target by its webID card
+  g.addTripleToGroups('<#zack>', 'acl:agent',
+      '<https://solid.dev.yarrabah.net/zack-collins/profile/card#me>');
+  // Grant him access to Read only
+  g.addTripleToGroups('<#zack>', 'acl:mode', 'acl:Read');
+  // Need to serialize before exporting
+  g.serialize(format: 'ttl', abbr: 'short');
+  print('-------Serialized ACL Contents (New)------\n${g.serializedString}\n');
 }
-```
 
-#### 3.2 Parsing long text string
-
-```dart
-import 'package:rdflib/rdflib.dart';
-
-main() {
-  // sample whole text file
-  String text = """
-#--rdflib--
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-<https://solid.silo.net.au/charlie_bruegel> rdf:type owl:NamedIndividual ;
-    <http://xmlns.com/foaf/0.1/name> "Charlie Bruegel"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#bmiM> "0,3,2,6"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#bmiF> "1,10,2,6"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#bloodPressureM> "11,0,0,0"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#bloodPressureF> "19,0,0,0"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#cholesterolLevelM> "8,1,2"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#cholesterolLevelF> "11,5,3"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#smoking0> "26"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#smoking1> "4"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#bloodGlucoseReal> "8.1,8.0,7.9,7.7,7.6,7.8,7.3,7.1,6.9,6.7,6.3,6.6,6.4"^^xsd:string ;
-    <http://silo.net.au/predicates/analytic#BMIList> "33,30,27,25,24"^^xsd:string .
-
-  """;
-
-  // create a graph to read turtle file and store info
-  Graph g = Graph();
-  g.parseText(text);
-
-  // full format of triples (will use shorthand in serialization/export)
-  for (Triple t in g.triples) {
-    print(t);
-  }
-
-  // verify contexts
-  print('Contexts: ${g.contexts}');
-
-  // export it to a new file (should be equivalent to the original one)
-  g.serialize(format: 'ttl', dest: 'example/ex_full_text.ttl');
-}
 ```
 
 ## Additional information
@@ -281,4 +244,6 @@ Make a pull request on our GitHub [repo](https://github.com/anusii/rdfgraph)!
 
 ## Acknowledgement
 
-This `rdflib` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
+- This `rdflib` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
+- The parser is written with
+  package [dart-petitparser](https://github.com/petitparser/dart-petitparser)
