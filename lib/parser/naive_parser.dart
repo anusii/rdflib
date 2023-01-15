@@ -114,8 +114,7 @@ final PLX = PERCENT | PN_LOCAL_ESC;
 // [168s] 	PN_LOCAL 	::= 	(PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
 // should not add trim() here as the local string should not contain any whitepaces
 final PN_LOCAL = (PN_CHARS_U | string(':') | pattern('0-9') | PLX) &
-    ((PN_CHARS | pattern(':.') | PLX)
-                .starGreedy(PN_CHARS | string(':') | PLX) &
+    ((PN_CHARS | pattern(':.') | PLX).starGreedy(PN_CHARS | string(':') | PLX) &
             (PN_CHARS | string(':') | PLX))
         .repeat(0, 1);
 
