@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
-import 'package:encrypt/encrypt.dart';
-import 'package:crypto/crypto.dart';
-
 import './namespace.dart';
 import './term.dart';
 import './triple.dart';
@@ -11,14 +8,31 @@ import './constants.dart';
 import '../parser/grammar_parser.dart';
 
 class Graph {
+  /// The set to store different groups of triples
+  @Deprecated('Use [Graph.groups] instead')
   Map<URIRef, Set<Triple>> graphs = {};
-  Map<String, String> contexts = {};
-  Map<URIRef, Map<URIRef, Set>> groups = {};
-  Map<String, URIRef> ctx = {};
-  Set triples = {};
-  String serializedString = ''; // for storing serialized string after parsing
 
-  /// add a triple to group using its string form
+  /// The set to store prefixed namespaces
+  @Deprecated('Use [Graph.ctx] instead')
+  Map<String, String> contexts = {};
+
+  /// The set to store different groups of triples in the form of {sub1: {pre1: {obj1}, pre2, {obj2, obj2_1}}, sub2: {pre3: {obj3, obj3_1}, ...}, ...}
+  // TODO: turtle subject as a BlankNode as subjects can be {iri, BlankNode, collection}, and iri can be {IRIREF, PrefixedName}, the current implementation only deals with iri (implemented as URIRef) as subject.
+  Map<URIRef, Map<URIRef, Set>> groups = {};
+
+  /// The set to store all prefixed namespaces
+  Map<String, URIRef> ctx = {};
+
+  /// The set to store all triples in the graph
+  Set triples = {};
+
+  /// The string for storing serialized string after parsing
+  String serializedString = '';
+
+  /// The grammar parser to extract file content to a list
+  final parser = EvaluatorDefinition().build();
+
+  /// Adds a triple to group using its string forms
   ///
   /// Note:
   /// 1. Because the triple is a set, no duplicates are allowed.
@@ -30,6 +44,9 @@ class Graph {
   /// use [Graph.addTripleToGroups]
   /// 3. If it's a standard namespace, the context set [ctx] will be updated
   /// automatically by [Graph._updateCtx].
+  /// 4. [s], [p], [o] can be valid strings as subject, predicate, ar object,
+  /// OR they can use the URIRef or other valid forms (e.g. object can be a
+  /// Literal.
   ///
   /// Example:
   /// ```dart
@@ -94,6 +111,8 @@ class Graph {
   /// add triple to the set, also update the graph to include the triple.
   ///
   /// using a triples set can avoid duplicated records
+  @Deprecated(
+      'Use [Graph.addTripleToGroups] and [Graph.addPrefixToCtx] instead')
   void add(Triple triple) {
     triples.add(triple);
 
@@ -160,7 +179,7 @@ class Graph {
     return true;
   }
 
-  /// check if a named individual already exists in the graph
+  /// Checks if a named individual already exists in the graph
   bool _namedIndividualExists(URIRef sub) {
     for (Triple t in triples) {
       if (t.sub == sub) {
@@ -236,9 +255,7 @@ class Graph {
     }
   }
 
-  /// find the subjects which have a certain predicate and object
-  ///
-  /// returns a set
+  /// Finds all subjects which have a certain predicate and object
   Set<URIRef> subjects(URIRef pre, dynamic obj) {
     Set<URIRef> subs = {};
     for (Triple t in triples) {
@@ -249,9 +266,7 @@ class Graph {
     return subs;
   }
 
-  /// find the objects which have a certain subject and predicate
-  ///
-  /// returns a set
+  /// Finds all objects which have a certain subject and predicate
   Set objects(URIRef sub, URIRef pre) {
     Set objs = {};
     for (Triple t in triples) {
@@ -262,104 +277,7 @@ class Graph {
     return objs;
   }
 
-  /// parse encrypted file (local) and update the graph
-  ///
-  /// throws [Exception] if file does not end with .enc.ttl (default)
-  /// or no password is provided
-  /// or decryption is not AES (default)
-  parseEncrypted(String filePath,
-      {String decrypt = 'AES', String? passphrase}) async {
-    if (!filePath.endsWith('.enc.ttl') || !await File(filePath).exists()) {
-      throw Exception('File is not correct');
-    } else if (passphrase == null) {
-      throw Exception('No password is provided');
-    } else if (decrypt != 'AES') {
-      throw Exception('$decrypt is not supported');
-    } else {
-      final hashedKey = sha256.convert(utf8.encode(passphrase)).toString();
-
-      /// read the encrypted file to extract the hashed key and encrypted data
-      final file = File(filePath);
-      Stream<String> lines =
-          file.openRead().transform(utf8.decoder).transform(LineSplitter());
-
-      /// create a new graph for holding the encrypted triples
-      Graph encrytedGraph = Graph();
-      try {
-        Map<String, dynamic> encryptedConfig = {
-          'prefix': false,
-          'sub': URIRef('http://sub.encryt.pl'),
-          'pre': URIRef('http://pre.ecrypt.pl')
-        };
-        await for (var line in lines) {
-          line = line.trim();
-          encryptedConfig = encrytedGraph._parseLine(line, encryptedConfig);
-        }
-      } catch (e) {
-        print('Error in parsing encrypted file $filePath');
-      }
-
-      /// placeholder for the default format of triples in the encrypted file
-      /// ... prefixes ...
-      /// <RDF.subject> <RDF.type> <Literal('encrypted')> ;
-      ///               <XSD.token> <Literal of hashed key> ;
-      ///               <RDF.value> <Literal of encrypted data in base64> .
-      if (!encrytedGraph.graphs.keys.contains(RDF.subject)) {
-        throw Exception('Invalid content');
-      } else {
-        /// get the corresponding object(s)
-        var objs = encrytedGraph.objects(RDF.subject, XSD.token);
-        if (objs.length == 0) {
-          throw Exception('No hashed key is found');
-        } else if (objs.length > 1) {
-          throw Exception('Too many hashed keys found');
-        } else {
-          Literal obj = objs.first as Literal;
-          String originalHashedKey = obj.value;
-          if (hashedKey != originalHashedKey) {
-            throw Exception('Keys don\'t match');
-          } else {
-            /// decryption
-            String encryptedContent =
-                (encrytedGraph.objects(RDF.subject, RDF.value).first as Literal)
-                    .value;
-
-            final iv = IV.fromLength(16);
-
-            /// only if verification succeeds, decoding proceeds using sha512
-            /// use sha512 first 32 bytes as the key
-            final theKey = sha512
-                .convert(utf8.encode(passphrase))
-                .toString()
-                .substring(0, 32);
-
-            /// corresponds with the same process from encryption
-            final encrypter = Encrypter(AES(Key.fromUtf8(theKey)));
-
-            /// decrypt base64 string
-            final decrypted = encrypter
-                .decrypt(Encrypted.fromBase64(encryptedContent), iv: iv);
-
-            List<String> decryptedLines = decrypted.split('\n');
-
-            Map<String, dynamic> config = {
-              'prefix': false,
-              'sub': URIRef('http://sub.place.pl'),
-              'pre': URIRef('http://pre.place.pl')
-            };
-
-            /// read it line by line as usual to update graph
-            for (var line in decryptedLines) {
-              line = line.trim();
-              config = _parseLine(line, config);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /// parse file and update graph accordingly
+  /// Parse file and update graph accordingly
   parse(String filePath) async {
     final file = File(filePath);
     Stream<String> lines =
@@ -623,15 +541,10 @@ class Graph {
     }
   }
 
-  /// parse turtle file using grammar rules
-  ///
-  ///
+  /// Parses a valid turtle file read into a string [fileContent]
   void parseTurtle(String fileContent) {
-    // use grammar parser to extract file content to the list
-    final evaluatorDef = EvaluatorDefinition();
-    final evaluatorParser = evaluatorDef.build();
     final String content = _removeComments(fileContent);
-    List parsedList = evaluatorParser.parse(content).value;
+    List parsedList = parser.parse(content).value;
     for (List tripleList in parsedList) {
       _saveToContext(tripleList);
     }
@@ -683,7 +596,16 @@ class Graph {
     }
   }
 
-  /// convert string to corresponding URIRef, or Literal
+  /// Converts a string to its corresponding URIRef, or Literal form.
+  ///
+  /// Examples:
+  /// Case 0: 'a' -> RDF.type
+  /// Case 1: '<content>' -> URIRef('<content>')
+  /// Case 2: :abc -> URIRef(base+abc)
+  /// Case 3: abc:efg -> Use prefix abc for a full URIRef
+  /// Case 4: abc^^xsd:string -> Literal('abc', datatype:xsd:string)
+  /// Case 5: abc@en -> Literal('abc', lang:'en')
+  /// Case 6: abc -> Literal('abc')
   item(String s) {
     s = s.trim();
     // 0. a is short for rdf:type
@@ -699,8 +621,14 @@ class Graph {
         return URIRef(uri);
       } else {
         if (ctx.containsKey(':')) {
-          // if context has base, then stitch
-          return URIRef('${ctx[':']!.value}${uri}');
+          // FIXME: if context has base, do we need to stitch them?
+          // Examples:
+          // 1. <> -> URIRef('')
+          // 2. <./> -> URIRef('./')
+          // 3. <bob#me> -> e.g., URIRef('http://example.org/bob#me')
+          //                or just URIRef('bob#m3') [current implementation]?
+          return URIRef(uri);
+          // return URIRef('${ctx[':']!.value}${uri}');
         } else {
           return URIRef(uri); // or it's just a string within <>
         }
@@ -762,22 +690,7 @@ class Graph {
   ///                file already exists
   ///         [encrypt] now only supports AES encryption
   ///         [passphrase] user specified key/password
-  void serialize(
-      {String format = 'ttl',
-      String? dest,
-      String? encrypt,
-      String? passphrase,
-      String? abbr}) {
-    /// encrypt and passphrase should both exist or not exist
-    /// TODO: passphrase strength checker
-    if (encrypt != null && (passphrase == null || passphrase.trim() == '')) {
-      throw Exception('No key is provided');
-    } else if (encrypt != null && encrypt != 'AES') {
-      throw Exception('$encrypt not supported');
-    } else if (encrypt == null && passphrase != null) {
-      throw Exception('No encryption is provided');
-    }
-
+  void serialize({String format = 'ttl', String? dest, String? abbr}) {
     String indent = ' ' * 4;
 
     // new abbr option to work with new method parseTurtle
@@ -795,39 +708,6 @@ class Graph {
       _writePrefixes(output);
       // 2. read and write every graph
       _writeGraphs(output, indent);
-
-      var file;
-
-      // 3. deal with encryption
-      if (encrypt != null) {
-        /// 3.0 calculate hashed key of passphrase for quick verification
-        final hashedKey = sha256.convert(utf8.encode(passphrase!)).toString();
-
-        /// 3.1 key to be used in encryption
-        final theKey =
-            sha512.convert(utf8.encode(passphrase)).toString().substring(0, 32);
-
-        /// currently only support mode AES SIC
-        file = dest.endsWith('.ttl')
-            ? File(dest.substring(0, dest.indexOf('.ttl')) + '.enc.ttl')
-            : File(dest + '.enc.ttl');
-
-        /// 3.1 encrypt whole data first
-        // final key = Key.fromUtf8(passphrase!);
-        final key = Key.fromUtf8(theKey);
-        final iv = IV.fromLength(16);
-        final encrypter = Encrypter(AES(key));
-
-        /// keep it shorter using base64
-        final encrypted = encrypter.encrypt(output.toString(), iv: iv).base64;
-
-        /// 3.2 write to file with encrypted data
-        _exportToEncryptFile(file, encrypted, hashedKey);
-      } else {
-        file = File(dest.endsWith('.ttl') ? dest : dest + '.ttl');
-        // 4. write output to file location
-        _exportToFile(file, output);
-      }
     }
   }
 
