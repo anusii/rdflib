@@ -21,7 +21,8 @@ main() {
       ':Control \n  <2023> _:burg, _:_, x:, "a", <empty>, <whoiswho> .': false,
       '<./> a <folder> "directory";': false,
       '<bob#me> xyz:loves ': false,
-      'card:ij    rdfs:seeAlso <https://timbl.com/timbl/Public/friends.ttl>': true,
+      'card:ij    rdfs:seeAlso <https://timbl.com/timbl/Public/friends.ttl>':
+          true,
       'c:i r:s <>': true,
       '''<#i> cert:key  [ a cert:RSAPublicKey ; ] ''': true,
       '''<#i> cert:key  [ 
