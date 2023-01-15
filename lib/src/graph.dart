@@ -119,9 +119,28 @@ class Graph {
     // print('Contexts now: $contexts');
   }
 
+  /// add named individual to the graph: <subject> rdf:type owl:NamedIndividual
+  @Deprecated('Use [Graph.addNamedIndividualToGroups] instead')
+  bool addNamedIndividual(URIRef sub) {
+    /// check if the new individual already exists in the graph
+    /// if it's already there, can't add it and return false
+    if (_namedIndividualExists(sub)) {
+      return false;
+    }
+    Triple newNamedIndividual = Triple(
+        sub: sub,
+        pre: RDF.type,
+        // both ways work, but OWL.NamedIndividual is more succinct
+        // obj: Literal('', datatype: OWL.NamedIndividual));
+        obj: OWL.NamedIndividual);
+    // call add method to update contexts instead of just adding them to triples
+    add(newNamedIndividual);
+    return true;
+  }
+
   /// Add named individual to the graph: <subject> rdf:type owl:NamedIndividual
   ///
-  bool addNamedIndividual(dynamic s) {
+  bool addNamedIndividualToGroups(dynamic s) {
     // Check whether the new individual already exists in the graph.
     // If it's already there, can't add it and return false because adding
     // a named individual is usually the first step when we add a new group of
