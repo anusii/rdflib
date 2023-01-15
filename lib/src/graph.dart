@@ -1033,6 +1033,9 @@ class Graph {
       // comments in Turtle take the form of '#', outside an IRIREF or String,
       // and continue to the end of line
       // note to include a whitespace to exclude cases like <www.ex.org/bob#me>
+      if (line.startsWith('#')) {
+        continue;
+      }
       rtnStr += line.replaceAll(RegExp(r'\s*#\s.*$'), '');
       rtnStr += '\n';
     }
