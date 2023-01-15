@@ -3,8 +3,11 @@ import 'package:rdflib/rdflib.dart';
 main() {
   String turtleSimple = '''
   @prefix ab: <http://www.ex.org/> .
-  @base <http://www.base.org/> .
+  @prefix : <http://colon.org/> .
   @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+  @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+  
+  <> a foaf:PersonalProfileDocument .
   
   ab:cd a ab:company, <logo> ;
     <http://www.pre.com/> <http://www.xyz.com> ;
@@ -164,6 +167,10 @@ main() {
     acl:mode acl:Read, acl:Write.
   ''';
 
+  String turtleSimple2 = """
+  bob:me a uni:student .
+  """;
+
   // test an example string with valid ttl content
   Graph g = Graph();
 
@@ -172,7 +179,8 @@ main() {
   // g.parseTurtle(turtleRealExample);
 
   g.parseTurtle(turtleSimple);
-  g.addTripleToGroups('ab:xy', 'rdf:type', '3');
+  g.addTripleToGroups('ab:xy.zzz', 'rdf:type', '3');
+  g.addTripleToGroups(URIRef(''), a, XSD.anyURI);
 
   // should not add duplicate triples
   g.addTripleToGroups('<xyz>', 'ab:when', 'yesterday');
