@@ -11,3 +11,4 @@
     a acl:Authorization;
     acl:accessTo <./README>;
     acl:agent <https://solid.dev.yarrabah.net/charlie-breugel/profile/card#me>;
+    acl:mode acl:Read, acl:Write, acl:Control.
