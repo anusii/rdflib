@@ -170,27 +170,29 @@ class Graph {
     return false;
   }
 
-  /// add object property to link two triple subjects together
+  /// Adds object property to link two triple subjects together.
   ///
-  /// throws an [Exception] if object or property is not existed
+  /// Throws an [Exception] if object or property does not exist.
+  /// Here the object is different from the object in the triple.
   void addObjectProperty(URIRef obj, URIRef relation, URIRef prop) {
-    // create the triple to represent the new relationship
+    // Creates the triple to represent the new relationship
     Triple newRelation = Triple(sub: obj, pre: relation, obj: prop);
     if (triples.contains(newRelation)) {
       throw Exception('Triples are already linked!');
-    } else if (!graphs.containsKey(obj) || !graphs.containsKey(prop)) {
-      /// the both obj, and prop should exist in the graph first, then we can
-      /// link them together, You can add them to graph using
-      /// `addNamedIndividual` or `add`.
+    } else if (!groups.containsKey(obj) || !groups.containsKey(prop)) {
+      // Both the object itself, and the property should exist in the groups
+      // first, then we can link them together. You can first add them to groups
+      // using [Graph.addNamedIndividualToGroups] or [Graph.addTripleToGroups].
       throw Exception('No triples with $obj or $prop exist');
     } else {
-      add(newRelation);
+      addTripleToGroups(obj, relation, prop);
     }
   }
 
   /// update standard prefixes to include in the contexts
   ///
   /// useful for serialization
+  @Deprecated('Use [Graph._updateCtx] instead')
   void _updateContexts(URIRef u, Map ctx) {
     for (String sp in standardPrefixes.keys) {
       if (u.inNamespace(Namespace(ns: standardPrefixes[sp]!)) &&
