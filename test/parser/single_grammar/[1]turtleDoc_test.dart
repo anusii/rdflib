@@ -729,6 +729,33 @@ main() {
            rdfs:range rdf:List .
      
     ''';
+    // Example 16 from https://www.w3.org/TR/turtle/#unlabeled-bnodes is
+    // actually not valid turtle syntax as the subject cannot be just a
+    // blankNodePropertyList list based on rule
+    // [10] 	subject 	::= 	iri | BlankNode | collection.
+    // But the alternative form as shown in the next example is valid.
+    String sampleTurtle4 = '''
+      @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+      [ foaf:name "Alice" ] foaf:knows [
+          foaf:name "Bob" ;
+          foaf:knows [
+              foaf:name "Eve" ] ;
+          foaf:mbox <bob@example.com> ]
+    ''';
+    // An alternative form of example 16 from
+    // https://www.w3.org/TR/turtle/#unlabeled-bnodes
+    String sampleTurtle5 = '''
+      @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+      []
+        foaf:name "Alice" ;
+        foaf:knows [
+          foaf:name "Bob" ;
+          foaf:knows [ foaf:name "Eve" ] ;
+          foaf:mbox <http://njh.me/bob@example.com>
+        ] .
+    ''';
     Map<String, bool> testStrings = {
       '': true,
       sampleTurtle0: true,
@@ -736,6 +763,8 @@ main() {
       sampleTurtle1: true,
       sampleTurtle2: true,
       sampleTurtle3: true,
+      sampleTurtle4: false,
+      sampleTurtle5: true,
       '.': false,
       ' ': false,
       '@prefix : </etc/> . @prefix c: <./> . @base <./> .': true,
