@@ -172,7 +172,7 @@ main() {
 
       <../../DesignIssues/Overview.html>
           dc:title "Design Issues for the World Wide Web";
-          foaf:maker card:i
+          foaf:maker card:i .
     ''';
     // OWL ontology: http://www.w3.org/2002/07/owl#
     String sampleTurtle3 = '''
