@@ -1,15 +1,29 @@
+## 0.2.3
+
+- `graph.dart`
+    - add [deprecated] tags to some methods
+    - update to new methods to utilize parser effectively
+    - re-write comments based on dart style guide
+- Parser
+    - fix bugs in trimming
+    - update tests to include real-world examples
+- Examples
+    - update examples to utilize the new parser funtion in the package. Examples are included in
+      the `example` folder, check out more
+      examples [here](https://github.com/anusii/rdflib/tree/main/example).
+
 ## 0.2.2
 
 - `graph.dart`
-  - fix a bug of parsing and serializing `@base` and `:`
+    - fix a bug of parsing and serializing `@base` and `:`
 
 ## 0.2.1
 
-- `graph.dart`: 
-  - remove comments before parsing
-  - add function to add a triple to groups by passing in subject, predicate and object as strings
-  - update prefixes context for 'a' (rdf:type) 
-  - fix a bug of causing duplicated triples added to the graph
+- `graph.dart`:
+    - remove comments before parsing
+    - add function to add a triple to groups by passing in subject, predicate and object as strings
+    - update prefixes context for 'a' (rdf:type)
+    - fix a bug of causing duplicated triples added to the graph
 
 ## 0.2.0
 
