@@ -16,7 +16,8 @@ class Graph {
   @Deprecated('Use [Graph.ctx] instead')
   Map<String, String> contexts = {};
 
-  /// The set to store different groups of triples in the form of {sub1: {pre1: {obj1}, pre2, {obj2, obj2_1}}, sub2: {pre3: {obj3, obj3_1}, ...}, ...}
+  /// The set to store different groups of triples in the form of
+  /// {sub1: {pre1: {obj1}, pre2, {obj2, obj2_1}}, sub2: {pre3: {obj3, obj3_1}, ...}, ...}
   // TODO: turtle subject as a BlankNode as subjects can be {iri, BlankNode, collection}, and iri can be {IRIREF, PrefixedName}, the current implementation only deals with iri (implemented as URIRef) as subject.
   Map<URIRef, Map<URIRef, Set>> groups = {};
 
@@ -108,9 +109,9 @@ class Graph {
     ctx[prefixName] = uriRef;
   }
 
-  /// add triple to the set, also update the graph to include the triple.
+  /// Adds triple to the set, also update the graph to include the triple.
   ///
-  /// using a triples set can avoid duplicated records
+  /// It uses a triples set can avoid duplicated records.
   @Deprecated(
       'Use [Graph.addTripleToGroups] and [Graph.addPrefixToCtx] instead')
   void add(Triple triple) {
@@ -138,7 +139,7 @@ class Graph {
     // print('Contexts now: $contexts');
   }
 
-  /// add named individual to the graph: <subject> rdf:type owl:NamedIndividual
+  /// Adds named individual to the graph: <subject> rdf:type owl:NamedIndividual
   @Deprecated('Use [Graph.addNamedIndividualToGroups] instead')
   bool addNamedIndividual(URIRef sub) {
     /// check if the new individual already exists in the graph
@@ -157,7 +158,7 @@ class Graph {
     return true;
   }
 
-  /// Add named individual to the graph: <subject> rdf:type owl:NamedIndividual
+  /// Adds named individual to graph: <subject> rdf:type owl:NamedIndividual.
   ///
   bool addNamedIndividualToGroups(dynamic s) {
     // Check whether the new individual already exists in the graph.
@@ -169,7 +170,7 @@ class Graph {
       if (_namedIndividualExists(sub)) {
         return false;
       }
-      // Note 'a' is equivalent to RDF.type and by using [Graph.addTripleToGroup],
+      // Note 'a' is equivalent to RDF.type. By using [Graph.addTripleToGroup],
       // we are updating both the triples and the namespaces as well.
       addTripleToGroups(sub, a, OWL.NamedIndividual);
     } catch (e) {
@@ -179,7 +180,7 @@ class Graph {
     return true;
   }
 
-  /// Checks if a named individual already exists in the graph
+  /// Checks if a named individual already exists in the graph.
   bool _namedIndividualExists(URIRef sub) {
     for (Triple t in triples) {
       if (t.sub == sub) {
@@ -208,9 +209,7 @@ class Graph {
     }
   }
 
-  /// update standard prefixes to include in the contexts
-  ///
-  /// useful for serialization
+  /// Update standard prefixes to include in the contexts.
   @Deprecated('Use [Graph._updateCtx] instead')
   void _updateContexts(URIRef u, Map ctx) {
     for (String sp in standardPrefixes.keys) {
@@ -235,7 +234,7 @@ class Graph {
     }
   }
 
-  /// Binds a namespace to a prefix for better readability when serializing
+  /// Binds a namespace to a prefix for better readability when serializing.
   ///
   /// Throws an [Exception] if trying to bind the name that already exists.
   /// Example:
@@ -255,7 +254,7 @@ class Graph {
     }
   }
 
-  /// Finds all subjects which have a certain predicate and object
+  /// Finds all subjects which have a certain predicate and object.
   Set<URIRef> subjects(URIRef pre, dynamic obj) {
     Set<URIRef> subs = {};
     for (Triple t in triples) {
@@ -266,7 +265,7 @@ class Graph {
     return subs;
   }
 
-  /// Finds all objects which have a certain subject and predicate
+  /// Finds all objects which have a certain subject and predicate.
   Set objects(URIRef sub, URIRef pre) {
     Set objs = {};
     for (Triple t in triples) {
@@ -277,7 +276,8 @@ class Graph {
     return objs;
   }
 
-  /// Parse file and update graph accordingly
+  /// Parses file and update graph accordingly.
+  @Deprecated('Use [Graph.parseTurtle] instead for parsing a turtle string')
   parse(String filePath) async {
     final file = File(filePath);
     Stream<String> lines =
@@ -298,7 +298,8 @@ class Graph {
     }
   }
 
-  /// parse whole text and update graph accordingly
+  /// Parses whole text and update graph accordingly.
+  @Deprecated('Use [Graph.parseTurtle] instead for parsing a turtle string')
   parseText(String text) {
     List<String> lines = text.split('\n');
     try {
@@ -317,12 +318,14 @@ class Graph {
     }
   }
 
-  /// parse the line and update the graph
+  /// Parse the line and update the graph
   ///
-  /// params: [config] is used to hold and update prefix, subject and predicate
-  ///         it's a Map so we can change its value (not reference) although Dart
-  ///         param is passed by value (in this case, the address is passed)
-  /// returns: updated config
+  /// Note:
+  /// [config] is used to hold and update prefix, subject and predicate.
+  /// It's a Map so we can change its value (not reference) although Dart
+  /// param is passed by value (in this case, the address is passed).
+  @Deprecated('Should not use this method as it\'s not robust in grammar.'
+      'Will remove this method in the future.')
   Map<String, dynamic> _parseLine(String line, Map<String, dynamic> config) {
     URIRef sub = config['sub']! as URIRef;
     URIRef pre = config['pre']! as URIRef;
@@ -422,7 +425,8 @@ class Graph {
     }
   }
 
-  /// first need to store prefixes to contexts map
+  /// Stores prefixes to contexts map first.
+  @Deprecated('Use [Graph.addPrefixToCtx] instead.')
   void _parsePrefix(String prefixLine) {
     String k = '';
     String v = '';
@@ -458,8 +462,11 @@ class Graph {
     contexts[k] = v;
   }
 
-  /// 1. parse form such as <http://www.w3.org/2002/07/owl#>
-  /// 2. parse form such as xsd:string to full URIRef
+  /// Convert a string to a [URIRef] format.
+  ///
+  /// Examples:
+  /// 1. Parses form such as <http://www.w3.org/2002/07/owl#>
+  /// 2. Parses form such as xsd:string to full URIRef
   URIRef _toFullUriref(String s) {
     /// case 1: <uri>
     if (s.startsWith('<') && s.endsWith('>')) {
@@ -499,9 +506,8 @@ class Graph {
     }
   }
 
-  /// parse single element in a triple or prefix line
-  ///
-  /// need to be more robust
+  /// Parses single element in a triple or prefix line
+  @Deprecated('Use [Graph.item] instead.')
   dynamic _parseElement(String element) {
     element = element.trim();
 
@@ -541,7 +547,9 @@ class Graph {
     }
   }
 
-  /// Parses a valid turtle file read into a string [fileContent]
+  /// Parses a valid turtle file read into a string [fileContent].
+  ///
+  /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
   void parseTurtle(String fileContent) {
     final String content = _removeComments(fileContent);
     List parsedList = parser.parse(content).value;
@@ -553,13 +561,15 @@ class Graph {
     }
   }
 
-  /// save triples to groups
-  /// each group corresponds to a group of triples ending with .
-  /// parsed triples are saved in the list and in the form of
+  /// Saves triples to [Graph.groups].
+  ///
+  /// Each group corresponds to a group of triples ending with .
+  /// Note:
+  /// Parsed triples are saved in the list and in the form of
   /// [[sub, [pre1, [obj1, obj2, ...]], [pre2, [obj3, ...]], ...], .]
   /// so the first item is a list of triple content, and the second is just .
   void _saveToGroups(List tripleList) {
-    // skip namespace prefixes
+    // Skips namespace prefixes as they are handled by [Graph._saveToContext]
     if (tripleList[0] == '@prefix' || tripleList[0] == '@base') {
       return;
     }
@@ -570,11 +580,11 @@ class Graph {
     }
     List predicateObjectLists = tripleContent[1];
     for (List predicateObjectList in predicateObjectLists) {
-      // predicate is always an iri
-      // use URIRef as we translate PrefixedName to full form of URIREF
+      // Predicate is always an iri.
+      // Uses URIRef as we translate PrefixedName to full form of [URIRef]
       URIRef pre;
       pre = item(predicateObjectList[0]);
-      // use a set to store the triples
+      // Use a set to store the triples.
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
       for (String obj in objectList) {
@@ -584,14 +594,14 @@ class Graph {
     }
   }
 
-  /// save prefix lists to ctx map
+  /// Saves prefix lists to ctx map [Graph.ctx].
   void _saveToContext(List tripleList) {
     if (tripleList[0] == '@prefix') {
       String prefixedName = tripleList[1];
       URIRef namespace = item(tripleList[2]) as URIRef;
       ctx[prefixedName] = namespace;
     } else if (tripleList[0] == '@base' && !ctx.containsKey(':')) {
-      // there might a conflict between '@prefix : <> .' and '@base <> .'
+      // Note: there might a conflict between '@prefix : <> .' and '@base <> .'
       ctx[BASE] = item(tripleList[1]) as URIRef;
     }
   }
@@ -635,7 +645,7 @@ class Graph {
       }
     }
     // 4. abc^^xsd:string
-    // note this needs to come before :abc or abc:efg cases
+    // Note this needs to come before :abc or abc:efg cases
     else if (s.contains('^^')) {
       List<String> lst = s.split('^^');
       String value = lst[0];
@@ -678,18 +688,10 @@ class Graph {
     }
   }
 
-  /// serialize the graph to certain format and export to file
+  /// Serializes the graph to certain format and export to file.
   ///
-  /// now support exporting to turtle file (will be the default format)
-  /// needs to check the [dest] before writing to file (not implemented)
-  /// also needs to optimize the namespace binding instead of full URIRef
-  /// throws [Exception] if encrypt and passphrase don't qualify
-  ///
-  /// params: [format] now only supports turtle ttl
-  ///         [dest] destination file location to write to (will overwrite if
-  ///                file already exists
-  ///         [encrypt] now only supports AES encryption
-  ///         [passphrase] user specified key/password
+  /// Note:
+  /// [format] now only supports turtle ttl, and [abbr] is used to output cleaner string
   void serialize({String format = 'ttl', String? dest, String? abbr}) {
     String indent = ' ' * 4;
 
@@ -711,32 +713,8 @@ class Graph {
     }
   }
 
-  /// using a Stream to write to file
-  void _exportToFile(File file, StringBuffer output) {
-    var sink = file.openWrite();
-    sink.write(output);
-    sink.close();
-  }
-
-  /// recursively call serialize function to write to file with encrypted data
-  void _exportToEncryptFile(File file, String encrypted, String hashedKey) {
-    Triple dataTypeTriple =
-        Triple(sub: RDF.subject, pre: RDF.type, obj: Literal('encrypted'));
-    Triple dataKeyTriple =
-        Triple(sub: RDF.subject, pre: XSD.token, obj: Literal(hashedKey));
-    Triple dataContentTriple =
-        Triple(sub: RDF.subject, pre: RDF.value, obj: Literal(encrypted));
-
-    /// create a new graph to write encrypted data to file
-    Graph encryptedGraph = Graph();
-    encryptedGraph.add(dataTypeTriple);
-    encryptedGraph.add(dataKeyTriple);
-    encryptedGraph.add(dataContentTriple);
-
-    encryptedGraph.serialize(format: 'ttl', dest: file.path);
-  }
-
-  /// write different graphs with various triples to output
+  /// Writes different graphs with various triples to output
+  @Deprecated('Use serialization methods instead.')
   void _writeGraphs(StringBuffer output, String indent) {
     String line = '';
     for (var k in graphs.keys) {
@@ -786,9 +764,11 @@ class Graph {
     }
   }
 
-  /// abbreviate URIRef or Literal to shorthand form
-  /// e.g. URIRef(http://www.w3.org/2001/XMLSchema#numeric) -> xsd:numeric
-  /// Literal(56.7, datatype: URIRef(http://www.w3.org/2001/XMLSchema#float)) -> "56.7"^^xsd:float
+  /// Abbreviates URIRef or Literal to shorthand form.
+  /// Examples:
+  /// 1. URIRef(http://www.w3.org/2001/XMLSchema#numeric) -> xsd:numeric
+  /// 2. Literal(56.7, datatype: URIRef(http://www.w3.org/2001/XMLSchema#float))
+  ///    -> "56.7"^^xsd:float
   String _abbr(dynamic dy) {
     if (dy.runtimeType == URIRef) {
       if (dy == RDF.type) {
@@ -805,7 +785,7 @@ class Graph {
           } else if (abbr != ':') {
             return '$abbr${dy.value.substring(ns.value.length)}';
           } else {
-            // if it's a shorthand form, just surround it with <>
+            // If it's a shorthand form, just surround it with <>
             // @prefix : <www.example2.org/>
             // :alice a rdf:Person
             return ':${dy.value.substring(ns.value.length)}';
@@ -817,53 +797,54 @@ class Graph {
       dy = dy as Literal;
       return dy.toTtl();
     }
-    // default return its string back
+    // Default case is returning its string back.
     return dy.toString();
   }
 
-  /// read and write prefixes
+  /// Reads and write prefixes.
+  @Deprecated('Use serialization methods instead.')
   void _writePrefixes(StringBuffer output) {
     String line = '';
     for (var c in contexts.keys) {
       if (c == BaseType.shorthandBase.name) {
-        // shorthand ':' has no prefixed word
+        // Shorthand ':' has no prefixed word
         line = '@prefix : <${contexts[c]}> .\n';
       } else if (c == BaseType.defaultBase.name) {
-        // default base syntax
+        // Default base syntax
         line = '@base <${contexts[c]}> .\n';
       } else {
-        // usual prefix syntax
+        // Usual prefix syntax
         line = '@prefix $c: <${contexts[c]}> .\n';
       }
       output.write(line);
     }
   }
 
-  /// get the well-formatted serialized prefixes
+  /// Gets the well-formatted serialized prefixes.
   String _serializedContext() {
     String rtnStr = '';
     for (var key in ctx.keys) {
-      // note the difference between @base and @prefix
+      // Note the difference between @base and @prefix.
       if (key == BASE) {
         rtnStr += '@base <${ctx[key]?.value}> .\n';
       } else {
         rtnStr += '@prefix $key <${ctx[key]?.value}> .\n';
       }
     }
-    // add a new empty line before all the triples
+    // Add a new empty line before all the triples.
     rtnStr += '\n';
     return rtnStr;
   }
 
-  /// get the well-formatted serialized triples with commas and semi-colons
+  /// Gets the well-formatted serialized triples with commas and semi-colons.
   String _serializedGroups() {
     String rtnStr = '';
-    // right now subject is in form of URIRef
+    // Subject is in form of URIRef currently.
     for (URIRef sub in groups.keys) {
       String subStr = _abbr(sub);
       rtnStr += '$subStr\n';
       for (URIRef pre in groups[sub]!.keys) {
-        // leave an indent
+        // Leave an indent for readability.
         rtnStr += ' ' * 4;
         String preStr = _abbr(pre);
         rtnStr += '$preStr ';
@@ -871,26 +852,28 @@ class Graph {
           String objStr = _abbr(obj);
           rtnStr += '$objStr, ';
         }
-        // remove the last ,
+        // Remove the last ,
         rtnStr = rtnStr.substring(0, rtnStr.length - 2);
-        // start a new line
+        // Start a new line
         rtnStr += ' ;\n';
       }
-      // remove the last ;\n
+      // Remove the last ;\n
       rtnStr = rtnStr.substring(0, rtnStr.length - 2);
       rtnStr += '.\n';
     }
     return rtnStr;
   }
 
-  /// abbreviate uriref in namespace to bound short name for better readability
+  /// Abbreviates [URIRef] in the namespace to bound short name for better
+  /// readability in serialization.
   ///
-  /// this is useful when serializing and exporting to files to turtle
+  /// Note:
+  /// This is useful when serializing and exporting to files to turtle
   String _abbrUrirefToTtl(URIRef uriRef, Map<String, String> ctx) {
     for (String abbr in ctx.keys) {
       String ns = ctx[abbr]!;
       if (uriRef.inNamespace(Namespace(ns: ns))) {
-        // if there are duplicates namespaces for different ctx keys, whichever
+        // If there are duplicates namespaces for different ctx keys, whichever
         // comes first will take precedence
         if (abbr == BaseType.defaultBase.name) {
           return '<${uriRef.value.substring(ns.length)}>';
@@ -903,16 +886,18 @@ class Graph {
     return '<${uriRef.value}>';
   }
 
-  /// replace any lines that has #<space> with content shown before
-  /// current implementation is to match and replace line by line
+  /// Replaces any lines that has #<space> with content shown before.
+  ///
+  /// Note:
+  /// Current implementation is to match and replace line by line
   String _removeComments(String fileContent) {
     String rtnStr = '';
     List<String> lines = fileContent.split('\n');
     for (var line in lines) {
       // See also: https://www.w3.org/TR/turtle/#sec-grammar-comments
       // comments in Turtle take the form of '#', outside an IRIREF or String,
-      // and continue to the end of line
-      // note to include a whitespace to exclude cases like <www.ex.org/bob#me>
+      // and continue to the end of line.
+      // Note to include a whitespace to exclude cases like <www.ex.org/bob#me>
       if (line.startsWith('#')) {
         continue;
       }
