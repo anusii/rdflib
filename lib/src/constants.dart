@@ -1,10 +1,11 @@
+@Deprecated('Should use @base and empty prefix : for different purposes')
 enum BaseType { shorthandBase, defaultBase }
 
 extension ParseToString on BaseType {
   String get name => this.toString().split('.').last;
 }
 
-// keyword @base
+/// Keyword for @base
 const BASE = 'BASE';
 
 /// Most common namespace addresses including RDF, FOAF, XSD, RDFS, OWL

@@ -7,9 +7,9 @@ class Namespace {
 
   Namespace({required this.ns}) : uriRef = URIRef.fullUri(ns);
 
-  /// can be used to further shorten the namespace binding
+  /// This is used to further shorten the namespace binding
   ///
-  /// note to check validity (not implemented)
+  /// TODO: note to check validity (not implemented)
   URIRef withAttr(String attr) {
     return URIRef.fullUri(ns + attr);
   }
@@ -169,7 +169,7 @@ class RDFS extends Namespace {
 
   RDFS({required super.ns});
 
-  /// refer to W3 specification: http://www.w3.org/2000/01/rdf-schema#
+  /// Refer to W3 specification: http://www.w3.org/2000/01/rdf-schema#
   static final URIRef comment = _rdfs.slash('comment');
   static final URIRef isDefinedBy = _rdfs.slash('isDefinedBy');
   static final URIRef label = _rdfs.slash('label');
@@ -203,8 +203,8 @@ class OWL extends Namespace {
   static final URIRef NamedIndividual = _owl.slash('NamedIndividual');
 }
 
-/// include standard prefixes for namespace checking and shortening for export
-/// to other formats
+/// Includes standard prefixes for namespace checking and shortening to export
+/// to other formats.
 final Map<String, String> standardPrefixes = {
   'foaf': foafAnchor,
   'xsd': xsdAnchor,
@@ -213,4 +213,5 @@ final Map<String, String> standardPrefixes = {
   'rdfs': rdfsAnchor,
 };
 
-final a = RDF.type; // constant a is a shorthand predicate for rdf:type
+/// This constant [a] is a shorthand predicate for rdf:type.
+final a = RDF.type;

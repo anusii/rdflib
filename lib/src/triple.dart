@@ -11,8 +11,8 @@ class Triple {
     }
   }
 
-  /// for checking if two triples are the same for them to be put
-  /// in the set of the graph efficiently (without duplicates)
+  /// Checks if two triples are the same for them to be put in the set of the
+  /// [Graph] efficiently (without duplicates).
   @override
   bool operator ==(Object other) {
     return other is Triple &&
