@@ -34,7 +34,7 @@ jobs:
         run: dart format .
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
+      # - name: Analyze project source
         # Disable this check for now as we migrate to new version but still utilize deprecated
         # methods current projects. (Will re-enable after a full upgrade)
         # run: dart analyze
