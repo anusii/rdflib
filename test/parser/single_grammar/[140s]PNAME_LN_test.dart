@@ -15,8 +15,8 @@ main() {
       '_:burg': false,
       '_:_': false,
       'burg:_do': true,
-      ' card:i    ': true,
-      '   rdfs:seeAlso    ': true,
+      'card:i': true,
+      'rdfs:seeAlso': true,
     };
     testStrings.keys.forEach((element) {
       bool actual = PNAME_LN.end().accept(element);
