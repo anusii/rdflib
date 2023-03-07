@@ -180,7 +180,7 @@ class Graph {
   }
 
   /// Adds property to graph: <subject> rdf:type owl:<uriRef.value>.
-  bool addPropertyToGroups(dynamic s, String uriRefBase) {
+  bool addPropertyToGroups(dynamic s, dynamic uriRefBase) {
     // Check whether the new uriRef.value already exists in the graph.
     // If it's already there, can't add it and return false because adding
     // a named individual is usually the first step when we add a new group of
