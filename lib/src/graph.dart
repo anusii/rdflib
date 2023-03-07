@@ -180,7 +180,7 @@ class Graph {
   }
 
   /// Adds property to graph: <subject> rdf:type owl:<uriRef.value>.
-  bool addPropertyToGroups(dynamic s, URIRef uriRef) {
+  bool addPropertyToGroups(dynamic s, String uriRefBase) {
     // Check whether the new uriRef.value already exists in the graph.
     // If it's already there, can't add it and return false because adding
     // a named individual is usually the first step when we add a new group of
@@ -192,7 +192,7 @@ class Graph {
       }
       // Note [a] is equivalent to RDF.type. By using [Graph.addTripleToGroup],
       // we are updating both the triples and the namespaces as well.
-      addTripleToGroups(sub, a, uriRef.base);
+      addTripleToGroups(sub, a, uriRefBase);
     } catch (e) {
       print('Error occurred when adding named individual $s. Error detail: $e');
       return false;
