@@ -192,7 +192,7 @@ class Graph {
       }
       // Note [a] is equivalent to RDF.type. By using [Graph.addTripleToGroup],
       // we are updating both the triples and the namespaces as well.
-      addTripleToGroups(sub, a, uriRefBase);
+      addTripleToGroups(sub, a, URIRef.fullUri(owlAnchor).slash(uriRefBase));
     } catch (e) {
       print('Error occurred when adding named individual $s. Error detail: $e');
       return false;
