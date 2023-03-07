@@ -179,8 +179,39 @@ class Graph {
     return true;
   }
 
+  /// Adds object property to graph: <subject> rdf:type owl:ObjectProperty.
+  bool adObjectPropertyToGroups(dynamic s) {
+    // Check whether the new object property already exists in the graph.
+    // If it's already there, can't add it and return false because adding
+    // an object property is usually the first step when we add a new group of
+    // triples in the Graph.
+    try {
+      URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
+      if (_objectPropertyExists(sub)) {
+        return false;
+      }
+      // Note [a] is equivalent to RDF.type. By using [Graph.addTripleToGroup],
+      // we are updating both the triples and the namespaces as well.
+      addTripleToGroups(sub, a, OWL.objectProperty);
+    } catch (e) {
+      print('Error occurred when adding named individual $s. Error detail: $e');
+      return false;
+    }
+    return true;
+  }
+
   /// Checks if a named individual already exists in the graph.
   bool _namedIndividualExists(URIRef sub) {
+    for (Triple t in triples) {
+      if (t.sub == sub) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Checks if an object property already exists in the graph.
+  bool _objectPropertyExists(URIRef sub) {
     for (Triple t in triples) {
       if (t.sub == sub) {
         return true;
