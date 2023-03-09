@@ -63,7 +63,7 @@ class Graph {
   ///   print(t);
   /// }
   /// ```
-  void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
+  void  addTripleToGroups(dynamic s, dynamic p, dynamic o) {
     // TODO: subject as a BlankNode
     try {
       URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
@@ -212,7 +212,7 @@ class Graph {
 
   /// Adds object property to link two triple subjects together.
   ///
-  /// Throws an [Exception] if object or property does not exist.
+  /// Throws an [Exception] if the relationship already exist.
   /// Here the object is different from the object in the triple.
   void addObjectProperty(URIRef obj, URIRef relation, URIRef prop) {
     // Creates the triple to represent the new relationship
