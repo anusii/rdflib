@@ -63,7 +63,7 @@ class Graph {
   ///   print(t);
   /// }
   /// ```
-  void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
+  void  addTripleToGroups(dynamic s, dynamic p, dynamic o) {
     // TODO: subject as a BlankNode
     try {
       URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
@@ -179,6 +179,27 @@ class Graph {
     return true;
   }
 
+  /// Adds property to graph: <subject> rdf:type owl:<uriRef.value>.
+  bool addPropertyToGroups(dynamic s, dynamic uriRefBase) {
+    // Check whether the new uriRef.value already exists in the graph.
+    // If it's already there, can't add it and return false because adding
+    // a named individual is usually the first step when we add a new group of
+    // triples in the Graph.
+    try {
+      URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
+      if (_namedIndividualExists(sub)) {
+        return false;
+      }
+      // Note [a] is equivalent to RDF.type. By using [Graph.addTripleToGroup],
+      // we are updating both the triples and the namespaces as well.
+      addTripleToGroups(sub, a, URIRef.fullUri(owlAnchor).slash(uriRefBase));
+    } catch (e) {
+      print('Error occurred when adding named individual $s. Error detail: $e');
+      return false;
+    }
+    return true;
+  }
+
   /// Checks if a named individual already exists in the graph.
   bool _namedIndividualExists(URIRef sub) {
     for (Triple t in triples) {
@@ -191,18 +212,13 @@ class Graph {
 
   /// Adds object property to link two triple subjects together.
   ///
-  /// Throws an [Exception] if object or property does not exist.
+  /// Throws an [Exception] if the relationship already exist.
   /// Here the object is different from the object in the triple.
   void addObjectProperty(URIRef obj, URIRef relation, URIRef prop) {
     // Creates the triple to represent the new relationship
     Triple newRelation = Triple(sub: obj, pre: relation, obj: prop);
     if (triples.contains(newRelation)) {
       throw Exception('Triples are already linked!');
-    } else if (!groups.containsKey(obj) || !groups.containsKey(prop)) {
-      // Both the object itself, and the property should exist in the groups
-      // first, then we can link them together. You can first add them to groups
-      // using [Graph.addNamedIndividualToGroups] or [Graph.addTripleToGroups].
-      throw Exception('No triples with $obj or $prop exist');
     } else {
       addTripleToGroups(obj, relation, prop);
     }

@@ -200,7 +200,9 @@ class OWL extends Namespace {
   static final URIRef Thing = _owl.slash('Thing');
   static final URIRef topDataProperty = _owl.slash('topDataProperty');
   static final URIRef topObjectProperty = _owl.slash('topObjectProperty');
+  static final URIRef objectProperty = _owl.slash('ObjectProperty');
   static final URIRef NamedIndividual = _owl.slash('NamedIndividual');
+  static final URIRef Class = _owl.slash('Class');
 }
 
 /// Includes standard prefixes for namespace checking and shortening to export
