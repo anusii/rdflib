@@ -219,12 +219,14 @@ class Graph {
     Triple newRelation = Triple(sub: obj, pre: relation, obj: prop);
     if (triples.contains(newRelation)) {
       throw Exception('Triples are already linked!');
-    } else if (!groups.containsKey(obj) || !groups.containsKey(prop)) {
-      // Both the object itself, and the property should exist in the groups
-      // first, then we can link them together. You can first add them to groups
-      // using [Graph.addNamedIndividualToGroups] or [Graph.addTripleToGroups].
-      throw Exception('No triples with $obj or $prop exist');
-    } else {
+    }
+    // else if (!groups.containsKey(obj) || !groups.containsKey(prop)) {
+    //   // Both the object itself, and the property should exist in the groups
+    //   // first, then we can link them together. You can first add them to groups
+    //   // using [Graph.addNamedIndividualToGroups] or [Graph.addTripleToGroups].
+    //   throw Exception('No triples with $obj or $prop exist');
+    // }
+    else {
       addTripleToGroups(obj, relation, prop);
     }
   }
