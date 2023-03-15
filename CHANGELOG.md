@@ -16,7 +16,7 @@
   - fix bugs in trimming
   - update tests to include real-world examples
 - Examples
-  - update examples to utilize the new parser funtion in the package. Examples are included in
+  - update examples to utilize the new parser function in the package. Examples are included in
     the `example` folder, check out more
     examples [here](https://github.com/anusii/rdflib/tree/main/example).
 
