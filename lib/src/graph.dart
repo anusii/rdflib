@@ -63,7 +63,7 @@ class Graph {
   ///   print(t);
   /// }
   /// ```
-  void  addTripleToGroups(dynamic s, dynamic p, dynamic o) {
+  void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
     // TODO: subject as a BlankNode
     try {
       URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
@@ -572,8 +572,11 @@ class Graph {
   ///
   /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
   void parseTurtle(String fileContent) {
-    final String content = _removeComments(fileContent);
+    String processedContent = _preprocessTurtleContent(fileContent);
+    final String content = _removeComments(processedContent);
+
     List parsedList = parser.parse(content).value;
+
     for (List tripleList in parsedList) {
       _saveToContext(tripleList);
     }
@@ -928,5 +931,30 @@ class Graph {
       rtnStr += '\n';
     }
     return rtnStr;
+  }
+
+  /// Preprocesses Turtle content to handle multiline string literals.
+  ///
+  /// This function addresses the issue of multiline literals in Turtle syntax,
+  /// which are enclosed within triple quotes `"""`.
+  String _preprocessTurtleContent(String turtleContent) {
+    // Regular expression to match multiline literals.
+
+    final multilineLiteralRegex = RegExp(r'"""(.*?)"""', dotAll: true);
+
+    // Replace each multiline literal with a processed version.
+
+    return turtleContent.replaceAllMapped(multilineLiteralRegex, (match) {
+      // Get the multiline literal, excluding the triple quotes.
+
+      String multilineLiteral = match.group(1)!;
+
+      // Process the multiline literal as needed.
+      // Example: Replace line breaks with a special sequence.
+      String processedLiteral = multilineLiteral.replaceAll('\n', '\\n');
+
+      // Return the processed literal with the original triple quotes
+      return '"$processedLiteral"';
+    });
   }
 }
