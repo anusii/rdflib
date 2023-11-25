@@ -1,3 +1,19 @@
+## 0.2.6
+
+- `pubspec.yaml`
+  - update version of package [petitparser]
+- `graph.dart`
+  - new [_preprocessTurtleContent] method to to handle multiline string literals
+  - update [parseTurtle] to work when the content with multiline comments
+- Examples
+  - add a example to parse files with multiline field
+
+
+## 0.2.5
+
+- `pubspec.yaml`
+  - update version of package [http]
+
 ## 0.2.4
 
 - `graph.dart`

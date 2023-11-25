@@ -1,0 +1,11 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh_data: <http://yarrabah.net/data/solid-health#> .
+@prefix sh_onto: <http://sii.cecs.anu.edu.au/onto/solid-health#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+sh_data:Info-17809g89a a sh_onto:InfoTab,
+        owl:NamedIndividual ;
+    rdfs:label "label_name"^^xsd:string ;
+    sh_onto:commentP """1. First comment.
+2. Second comment.
+3. Third comment."""^^xsd:string .
