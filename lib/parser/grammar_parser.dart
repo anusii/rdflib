@@ -23,7 +23,6 @@ class ExpressionDefinition extends GrammarDefinition {
 
   // [163s] 	PN_CHARS_BASE 	::= 	[A-Z] | [a-z] | [#x00C0-#x00D6] | [#x00D8-#x00F6] | [#x00F8-#x02FF] | [#x0370-#x037D] | [#x037F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
   // final PN_CHARS_BASE = pattern('A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF');
-  // FIXME: for unicode \U00010000 to \U000EFFFF
   Parser PN_CHARS_BASE() => pattern(
       'A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD');
 
@@ -60,7 +59,7 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser PLX() => ref0(PERCENT) | ref0(PN_LOCAL_ESC);
 
   // [168s] 	PN_LOCAL 	::= 	(PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
-  // should not add trim() here as the local string should not contain any whitepaces
+  // should not add trim() here as the local string should not contain any white paces
   Parser PN_LOCAL() =>
       (ref0(PN_CHARS_U) | string(':') | pattern('0-9') | ref0(PLX)) &
       ((ref0(PN_CHARS) | pattern(':.') | ref0(PLX))
@@ -184,11 +183,11 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser BlankNode() => ref0(BLANK_NODE_LABEL) | ref0(ANON);
 
   // [15] 	collection 	::= 	'(' object* ')'
-  // need clarification in whitespaces between two objects.
+  // need clarification in white spaces between two objects.
   // based on the example here: https://www.w3.org/TR/turtle/#collections,
-  // there can be whitespaces, but it's not consistent.
+  // there can be white spaces, but it's not consistent.
   // e.g. in [20] 	DECIMAL 	::= 	[+-]? [0-9]* '.' [0-9]+
-  // the [0-9]* part can't have any whitespaces in between
+  // the [0-9]* part can't have any white spaces in between
   Parser collection() => string('(') & ref0(object).trim().star() & string(')');
 
   // [12] 	object 	::= 	iri | BlankNode | collection | blankNodePropertyList | literal

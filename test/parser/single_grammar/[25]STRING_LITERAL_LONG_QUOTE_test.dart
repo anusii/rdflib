@@ -20,7 +20,6 @@ main() {
       '\"\"\"dinner\"\"\"': true,
       '\"\"\"\\elevator\"\"\"': false,
       '\"\"\"\"dinner\"\"\"': true,
-      // '\"\"\"\"dinner\"\"\"': true, //FIXME: expected true, but actual false
     };
     testStrings.keys.forEach((element) {
       bool actual = STRING_LITERAL_LONG_QUOTE.end().accept(element);
