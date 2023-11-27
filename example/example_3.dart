@@ -1,26 +1,34 @@
-import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:rdflib/rdflib.dart';
 
 main() async {
-  String filePath = 'example/sample_ttl_1.ttl';
-  // Read file content to a local String
-  String fileContents = await File(filePath).readAsStringSync();
-  print('-------Original file-------\n$fileContents');
+  // https://github.com/anusii/rdflib/blob/main/example/sample_acl_1.acl
+  // https://raw.githubusercontent.com/anusii/rdflib/main/example/sample_acl_1.acl
+  var url = Uri.https('raw.githubusercontent.com',
+      'anusii/rdflib/main/example/sample_acl_1.acl');
+  // Get the contents of the acl file
+  var res = await http.get(url);
+  String aclContents = res.body;
+  print('-------Original ACL Contents-------\n${res.body}\n');
 
-  // create a graph to read turtle file and store info
+  // Initialize a Graph to store all the info
   Graph g = Graph();
-
-  // Parse with the new method [Graph.parseTurtle] instead of [Graph.parse] (deprecated)
-  g.parseTurtle(fileContents);
-
-  // Serialize the Graph for output
+  // Parse the contents and update the triples
+  g.parseTurtle(aclContents);
   g.serialize(format: 'ttl', abbr: 'short');
-  print('-------Serialized String--------\n${g.serializedString}');
+  print('-------Serialized ACL Contents------\n${g.serializedString}\n');
 
-  // Print out full format of triples (will use shorthand in serialization/export)
-  print('--------All triples in the graph-------');
-  for (Triple t in g.triples) {
-    print(t);
-  }
+  // Add 'zack' to the ACL file
+  g.addTripleToGroups('<#zack>', a, 'acl:Authorization');
+  // Specify which document/fold
+  g.addTripleToGroups('<#zack>', 'acl:accessTo', '<./README>');
+  // Specify the target by its webID card
+  g.addTripleToGroups('<#zack>', 'acl:agent',
+      '<https://solid.dev.yarrabah.net/zack-collins/profile/card#me>');
+  // Grant him access to Read only
+  g.addTripleToGroups('<#zack>', 'acl:mode', 'acl:Read');
+  // Need to serialize before exporting
+  g.serialize(format: 'ttl', abbr: 'short');
+  print('-------Serialized ACL Contents (New)------\n${g.serializedString}\n');
 }

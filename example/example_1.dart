@@ -1,51 +1,50 @@
 import 'package:rdflib/rdflib.dart';
 
 main() {
-  // the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
-
   // Initialize a Graph
   Graph g = Graph();
 
-  // Create a new URIRef instance for a person
-  final donna = URIRef('http://example.org/donna');
+  // Define namespaces for later use
+  Namespace shData = Namespace(ns: 'http://silo.net.au/data/SOLID-Health#');
+  Namespace shOnto =
+      Namespace(ns: 'http://sii.cecs.anu.edu.au/onto/SOLID-Health#');
 
-  // Add triples to the Graph using [Graph.addTriplesToGroups] method
-  g.addTripleToGroups(donna, RDF.type, FOAF.Person);
-  g.addTripleToGroups(donna, FOAF.nick, Literal('donna', lang: 'en'));
-  g.addTripleToGroups(donna, FOAF.name, Literal('Donna Fales'));
-  g.addTripleToGroups(donna, FOAF.mbox, URIRef('mailto:donna@example.org'));
-  // Adding a duplicate triple should be ignored
-  g.addTripleToGroups(donna, FOAF.mbox, URIRef('mailto:donna@example.org'));
+  // Create a subject
+  URIRef newAssessTab = shData.withAttr('AssessmentTab-p43623-20220727T120913');
 
-  // Create another URIRef instance
-  final ed = URIRef('http://example.org/edward');
+  // Add the entity to the Graph, equivalent to
+  // g.addTripleToGroups(newAssessTab, rdf.typ, owl:NamedIndividual)
+  g.addNamedIndividualToGroups(newAssessTab);
 
-  // Add triples to the Graph
-  g.addTripleToGroups(ed, RDF.type, FOAF.Person);
-  g.addTripleToGroups(ed, FOAF.nick, Literal('ed', datatype: XSD.string));
-  g.addTripleToGroups(ed, FOAF.name, Literal('Edward Scissorhands'));
+  // Add using a Triple type
+  Triple t1 = Triple(
+      sub: newAssessTab, pre: RDF.type, obj: shOnto.withAttr('AssessmentTab'));
+  g.addTripleToGroups(t1.sub, t1.pre, t1.obj);
+
+  // Add directly using sub, pre, and obj
   g.addTripleToGroups(
-      ed, FOAF.mbox, Literal('mailto:ed@example.org', datatype: XSD.anyURI));
+      newAssessTab, shData.withAttr('asthmaControl'), 'Poor Control');
+  g.addTripleToGroups(
+      newAssessTab, shOnto.withAttr('diastolicBloodPressure'), '75');
+  g.addTripleToGroups(
+      newAssessTab, shOnto.withAttr('systolicBloodPressure'), Literal('125.0'));
 
-  // Bind the long namespace to shorter string for better readability
-  g.bind('example', Namespace(ns: 'http://example.org/'));
+  URIRef newSeeAndDoTab = shData.withAttr('SeeAndDoTab-p43623-20220727T120913');
+  URIRef newSeeAndDoOption =
+      shData.withAttr('SeeAndDoOption-p43623-20220727T120913-fitnessDrive');
 
-  // Serialize the Graph to the standard turtle format, and the result is stored
-  // in [Graph.serializedString]
+  g.addNamedIndividualToGroups(newSeeAndDoTab);
+  g.addNamedIndividualToGroups(newSeeAndDoOption);
+
+  // Link two triple individuals by a relation
+  g.addObjectProperty(
+      newSeeAndDoTab, shOnto.withAttr('hasSeeAndDoOption'), newSeeAndDoOption);
+
+  // Bind to shorter abbreviations for readability
+  g.bind('sh-data', shData);
+  g.bind('sh-onto', shOnto);
+
+  // Serialize the graph for output
   g.serialize(format: 'ttl', abbr: 'short');
-  print('-------\nSerialized content:\n${g.serializedString}');
-
-  // Print out every added triple in the graph by iterating through the set
-  print('-------\nTriples updated in the graph:');
-  for (Triple t in g.triples) {
-    print(t);
-  }
-
-  // Print out each person's mailbox value
-  print('-------\nMailboxes:');
-  for (var sub in g.subjects(a, FOAF.Person)) {
-    for (var mbox in g.objects(sub, FOAF.mbox)) {
-      print('${sub}\'s mailbox: ${mbox.value}');
-    }
-  }
+  print(g.serializedString);
 }
