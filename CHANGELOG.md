@@ -1,10 +1,15 @@
+## 0.2.8
+
+_ Static analysis
+  - revert changes of static analysis
+
 ## 0.2.7
 
 - Examples
   - add a example to package homepage
 _ Static analysis
   - fix warnings, lints, or formatting issues
-  
+
 ## 0.2.6
 
 - `pubspec.yaml`
