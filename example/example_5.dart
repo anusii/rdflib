@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:rdflib/rdflib.dart';
 
 main() async {
-  String filePath = 'example/sample_ttl_1.ttl';
+  String filePath = 'example/sample_ttl_5.ttl';
   // Read file content to a local String
   String fileContents = await File(filePath).readAsStringSync();
+
   print('-------Original file-------\n$fileContents');
 
   // create a graph to read turtle file and store info
