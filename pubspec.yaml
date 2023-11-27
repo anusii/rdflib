@@ -1,6 +1,6 @@
 name: rdflib
 description: A pure Dart package for working with RDF (resource description framework).
-version: 0.2.6
+version: 0.2.7
 homepage: https://github.com/anusii/rdflib
 repository: https://github.com/anusii/rdflib
 
