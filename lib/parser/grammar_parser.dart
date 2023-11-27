@@ -1,5 +1,8 @@
 import 'package:petitparser/petitparser.dart';
 
+/// An implementation of a parser using a grammar definition framework,
+/// presumably for parsing structured text formats like Turtle or SPARQL.
+
 class ExpressionDefinition extends GrammarDefinition {
   Parser start() => ref0(turtleDoc).end();
 
@@ -253,6 +256,9 @@ class ExpressionDefinition extends GrammarDefinition {
   // [1] 	turtleDoc 	::= 	statement*
   Parser turtleDoc() => ref0(statement).star();
 }
+
+/// This class focuses on interpreting and formatting the raw parsed data 
+/// into a more structured and meaningful format.
 
 class EvaluatorDefinition extends ExpressionDefinition {
   // extract IRIREF => <iriref>
