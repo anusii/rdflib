@@ -77,7 +77,6 @@ final IRIREF =
 
 /// [163s] 	PN_CHARS_BASE 	::= 	[A-Z] | [a-z] | [#x00C0-#x00D6] | [#x00D8-#x00F6] | [#x00F8-#x02FF] | [#x0370-#x037D] | [#x037F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
 ///
-/// FIXME: for unicode \U00010000 to \U000EFFFF.
 /// The following commented definition is not valid in dart:
 /// final PN_CHARS_BASE = pattern('A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF');
 final PN_CHARS_BASE = pattern(
@@ -117,7 +116,7 @@ final PLX = PERCENT | PN_LOCAL_ESC;
 ///
 /// Note:
 /// Do not add trim() here as the local string should not contain any
-/// whitespaces.
+/// white spaces.
 final PN_LOCAL = (PN_CHARS_U | string(':') | pattern('0-9') | PLX) &
     ((PN_CHARS | pattern(':.') | PLX).starGreedy(PN_CHARS | string(':') | PLX) &
             (PN_CHARS | string(':') | PLX))

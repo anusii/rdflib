@@ -21,8 +21,7 @@ class URIRef {
   }
 
   /// Constructs an instance from a full uri which is often handier.
-  ///
-  /// TODO: find a way to extract base used in a Graph.
+ 
   URIRef.fullUri(this.value) : base = '' {
     checkUri();
   }
@@ -66,8 +65,6 @@ class URIRef {
       name = '/' + name;
     }
 
-    /// TODO: check if there's invalid char in name, may use uri parser as an
-    /// alternative way for turtle.
     return URIRef.fullUri(value + name);
   }
 
@@ -76,7 +73,6 @@ class URIRef {
   /// Reference:
   /// https://stackoverflow.com/questions/52975739/dart-flutter-validating-a-string-for-url
   static bool isValidUri(String uri) {
-    // TODO: find a robust way to validate uri
     var u = Uri.tryParse(uri);
     return u?.hasAbsolutePath != null &&
         u?.scheme != null &&
@@ -118,12 +114,11 @@ class Literal {
       throw Exception('A Literal can only have one of lang or datatype,\n'
           'per http://www.w3.org/TR/rdf-concepts/#section-Graph-Literal');
     } else if (datatype == null && lang == null) {
-      /// Check for default data types including numeric and datetime
+      /// Check for default data types including numeric and date time
       if (_isInteger(value)) {
         datatype = XSD.int;
       } else if (_isDouble(value)) {
         // Default to float instead of double for now.
-        // TODO: differentiate between float and double.
         datatype = XSD.float;
       } else if (_isDateTime(value)) {
         datatype = XSD.dateTime;
@@ -163,12 +158,12 @@ class Literal {
     return int.tryParse(s) != null;
   }
 
-  /// Helper function to make Literal more robust to read datetime.
+  /// Helper function to make Literal more robust to read date time.
   bool _isDateTimeStamp(String s) {
     return DateTime.tryParse(s) != null && s.endsWith('Z');
   }
 
-  /// Helper function to make Literal more robust to read datetime.
+  /// Helper function to make Literal more robust to read date time.
   bool _isDateTime(String s) {
     return DateTime.tryParse(s) != null && !s.endsWith('Z');
   }

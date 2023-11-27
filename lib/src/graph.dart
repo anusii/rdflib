@@ -9,16 +9,14 @@ import '../parser/grammar_parser.dart';
 
 class Graph {
   /// The set to store different groups of triples
-  @Deprecated('Use [Graph.groups] instead')
   Map<URIRef, Set<Triple>> graphs = {};
 
   /// The set to store prefixed namespaces
-  @Deprecated('Use [Graph.ctx] instead')
   Map<String, String> contexts = {};
 
   /// The set to store different groups of triples in the form of
   /// {sub1: {pre1: {obj1}, pre2, {obj2, obj2_1}}, sub2: {pre3: {obj3, obj3_1}, ...}, ...}
-  // TODO: turtle subject as a BlankNode as subjects can be {iri, BlankNode, collection}, and iri can be {IRIREF, PrefixedName}, the current implementation only deals with iri (implemented as URIRef) as subject.
+  //  Turtle subject as a BlankNode as subjects can be {iri, BlankNode, collection}, and iri can be {IRIREF, PrefixedName}, the current implementation only deals with iri (implemented as URIRef) as subject.
   Map<URIRef, Map<URIRef, Set>> groups = {};
 
   /// The set to store all prefixed namespaces.
@@ -64,7 +62,6 @@ class Graph {
   /// }
   /// ```
   void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
-    // TODO: subject as a BlankNode
     try {
       URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
       _updateCtx(sub, ctx);
@@ -437,7 +434,6 @@ class Graph {
           throw Exception('Error: illegal line ending with "." $line');
         }
       } else {
-        // TODO: Decide if it's an empty line or starts with '#', just ignore it
         //       or throw an [Exception].
         // throw Exception('Error: cannot parse line $line');
       }
@@ -464,12 +460,12 @@ class Graph {
 
       // Single ':'
       if (k.length == 0) {
-        k = BaseType.shorthandBase.name;
+        k = shorthandBase;
       }
     } else if (prefixLine.toLowerCase().startsWith('@base') &&
         prefixLine.endsWith('.')) {
       List<String> lst = prefixLine.split(' ');
-      k = BaseType.defaultBase.name;
+      k = defaultBase;
       v = lst[1].substring(1, lst[1].length - 1);
     } else {
       throw Exception('Error: unable to parse this line $prefixLine');
@@ -500,7 +496,7 @@ class Graph {
         // Case 1.2 <uri> uses base as a default. E.g., <bob> in the following:
         // @base <www.example.com/> .
         // <bob#me> rdf:type owl:NamedIndividual
-        return URIRef(contexts[BaseType.defaultBase.name]! + content);
+        return URIRef(ctx[defaultBase]!.value + content);
       }
     } else if (s.contains(':')) {
       // Case 2: ':'
@@ -512,14 +508,14 @@ class Graph {
         if (lst.length > 1) {
           String vocab = lst[0];
           String type = lst[1];
-          if (!contexts.containsKey(vocab)) {
+          if (!ctx.containsKey(vocab)) {
             throw Exception('Error: $vocab not existed in contexts!');
           } else {
-            return URIRef(contexts[vocab]! + type);
+            return URIRef(ctx[vocab]!.value + type);
           }
         } else {
           // Case 2.2 ':a'
-          return URIRef(contexts[BaseType.shorthandBase.name]! + lst[0]);
+          return URIRef(ctx[shorthandBase]!.value + lst[0]);
         }
       }
     } else {
@@ -655,7 +651,6 @@ class Graph {
         return URIRef(uri);
       } else {
         if (ctx.containsKey(':')) {
-          // FIXME: if context has base, do we need to stitch them?
           // Examples:
           // 1. <> -> URIRef('')
           // 2. <./> -> URIRef('./')
@@ -739,7 +734,6 @@ class Graph {
   }
 
   /// Writes different graphs with various triples to output
-  @Deprecated('Use serialization methods instead.')
   void _writeGraphs(StringBuffer output, String indent) {
     String line = '';
     for (var k in graphs.keys) {
@@ -828,19 +822,18 @@ class Graph {
   }
 
   /// Reads and write prefixes.
-  @Deprecated('Use serialization methods instead.')
   void _writePrefixes(StringBuffer output) {
     String line = '';
-    for (var c in contexts.keys) {
-      if (c == BaseType.shorthandBase.name) {
+    for (var c in ctx.keys) {
+      if (c == shorthandBase) {
         // Shorthand ':' has no prefixed word.
-        line = '@prefix : <${contexts[c]}> .\n';
-      } else if (c == BaseType.defaultBase.name) {
+        line = '@prefix : <${ctx[c]}> .\n';
+      } else if (c == defaultBase) {
         // Default base syntax.
-        line = '@base <${contexts[c]}> .\n';
+        line = '@base <${ctx[c]}> .\n';
       } else {
         // Usual prefix syntax.
-        line = '@prefix $c: <${contexts[c]}> .\n';
+        line = '@prefix $c: <${ctx[c]}> .\n';
       }
       output.write(line);
     }
@@ -901,9 +894,9 @@ class Graph {
       if (uriRef.inNamespace(Namespace(ns: ns))) {
         // If there are duplicates namespaces for different ctx keys, whichever
         // comes first will take precedence
-        if (abbr == BaseType.defaultBase.name) {
+        if (abbr == defaultBase) {
           return '<${uriRef.value.substring(ns.length)}>';
-        } else if (abbr == BaseType.shorthandBase.name) {
+        } else if (abbr == shorthandBase) {
           return ':${uriRef.value.substring(ns.length)}';
         }
         return '$abbr:${uriRef.value.substring(ns.length)}';

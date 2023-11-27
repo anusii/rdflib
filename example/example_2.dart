@@ -1,50 +1,26 @@
+import 'dart:io';
+
 import 'package:rdflib/rdflib.dart';
 
-main() {
-  // Initialize a Graph
+main() async {
+  String filePath = 'example/sample_ttl_1.ttl';
+  // Read file content to a local String
+  String fileContents = await File(filePath).readAsStringSync();
+  print('-------Original file-------\n$fileContents');
+
+  // create a graph to read turtle file and store info
   Graph g = Graph();
 
-  // Define namespaces for later use
-  Namespace shData = Namespace(ns: 'http://silo.net.au/data/SOLID-Health#');
-  Namespace shOnto =
-      Namespace(ns: 'http://sii.cecs.anu.edu.au/onto/SOLID-Health#');
+  // Parse with the new method [Graph.parseTurtle] instead of [Graph.parse] (deprecated)
+  g.parseTurtle(fileContents);
 
-  // Create a subject
-  URIRef newAssessTab = shData.withAttr('AssessmentTab-p43623-20220727T120913');
-
-  // Add the entity to the Graph, equivalent to
-  // g.addTripleToGroups(newAssessTab, rdf.typ, owl:NamedIndividual)
-  g.addNamedIndividualToGroups(newAssessTab);
-
-  // Add using a Triple type
-  Triple t1 = Triple(
-      sub: newAssessTab, pre: RDF.type, obj: shOnto.withAttr('AssessmentTab'));
-  g.addTripleToGroups(t1.sub, t1.pre, t1.obj);
-
-  // Add directly using sub, pre, and obj
-  g.addTripleToGroups(
-      newAssessTab, shData.withAttr('asthmaControl'), 'Poor Control');
-  g.addTripleToGroups(
-      newAssessTab, shOnto.withAttr('diastolicBloodPressure'), '75');
-  g.addTripleToGroups(
-      newAssessTab, shOnto.withAttr('systolicBloodPressure'), Literal('125.0'));
-
-  URIRef newSeeAndDoTab = shData.withAttr('SeeAndDoTab-p43623-20220727T120913');
-  URIRef newSeeAndDoOption =
-      shData.withAttr('SeeAndDoOption-p43623-20220727T120913-fitnessDrive');
-
-  g.addNamedIndividualToGroups(newSeeAndDoTab);
-  g.addNamedIndividualToGroups(newSeeAndDoOption);
-
-  // Link two triple individuals by a relation
-  g.addObjectProperty(
-      newSeeAndDoTab, shOnto.withAttr('hasSeeAndDoOption'), newSeeAndDoOption);
-
-  // Bind to shorter abbreviations for readability
-  g.bind('sh-data', shData);
-  g.bind('sh-onto', shOnto);
-
-  // Serialize the graph for output
+  // Serialize the Graph for output
   g.serialize(format: 'ttl', abbr: 'short');
-  print(g.serializedString);
+  print('-------Serialized String--------\n${g.serializedString}');
+
+  // Print out full format of triples (will use shorthand in serialization/export)
+  print('--------All triples in the graph-------');
+  for (Triple t in g.triples) {
+    print(t);
+  }
 }

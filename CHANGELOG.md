@@ -1,3 +1,10 @@
+## 0.2.7
+
+- Examples
+  - add a example to package homepage
+_ Static analysis
+  - fix warnings, lints, or formatting issues
+
 ## 0.2.6
 
 - `pubspec.yaml`
@@ -32,7 +39,7 @@
   - fix bugs in trimming
   - update tests to include real-world examples
 - Examples
-  - update examples to utilize the new parser funtion in the package. Examples are included in
+  - update examples to utilize the new parser function in the package. Examples are included in
     the `example` folder, check out more
     examples [here](https://github.com/anusii/rdflib/tree/main/example).
 
@@ -123,7 +130,7 @@ Adding examples for reading and writing a full `ttl` file, check it out in the `
 - `graph.dart`:
   - fixing bugs in reading lines ending with `.`, `,` and `;`
   - [partly] fixing prefix lines starting with ':' and '@base'
-  - fixing bugs in reading single numeric values (with no specified datatypes)
+  - fixing bugs in reading single numeric values (with no specified data types)
 
 ## 0.1.2
 
@@ -155,7 +162,7 @@ Renaming `rdfgraph` to `rdflib`. (GitHub repository stays the same)
 
 ## 0.0.9
 
-Updating pub.dev page sidebar homepage link to new ANUSII GitHub repository.
+Updating pub.dev page sidebar homepage link to new ANU SII GitHub repository.
 
 ## 0.0.8
 
