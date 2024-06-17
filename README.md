@@ -1,4 +1,4 @@
-## This repository is a fork of anusii/rdflib:main to develop a solution to its [issue 34](https://github.com/anusii/rdflib/issues/34).
+## This repository is a fork of [anusii/rdflib:main](https://github.com/anusii/rdflib) to develop a solution to its [issue 34](https://github.com/anusii/rdflib/issues/34)
 
 
 # RDFLib
