@@ -1,3 +1,6 @@
+## This repository is a fork of anusii/rdflib:main to develop a solution to its [issue 34](https://github.com/anusii/rdflib/issues/34).
+
+
 # RDFLib
 
 [![Pub Package](https://img.shields.io/pub/v/rdflib)](https://pub.dev/packages/rdflib)
