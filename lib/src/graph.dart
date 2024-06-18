@@ -612,19 +612,22 @@ class Graph {
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
 
+      // My new code:
       for (var obj in objectList){
+        var objItem;
+        if (obj is String){
+          objItem = item(obj);
+        }
+        else if (obj is List){
+          objItem = itemFromList(obj);
+        }
 
-          var objItem;
-          if (obj is String){
-            objItem = item(obj);
-          }
-          if (obj is List){
-            print('List found!');
-            throw Error();
-          }
+        groups[sub]![pre]!.add(objItem);
+        print('Adding to groups, sub: $sub, pre: $pre, obj: $obj');
+        triples.add(Triple(sub: sub, pre: pre, obj: objItem));
 
-          groups[sub]![pre]!.add(objItem);
-          triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
+        var groups_sub_pre = groups[sub]![pre]!;
+        print('groups[sub]![pre]!: ${groups_sub_pre}');
       }
 
       // // Original for loop - TODO remove
@@ -728,6 +731,11 @@ class Graph {
       // Treat it as a normal string.
       return Literal(s);
     }
+  }
+
+  itemFromList(List l){
+    print('Pretending to process item from list ${l}');
+    return l;
   }
 
   /// Serializes the graph to certain format and export to file.
