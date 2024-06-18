@@ -751,7 +751,6 @@ class Graph {
     }
 
     for (List predicateObjectList in predicateObjectLists){
-      print('predicateObjectList in pOL: $predicateObjectList, type: ${predicateObjectList.runtimeType}, length: ${predicateObjectList.length}');
       if (predicateObjectList[0] == '['){
         predicateObjectList = predicateObjectList.sublist(1, predicateObjectList.length-1);
       }
