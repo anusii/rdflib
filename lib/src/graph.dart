@@ -623,11 +623,12 @@ class Graph {
         }
 
         groups[sub]![pre]!.add(objItem);
-        print('Adding to groups, sub: $sub, pre: $pre, obj: $obj');
         triples.add(Triple(sub: sub, pre: pre, obj: objItem));
 
-        var groups_sub_pre = groups[sub]![pre]!;
-        print('groups[sub]![pre]!: ${groups_sub_pre}');
+        // TODO remove
+        // print('Adding to groups, sub: $sub, pre: $pre, obj: $obj');
+        // var groups_sub_pre = groups[sub]![pre]!;
+        // print('groups[sub]![pre]!: ${groups_sub_pre}');
       }
 
       // // Original for loop - TODO remove
@@ -733,9 +734,52 @@ class Graph {
     }
   }
 
-  itemFromList(List l){
-    print('Pretending to process item from list ${l}');
-    return l;
+  Map<URIRef, Set<dynamic>> itemFromList(List tripleList){
+    print('Pretending to process item from list');
+    if (tripleList[0] == '[') {
+      // trim leading and trailing 'entries' that are just [ or ]
+      tripleList = tripleList.sublist(1, tripleList.length - 1);
+    }
+
+    List predicateObjectLists = tripleList[0];
+    print('pOLs: $predicateObjectLists,\n\t- length: ${predicateObjectLists.length},\n\t- runtimeType: ${predicateObjectLists.runtimeType}');
+    print('First in pOLs: ${predicateObjectLists[0]}');
+
+    // format is [subject, [ [pre1, obj1], [pre2, obj2], [pre3, obj3]... ] ]
+
+    Map<URIRef, Set<dynamic>> objectGroups = Map();
+    
+    for (List predicateObjectList in predicateObjectLists){
+      print('predicateObjectList in pOL: $predicateObjectList, type: ${predicateObjectList.runtimeType}, length: ${predicateObjectList.length}');
+      if (predicateObjectList[0] == '['){
+        predicateObjectList = predicateObjectList.sublist(1, predicateObjectList.length-1);
+      }
+      var pre;
+      if (predicateObjectList[0] is List){
+        pre = itemFromList(predicateObjectList[0]);
+      }
+      else {
+        pre = item(predicateObjectList[0]); // URIRef
+      }
+
+      List objectList = predicateObjectList[1];
+
+      var objectItem;
+      for (var object in objectList){
+        if (object is String){
+          objectItem = item(object);
+        }
+        else if (object is List){
+          objectItem = itemFromList(object);
+        }
+        else {
+          throw Exception('object could not be parsed. object');
+        }
+
+        objectGroups[pre] = {objectItem};
+      }
+    }
+    return objectGroups;
   }
 
   /// Serializes the graph to certain format and export to file.
