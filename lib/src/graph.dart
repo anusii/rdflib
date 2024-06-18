@@ -611,10 +611,27 @@ class Graph {
       // Use a set to store the triples.
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
-      for (String obj in objectList) {
-        groups[sub]![pre]!.add(item(obj));
-        triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
+
+      for (var obj in objectList){
+
+          var objItem;
+          if (obj is String){
+            objItem = item(obj);
+          }
+          if (obj is List){
+            print('List found!');
+            throw Error();
+          }
+
+          groups[sub]![pre]!.add(objItem);
+          triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
       }
+
+      // // Original for loop - TODO remove
+      // for (String obj in objectList) {
+      //   groups[sub]![pre]!.add(item(obj));
+      //   triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
+      // }
     }
   }
 
