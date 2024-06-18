@@ -735,19 +735,20 @@ class Graph {
   }
 
   Map<URIRef, Set<dynamic>> itemFromList(List tripleList){
-    print('Pretending to process item from list');
-    if (tripleList[0] == '[' || tripleList[0] == '(') {
-      // trim leading and trailing 'entries' that are just brackets
-      tripleList = tripleList.sublist(1, tripleList.length - 1);
+    List predicateObjectLists = [];
+    Map<URIRef, Set<dynamic>> objectGroups = Map();
+
+    if (tripleList[0] == '('){
+      if (tripleList[1][0] is List){
+        tripleList = tripleList[1][0];
+      }
     }
 
-    List predicateObjectLists = tripleList[0];
-    print('pOLs: $predicateObjectLists,\n\t- length: ${predicateObjectLists.length},\n\t- runtimeType: ${predicateObjectLists.runtimeType}');
-    print('First in pOLs: ${predicateObjectLists[0]}');
-
-    // format is [subject, [ [pre1, obj1], [pre2, obj2], [pre3, obj3]... ] ]
-
-    Map<URIRef, Set<dynamic>> objectGroups = Map();
+    if (tripleList[0] == '[') {
+      // trim leading and trailing 'entries' that are just [ or ]
+      tripleList = tripleList.sublist(1, tripleList.length - 1);
+      predicateObjectLists = tripleList[0];
+    }
 
     for (List predicateObjectList in predicateObjectLists){
       print('predicateObjectList in pOL: $predicateObjectList, type: ${predicateObjectList.runtimeType}, length: ${predicateObjectList.length}');
@@ -770,7 +771,18 @@ class Graph {
           objectItem = item(object);
         }
         else if (object is List){
-          objectItem = itemFromList(object);
+          if (object[0]=='('){
+            // Found a set of objects
+            object = object.sublist(1, object.length - 1);
+
+            if (object[0][0] is List){
+              object = object[0][0];
+              objectItem = itemFromList(object);
+            }
+            else {
+              objectItem = object.toSet();
+            }
+          }
         }
         else {
           throw Exception('object could not be parsed. object');
