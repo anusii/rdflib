@@ -736,8 +736,8 @@ class Graph {
 
   Map<URIRef, Set<dynamic>> itemFromList(List tripleList){
     print('Pretending to process item from list');
-    if (tripleList[0] == '[') {
-      // trim leading and trailing 'entries' that are just [ or ]
+    if (tripleList[0] == '[' || tripleList[0] == '(') {
+      // trim leading and trailing 'entries' that are just brackets
       tripleList = tripleList.sublist(1, tripleList.length - 1);
     }
 
@@ -748,7 +748,7 @@ class Graph {
     // format is [subject, [ [pre1, obj1], [pre2, obj2], [pre3, obj3]... ] ]
 
     Map<URIRef, Set<dynamic>> objectGroups = Map();
-    
+
     for (List predicateObjectList in predicateObjectLists){
       print('predicateObjectList in pOL: $predicateObjectList, type: ${predicateObjectList.runtimeType}, length: ${predicateObjectList.length}');
       if (predicateObjectList[0] == '['){
