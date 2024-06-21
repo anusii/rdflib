@@ -1,3 +1,7 @@
+## 0.2.9
+
+_ Identify language tags properly
+
 ## 0.2.8
 
 _ Static analysis
