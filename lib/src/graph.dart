@@ -742,7 +742,6 @@ class Graph {
 
   Set parseObjectValues(List objVals) {
     /// Parses a Set or List of multiple object values
-    print('objVals: $objVals'); // TODO remove
     objVals = stripBrackets(objVals)[0];
 
     Set values = {};
@@ -755,12 +754,12 @@ class Graph {
 
         // TODO try to parse to int/float etc
         Map objMap = {
-          objName: subValues.length == 1 ? subValues[0] : subValues
+          // TODO remove extra Set layer
+          objName: subValues.length == 1 ? {subValues[0]} : {subValues}
         };
         values.add(objMap);
       } else {
         // TODO
-        print('');
         values.add(objVal);
       }
     }
@@ -781,7 +780,7 @@ class Graph {
       objValues.add(values[0]);
     } else {
       // TODO parse multiple values
-      List singleValuesList = values[1];
+      // List singleValuesList = values[1];
       for (final val in values) {
         // check whether string or list
         if (val is String) {
@@ -825,12 +824,6 @@ class Graph {
       var pre;
       pre = item(predicateObjectList[0]);
       var objValues = predicateObjectList[1];
-      if (objValues[0] is List && objValues[0].length > 1) {
-        // Multiple object values found (e.g. multiple restrictions on a ConstrainedDatatype)
-        print('Multiple values!');
-        Set values = parseObjectValues(objValues[0]);
-        objectGroups[pre] = values;
-      }
 
       // TODO still needed? else if rather than if?
       if (predicateObjectList[0] is List) {
@@ -840,32 +833,44 @@ class Graph {
         pre = item(predicateObjectList[0]); // URIRef
       }
 
-      List objectList = predicateObjectList[1];
+      Set objItem = {};
 
-      var objectItem;
-      for (var object in objectList) {
-        if (object is String) {
-          objectItem = item(object);
-          print('');
-        } else if (object is List) {
-          if (object[0] == '(') {
-            // Found a set of objects
-            object = object.sublist(1, object.length - 1);
-
-            if (object[0][0] is List) {
-              object = object[0][0];
-              objectItem = itemFromList(object);
-              print('');
-            } else {
-              objectItem = object.toSet();
-            }
-          }
+      for (final obj in objValues) {
+        if (objValues[0] is List && objValues[0].length > 1) {
+          // Multiple object values found (e.g. multiple restrictions on a ConstrainedDatatype)
+          objItem.add(parseObjectValues(objValues[0]));
         } else {
-          throw Exception('object could not be parsed. object');
+          objItem.add(item(obj));
         }
-
-        objectGroups[pre] = {objectItem};
       }
+
+      objectGroups[pre] = objItem;
+      // List objectList = predicateObjectList[1];
+
+      // var objectItem;
+      // for (var object in objectList) {
+      //   if (object is String) {
+      //     objectItem = item(object);
+      //     print('');
+      //   } else if (object is List) {
+      //     if (object[0] == '(') {
+      //       // Found a set of objects
+      //       object = object.sublist(1, object.length - 1);
+      //
+      //       if (object[0][0] is List) {
+      //         object = object[0][0];
+      //         objectItem = itemFromList(object);
+      //         print('');
+      //       } else {
+      //         objectItem = object.toSet();
+      //       }
+      //     }
+      //   } else {
+      //     throw Exception('object could not be parsed. object');
+      //   }
+      //
+      //   objectGroups[pre] = {objectItem};
+      // }
     }
     return objectGroups;
   }
