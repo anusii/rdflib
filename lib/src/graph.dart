@@ -623,11 +623,6 @@ class Graph {
 
         groups[sub]![pre]!.add(objItem);
         triples.add(Triple(sub: sub, pre: pre, obj: objItem));
-
-        // TODO remove
-        // print('Adding to groups, sub: $sub, pre: $pre, obj: $obj');
-        // var groups_sub_pre = groups[sub]![pre]!;
-        // print('groups[sub]![pre]!: ${groups_sub_pre}');
       }
 
       // // Original for loop - TODO remove
@@ -754,8 +749,7 @@ class Graph {
 
         // TODO try to parse to int/float etc
         Map objMap = {
-          // TODO remove extra Set layer
-          objName: subValues.length == 1 ? {subValues[0]} : {subValues}
+          objName: subValues.length == 1 ? subValues[0] : subValues
         };
         values.add(objMap);
       } else {
@@ -825,7 +819,6 @@ class Graph {
       pre = item(predicateObjectList[0]);
       var objValues = predicateObjectList[1];
 
-      // TODO still needed? else if rather than if?
       if (predicateObjectList[0] is List) {
         // detect list within predicateObjectList and iterate
         pre = itemFromList(predicateObjectList[0]);
@@ -845,32 +838,6 @@ class Graph {
       }
 
       objectGroups[pre] = objItem;
-      // List objectList = predicateObjectList[1];
-
-      // var objectItem;
-      // for (var object in objectList) {
-      //   if (object is String) {
-      //     objectItem = item(object);
-      //     print('');
-      //   } else if (object is List) {
-      //     if (object[0] == '(') {
-      //       // Found a set of objects
-      //       object = object.sublist(1, object.length - 1);
-      //
-      //       if (object[0][0] is List) {
-      //         object = object[0][0];
-      //         objectItem = itemFromList(object);
-      //         print('');
-      //       } else {
-      //         objectItem = object.toSet();
-      //       }
-      //     }
-      //   } else {
-      //     throw Exception('object could not be parsed. object');
-      //   }
-      //
-      //   objectGroups[pre] = {objectItem};
-      // }
     }
     return objectGroups;
   }
