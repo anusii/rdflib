@@ -740,32 +740,61 @@ class Graph {
     return values;
   }
 
-  parseObjectValues(List objVals) {
+  Set parseObjectValues(List objVals) {
     /// Parses a Set or List of multiple object values
-    print('objVals: $objVals');
+    print('objVals: $objVals'); // TODO remove
     objVals = stripBrackets(objVals)[0];
-    print('');
-    for (var objVal in objVals) {
-      objVal = stripBrackets(objVal)[0][0];
-      String objName = objVal[0];
 
-      print('name: ${objVal[0]}, value: ${objVal[1]}');
-      print('');
+    Set values = {};
+    for (var objVal in objVals) {
+      if (objVal is List) {
+        objVal = stripBrackets(objVal)[0][0];
+
+        String objName = objVal[0];
+        List subValues = objVal[1];
+
+        // TODO try to parse to int/float etc
+        Map objMap = {
+          objName: subValues.length == 1 ? subValues[0] : subValues
+        };
+        values.add(objMap);
+      } else {
+        // TODO
+        print('');
+        values.add(objVal);
+      }
     }
+    return values;
   }
 
-  parseObjectValueFromNameStringAndValueList(List obj) {
+  List parseObjectValueFromNameStringAndValueList(List obj) {
     /// Used for getting name and values for objects when obj is in the format:
     /// ['Object name string', ['Value 1', 'Value 2 (optional)'...] ]
+    /// Returns in format: {'Object name string': {'Value 1', 'Value 2 (optional)'...} }
+
     String objName = obj[0];
+
     List values = obj[1];
-    String objValues = '';
+    Set objValues = {};
+
     if (values.length == 1) {
-      objValues = values[1];
+      objValues.add(values[0]);
     } else {
-      // TODO
+      // TODO parse multiple values
       List singleValuesList = values[1];
+      for (final val in values) {
+        // check whether string or list
+        if (val is String) {
+          objValues.add(val);
+        } else {
+          // TODO
+          throw UnimplementedError(
+              'Parsing of multiple values is not yet implemented in this method');
+        }
+      }
     }
+
+    return [objName, objValues];
   }
 
   parseObjectValue() {
@@ -794,14 +823,16 @@ class Graph {
             predicateObjectList.sublist(1, predicateObjectList.length - 1);
       }
       var pre;
-      pre = predicateObjectList[0];
+      pre = item(predicateObjectList[0]);
       var objValues = predicateObjectList[1];
       if (objValues[0] is List && objValues[0].length > 1) {
         // Multiple object values found (e.g. multiple restrictions on a ConstrainedDatatype)
         print('Multiple values!');
-        parseObjectValues(objValues[0]);
+        Set values = parseObjectValues(objValues[0]);
+        objectGroups[pre] = values;
       }
 
+      // TODO still needed? else if rather than if?
       if (predicateObjectList[0] is List) {
         // detect list within predicateObjectList and iterate
         pre = itemFromList(predicateObjectList[0]);
@@ -815,6 +846,7 @@ class Graph {
       for (var object in objectList) {
         if (object is String) {
           objectItem = item(object);
+          print('');
         } else if (object is List) {
           if (object[0] == '(') {
             // Found a set of objects
@@ -823,6 +855,7 @@ class Graph {
             if (object[0][0] is List) {
               object = object[0][0];
               objectItem = itemFromList(object);
+              print('');
             } else {
               objectItem = object.toSet();
             }
