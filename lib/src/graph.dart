@@ -613,12 +613,11 @@ class Graph {
       List objectList = predicateObjectList[1];
 
       // My new code:
-      for (var obj in objectList){
+      for (var obj in objectList) {
         var objItem;
-        if (obj is String){
+        if (obj is String) {
           objItem = item(obj);
-        }
-        else if (obj is List){
+        } else if (obj is List) {
           objItem = itemFromList(obj);
         }
 
@@ -734,12 +733,51 @@ class Graph {
     }
   }
 
-  Map<URIRef, Set<dynamic>> itemFromList(List tripleList){
+  List stripBrackets(List values) {
+    if (values[0] == '(' || values[0] == '[') {
+      values = values.sublist(1, values.length - 1);
+    }
+    return values;
+  }
+
+  parseObjectValues(List objVals) {
+    /// Parses a Set or List of multiple object values
+    print('objVals: $objVals');
+    objVals = stripBrackets(objVals)[0];
+    print('');
+    for (var objVal in objVals) {
+      objVal = stripBrackets(objVal)[0][0];
+      String objName = objVal[0];
+
+      print('name: ${objVal[0]}, value: ${objVal[1]}');
+      print('');
+    }
+  }
+
+  parseObjectValueFromNameStringAndValueList(List obj) {
+    /// Used for getting name and values for objects when obj is in the format:
+    /// ['Object name string', ['Value 1', 'Value 2 (optional)'...] ]
+    String objName = obj[0];
+    List values = obj[1];
+    String objValues = '';
+    if (values.length == 1) {
+      objValues = values[1];
+    } else {
+      // TODO
+      List singleValuesList = values[1];
+    }
+  }
+
+  parseObjectValue() {
+    /// Parses a single object value
+  }
+
+  Map<URIRef, Set<dynamic>> itemFromList(List tripleList) {
     List predicateObjectLists = [];
     Map<URIRef, Set<dynamic>> objectGroups = Map();
 
-    if (tripleList[0] == '('){
-      if (tripleList[1][0] is List){
+    if (tripleList[0] == '(') {
+      if (tripleList[1][0] is List) {
         tripleList = tripleList[1][0];
       }
     }
@@ -750,40 +788,46 @@ class Graph {
       predicateObjectLists = tripleList[0];
     }
 
-    for (List predicateObjectList in predicateObjectLists){
-      if (predicateObjectList[0] == '['){
-        predicateObjectList = predicateObjectList.sublist(1, predicateObjectList.length-1);
+    for (List predicateObjectList in predicateObjectLists) {
+      if (predicateObjectList[0] == '[') {
+        predicateObjectList =
+            predicateObjectList.sublist(1, predicateObjectList.length - 1);
       }
       var pre;
-      if (predicateObjectList[0] is List){
-        pre = itemFromList(predicateObjectList[0]);
+      pre = predicateObjectList[0];
+      var objValues = predicateObjectList[1];
+      if (objValues[0] is List && objValues[0].length > 1) {
+        // Multiple object values found (e.g. multiple restrictions on a ConstrainedDatatype)
+        print('Multiple values!');
+        parseObjectValues(objValues[0]);
       }
-      else {
+
+      if (predicateObjectList[0] is List) {
+        // detect list within predicateObjectList and iterate
+        pre = itemFromList(predicateObjectList[0]);
+      } else {
         pre = item(predicateObjectList[0]); // URIRef
       }
 
       List objectList = predicateObjectList[1];
 
       var objectItem;
-      for (var object in objectList){
-        if (object is String){
+      for (var object in objectList) {
+        if (object is String) {
           objectItem = item(object);
-        }
-        else if (object is List){
-          if (object[0]=='('){
+        } else if (object is List) {
+          if (object[0] == '(') {
             // Found a set of objects
             object = object.sublist(1, object.length - 1);
 
-            if (object[0][0] is List){
+            if (object[0][0] is List) {
               object = object[0][0];
               objectItem = itemFromList(object);
-            }
-            else {
+            } else {
               objectItem = object.toSet();
             }
           }
-        }
-        else {
+        } else {
           throw Exception('object could not be parsed. object');
         }
 
