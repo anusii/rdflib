@@ -715,12 +715,19 @@ class Graph {
       return URIRef('${ctx[namespace]?.value}$localname');
     }
     // 5. abc@en
-    else if (s.contains('@')) {
-      List<String> lst = s.split('@');
-      String value = lst[0];
-      String lang = lst[1];
+    else if (_existsLangTag(s)) {
+      String lang = _getLangTag(s);
+      String value = s.replaceAll('@$lang', '');
       return Literal(value, lang: lang);
     }
+    // AV-20240621: commenting the following and adding above
+    // as the following will identify non language tags as well
+    // else if (s.contains('@')) {
+    //   List<String> lst = s.split('@');
+    //   String value = lst[0];
+    //   String lang = lst[1];
+    //   return Literal(value, lang: lang);
+    // }
     // 6. abc
     else {
       // Treat it as a normal string.
@@ -1085,5 +1092,15 @@ class Graph {
       // Return the processed literal with the original triple quotes
       return '"$processedLiteral"';
     });
+  }
+
+  /// Check if a language tag exists in a given literal
+  bool _existsLangTag(String literal) {
+    return langTags.any((element) => literal.contains('@$element'));
+  }
+
+  /// Extract the language tag from a given literal
+  String _getLangTag(String literal) {
+    return langTags.firstWhere((element) => literal.contains('@$element'));
   }
 }
