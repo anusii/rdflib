@@ -756,7 +756,9 @@ class Graph {
 
         // TODO try to parse to int/float etc
         Map objMap = {
-          objName: subValues.length == 1 ? subValues[0] : subValues
+          item(objName): subValues.length == 1
+              ? item(subValues[0])
+              : subValues.map((e) => item(e)).toSet()
         };
         values.add(objMap);
       } else {
