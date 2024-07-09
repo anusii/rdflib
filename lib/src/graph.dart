@@ -291,6 +291,17 @@ class Graph {
     return objs;
   }
 
+  /// Finds all predicates which have a certain subject and object.
+  Set<URIRef> predicates(URIRef sub, dynamic obj) {
+    Set<URIRef> pres = {};
+    for (Triple t in triples) {
+      if (t.sub == sub && t.obj == obj) {
+        pres.add(t.pre);
+      }
+    }
+    return pres;
+  }
+
   /// Parses file and update graph accordingly.
   @Deprecated('Use [Graph.parseTurtle] instead for parsing a turtle string')
   parse(String filePath) async {
