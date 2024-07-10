@@ -1,3 +1,5 @@
+import 'package:rdflib/rdflib.dart';
+
 import '../graph.dart';
 
 /// Parses Turtle (Terse RDF Triple Language) content and extracts it into a map.
@@ -55,7 +57,7 @@ Map<String, dynamic> parseTTL(String ttlContent) {
 /// the key-value pairs from triples where the subject matches [webId].
 ///
 /// This function processes the provided TTL string and extracts the key-value,
-/// based on the given Web ID. It ensures there are no duplicate keys for the 
+/// based on the given Web ID. It ensures there are no duplicate keys for the
 /// same subject.
 ///
 /// Example usage:
@@ -84,7 +86,7 @@ Future<List<({String key, dynamic value})>> parseTTLStr(
 
   // Ensure that webId is not null.
   assert(webId != null, 'Web ID should not be null.');
-  
+
   // Helper function to extract the local name from a URI or blank node.
   String extract(String str) => str.contains('#') ? str.split('#')[1] : str;
 
@@ -113,4 +115,59 @@ Future<List<({String key, dynamic value})>> parseTTLStr(
 
   // Return the list of key-value pairs.
   return pairs;
+}
+
+/// Serializes key/value pairs [keyValuePairs] into TTL (Terse RDF Triple Language) format.
+///
+/// This function takes a list of key-value pairs, where each pair consists of a key (predicate)
+/// and a value (object). It uses a predefined Web ID as the subject and serializes the triples
+/// into a TTL formatted string.
+///
+/// Example usage:
+/// ```dart
+/// final keyValuePairs = [
+///   (key: 'name', value: 'Alice'),
+///   (key: 'age', value: 30),
+/// ];
+/// final ttlStr = await genTTLStr(keyValuePairs);
+/// ```
+///
+/// Returns a TTL formatted string representing the key-value pairs.
+///
+/// Throws an assertion error if:
+/// - The list of key-value pairs is empty.
+/// - There are duplicate keys in the key-value pairs.
+/// - The Web ID is null.
+Future<String> genTTLStr(List<({String key, dynamic value})> keyValuePairs,
+    String? webId, String appTerms) async {
+  // Ensure the list of key-value pairs is not empty.
+  assert(keyValuePairs.isNotEmpty,
+      'The list of key-value pairs should not be empty.');
+
+  // Ensure there are no duplicate keys in the key-value pairs.
+  assert(
+    {for (final p in keyValuePairs) p.key}.length == keyValuePairs.length,
+    'Duplicate keys found in the key-value pairs.',
+  );
+
+  // Ensure the Web ID is not null.
+  assert(webId != null, 'The Web ID should not be null.');
+
+  // Create a new graph instance.
+  final g = Graph();
+  // Create a URIRef for the Web ID.
+  final f = URIRef(webId!);
+  // Create a namespace for the application's terms.
+  final ns = Namespace(ns: appTerms);
+
+  // Add each key-value pair as a triple to the graph.
+  for (final p in keyValuePairs) {
+    g.addTripleToGroups(f, ns.withAttr(p.key), p.value);
+  }
+
+  // Serialize the graph to a TTL formatted string.
+  g.serialize(abbr: 'short');
+
+  // Return the serialized TTL string.
+  return g.serializedString;
 }
