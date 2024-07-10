@@ -48,4 +48,10 @@ main() {
       print('${sub}\'s mailbox: ${mbox.value}');
     }
   }
+
+  // Print out predicates of triples having donna
+  print('-------\nDonna predicates values:');
+  for (Triple tri in g.tripleValues(donna.value)) {
+    print(tri.pre.value);
+  }
 }
