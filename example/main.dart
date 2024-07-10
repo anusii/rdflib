@@ -43,8 +43,8 @@ main() {
 
   // Print out each person's mailbox value
   print('-------\nMailboxes:');
-  for (var sub in g.subjects(pre: a, obj: FOAF.Person)) {
-    for (var mbox in g.objects(sub: sub, pre: FOAF.mbox)) {
+  for (var sub in g.subjects(a, FOAF.Person)) {
+    for (var mbox in g.objects(sub, FOAF.mbox)) {
       print('${sub}\'s mailbox: ${mbox.value}');
     }
   }
