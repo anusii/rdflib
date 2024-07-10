@@ -270,117 +270,25 @@ class Graph {
   }
 
   /// Finds all subjects which have a certain predicate and object.
-  ///
-  /// If `pre` is provided, it checks for the predicate.
-  /// If `obj` is provided, it checks for the object.
-  /// If both are provided, it checks for both predicate and object.
-  /// If neither is provided, it returns all subjects in the triples.
-  Set<URIRef> subjects({URIRef? pre, dynamic obj}) {
-    // Initialize an empty set to store the subjects.
+  Set<URIRef> subjects(URIRef pre, dynamic obj) {
     Set<URIRef> subs = {};
-
-    // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      // Check conditions based on the presence of pre and obj.
-      if (pre != null && obj != null) {
-        // Both pre and obj are provided.
-        if (t.pre == pre && t.obj == obj) {
-          subs.add(t.sub);
-        }
-      } else if (pre != null) {
-        // Only pre is provided.
-        if (t.pre == pre) {
-          subs.add(t.sub);
-        }
-      } else if (obj != null) {
-        // Only obj is provided.
-        if (t.obj == obj) {
-          subs.add(t.sub);
-        }
-      } else {
-        // Neither pre nor obj is provided, return all subjects.
+      if (t.pre == pre && t.obj == obj) {
         subs.add(t.sub);
       }
     }
-
-    // Return the set of subjects.
     return subs;
   }
 
   /// Finds all objects which have a certain subject and predicate.
-  ///
-  /// If `sub` is provided, it checks for the subject.
-  /// If `pre` is provided, it checks for the predicate.
-  /// If both are provided, it checks for both subject and predicate.
-  /// If neither is provided, it returns all objects in the triples.
-  Set<dynamic> objects({URIRef? sub, URIRef? pre}) {
-    // Initialize an empty set to store the objects.
-    Set<dynamic> objs = {};
-
-    // Iterate over all triples in the graph.
+  Set objects(URIRef sub, URIRef pre) {
+    Set objs = {};
     for (Triple t in triples) {
-      // Check conditions based on the presence of sub and pre.
-      if (sub != null && pre != null) {
-        // Both sub and pre are provided.
-        if (t.sub == sub && t.pre == pre) {
-          objs.add(t.obj);
-        }
-      } else if (sub != null) {
-        // Only sub is provided.
-        if (t.sub == sub) {
-          objs.add(t.obj);
-        }
-      } else if (pre != null) {
-        // Only pre is provided.
-        if (t.pre == pre) {
-          objs.add(t.obj);
-        }
-      } else {
-        // Neither sub nor pre is provided, return all objects.
+      if (t.sub == sub && t.pre == pre) {
         objs.add(t.obj);
       }
     }
-
-    // Return the set of objects.
     return objs;
-  }
-
-  /// Finds all predicates which have a certain subject and object.
-  ///
-  /// If `sub` is provided, it checks for the subject.
-  /// If `obj` is provided, it checks for the object.
-  /// If both are provided, it checks for both subject and object.
-  /// If neither is provided, it returns all predicates in the triples.
-  Set<URIRef> predicates({URIRef? sub, dynamic obj}) {
-    // Initialize an empty set to store the predicates.
-    Set<URIRef> pres = {};
-
-    // Iterate over all triples in the graph.
-    for (Triple t in triples) {
-      // Check conditions based on the presence of sub and obj.
-      if (sub != null && obj != null) {
-        // Both sub and obj are provided.
-        if (t.sub == sub && t.obj == obj) {
-          pres.add(t.pre);
-        }
-      } else if (sub != null) {
-        // Only sub is provided.
-        if (t.sub == sub) {
-          pres.add(t.pre);
-        }
-      } else if (obj != null) {
-        // Only obj is provided.
-        if (t.obj == obj) {
-          pres.add(t.pre);
-        }
-      } else {
-        // Neither sub nor obj is provided, return all predicates.
-        pres.add(t.pre);
-      }
-    }
-
-    // Return the set of predicates.
-    return pres;
   }
 
   /// Parses file and update graph accordingly.
