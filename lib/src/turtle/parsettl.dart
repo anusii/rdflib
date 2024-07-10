@@ -1,4 +1,4 @@
-import 'graph.dart';
+import '../graph.dart';
 
 /// Parses Turtle (Terse RDF Triple Language) content and extracts it into a map.
 ///
