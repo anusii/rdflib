@@ -1,6 +1,6 @@
-import 'package:rdflib/rdflib.dart';
-
-import '../graph.dart';
+import 'package:rdflib/src/graph.dart';
+import 'package:rdflib/src/namespace.dart';
+import 'package:rdflib/src/term.dart';
 
 /// Parses Turtle (Terse RDF Triple Language) content and extracts it into a map.
 ///
