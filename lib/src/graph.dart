@@ -383,6 +383,37 @@ class Graph {
     return pres;
   }
 
+  /// Finds all triples which have a certain value.
+  ///
+  /// This method checks if the given [value] matches any of the components
+  /// (subject, predicate, or object) of the triples in the graph. It returns
+  /// a set of triples where any of these components matches the [value].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final value = 'exampleValue';
+  /// final matchingTriples = values(value);
+  /// print(matchingTriples);
+  /// ```
+  Set<Triple> tripleValues(String value) {
+    // Initialize an empty set to store the matching triples.
+    Set<Triple> matchingTriples = {};
+
+    // Iterate over all triples in the graph.
+    for (Triple t in triples) {
+      // Check if the subject, predicate, or object matches the given value.
+      if (t.sub.value == value ||
+          t.pre.value == value ||
+          t.obj.toString() == value) {
+        // If any component matches, add the triple to the set of matching triples.
+        matchingTriples.add(t);
+      }
+    }
+
+    // Return the set of matching triples.
+    return matchingTriples;
+  }
+
   /// Parses file and update graph accordingly.
   @Deprecated('Use [Graph.parseTurtle] instead for parsing a turtle string')
   parse(String filePath) async {
