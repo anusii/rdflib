@@ -1,4 +1,6 @@
 import 'package:logging/logging.dart';
+import 'package:uuid/uuid.dart' as uuid;
+
 import './namespace.dart';
 
 Logger logger = Logger('term');
@@ -203,6 +205,8 @@ class Literal {
 /// It is used to represent complex structures and relationships
 /// without assigning a global identifier.
 class BNode extends URIRef {
+  static final uuid.Uuid _uuid = uuid.Uuid();
+
   /// Creates a blank node with an optional identifier.
   ///
   /// If no identifier is provided, a unique identifier is generated.
@@ -210,9 +214,9 @@ class BNode extends URIRef {
 
   /// Generates a unique identifier for a blank node.
   ///
-  /// The identifier is based on the current timestamp if not provided.
+  /// The identifier is based on a UUID if not provided.
   static String _generateBNodeId([String? id]) {
-    return id ?? '_:' + DateTime.now().millisecondsSinceEpoch.toString();
+    return id ?? '_:' + _uuid.v4();
   }
 
   @override
