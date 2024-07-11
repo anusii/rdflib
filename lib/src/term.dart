@@ -196,3 +196,27 @@ class Literal {
     }
   }
 }
+
+/// Represents a blank node in an RDF graph.
+///
+/// A blank node is an anonymous resource that does not have a URI.
+/// It is used to represent complex structures and relationships
+/// without assigning a global identifier.
+class BNode extends URIRef {
+  /// Creates a blank node with an optional identifier.
+  ///
+  /// If no identifier is provided, a unique identifier is generated.
+  BNode([String? id]) : super(_generateBNodeId(id));
+
+  /// Generates a unique identifier for a blank node.
+  ///
+  /// The identifier is based on the current timestamp if not provided.
+  static String _generateBNodeId([String? id]) {
+    return id ?? '_:' + DateTime.now().millisecondsSinceEpoch.toString();
+  }
+
+  @override
+  String toString() {
+    return 'BNode($value)';
+  }
+}
