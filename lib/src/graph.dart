@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
+import 'package:http/http.dart' as http;
+
 import './namespace.dart';
 import './term.dart';
 import './triple.dart';
@@ -740,6 +742,34 @@ class Graph {
       } else {
         print('General error in parsing Turtle content: $e');
       }
+    }
+  }
+
+  /// Parses a valid turtle file from a web link [webLink].
+  ///
+  /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
+  /// The [webLink] should point to a valid Turtle (.ttl) file to ensure correct parsing.
+  /// If the [webLink] does not point to a .ttl file, it might cause unexpected parsing errors.
+  Future<void> parseTurtleFromWeb(String webLink) async {
+    String fileContent = '';
+
+    try {
+      // Fetch the content from the web link.
+      final response = await http.get(
+        Uri.parse(webLink),
+      );
+
+      if (response.statusCode == 200) {
+        fileContent = utf8.decode(response.bodyBytes);
+
+        // Parse the Turtle content.
+        parseTurtle(fileContent);
+      } else {
+        print(
+            'Failed to load content from $webLink. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to load content from $webLink. Error: $e');
     }
   }
 
