@@ -281,24 +281,13 @@ class Graph {
 
     // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      // Check conditions based on the presence of pre and obj.
-      if (pre != null && obj != null) {
-        // Both pre and obj are provided.
-        if (t.pre == pre && t.obj == obj) {
-          subs.add(t.sub);
-        }
-      } else if (pre != null) {
-        // Only pre is provided.
-        if (t.pre == pre) {
-          subs.add(t.sub);
-        }
-      } else if (obj != null) {
-        // Only obj is provided.
-        if (t.obj == obj) {
-          subs.add(t.sub);
-        }
-      } else {
-        // Neither pre nor obj is provided, return all subjects.
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the subject.
+      if (preMatches && objMatches) {
         subs.add(t.sub);
       }
     }
@@ -319,24 +308,13 @@ class Graph {
 
     // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      // Check conditions based on the presence of sub and pre.
-      if (sub != null && pre != null) {
-        // Both sub and pre are provided.
-        if (t.sub == sub && t.pre == pre) {
-          objs.add(t.obj);
-        }
-      } else if (sub != null) {
-        // Only sub is provided.
-        if (t.sub == sub) {
-          objs.add(t.obj);
-        }
-      } else if (pre != null) {
-        // Only pre is provided.
-        if (t.pre == pre) {
-          objs.add(t.obj);
-        }
-      } else {
-        // Neither sub nor pre is provided, return all objects.
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+
+      // If both conditions match (or are not provided), add the object.
+      if (subMatches && preMatches) {
         objs.add(t.obj);
       }
     }
@@ -357,24 +335,13 @@ class Graph {
 
     // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      // Check conditions based on the presence of sub and obj.
-      if (sub != null && obj != null) {
-        // Both sub and obj are provided.
-        if (t.sub == sub && t.obj == obj) {
-          pres.add(t.pre);
-        }
-      } else if (sub != null) {
-        // Only sub is provided.
-        if (t.sub == sub) {
-          pres.add(t.pre);
-        }
-      } else if (obj != null) {
-        // Only obj is provided.
-        if (t.obj == obj) {
-          pres.add(t.pre);
-        }
-      } else {
-        // Neither sub nor obj is provided, return all predicates.
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the predicate.
+      if (subMatches && objMatches) {
         pres.add(t.pre);
       }
     }
@@ -392,10 +359,10 @@ class Graph {
   /// Example usage:
   /// ```dart
   /// final value = 'exampleValue';
-  /// final matchingTriples = values(value);
+  /// final matchingTriples = matchTriples(value);
   /// print(matchingTriples);
   /// ```
-  Set<Triple> tripleValues(String value) {
+  Set<Triple> matchTriples(String value) {
     // Initialize an empty set to store the matching triples.
     Set<Triple> matchingTriples = {};
 
