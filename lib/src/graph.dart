@@ -798,23 +798,7 @@ class Graph {
       // 1. <>
       else if (s.startsWith('<') && s.endsWith('>')) {
         String uri = s.substring(1, s.length - 1);
-        if (URIRef.isValidUri(uri)) {
-          // Valid uri is sufficient as URIRef.
-          return URIRef(uri);
-        } else {
-          if (ctx.containsKey(':')) {
-            // FIXME: if context has base, do we need to stitch them?
-            // Examples:
-            // 1. <> -> URIRef('')
-            // 2. <./> -> URIRef('./')
-            // 3. <bob#me> -> e.g., URIRef('http://example.org/bob#me')
-            //                or just URIRef('bob#m3') [current implementation]?
-            return URIRef(uri);
-            // return URIRef('${ctx[':']!.value}${uri}');
-          } else {
-            return URIRef(uri); // or it's just a string within <>
-          }
-        }
+        return URIRef(uri);
       }
       // 4. abc^^xsd:string
       // Note this needs to come before :abc or abc:efg cases.
