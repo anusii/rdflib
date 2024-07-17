@@ -51,7 +51,7 @@ main() {
 
   // Print out predicates of triples having donna
   print('-------\nDonna predicates values:');
-  for (Triple tri in g.tripleValues(donna.value)) {
+  for (Triple tri in g.matchTriples(donna.value)) {
     print(tri.pre.value);
   }
 }
