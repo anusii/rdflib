@@ -392,10 +392,10 @@ class Graph {
   /// Example usage:
   /// ```dart
   /// final value = 'exampleValue';
-  /// final matchingTriples = values(value);
+  /// final matchingTriples = matchTriples(value);
   /// print(matchingTriples);
   /// ```
-  Set<Triple> tripleValues(String value) {
+  Set<Triple> matchTriples(String value) {
     // Initialize an empty set to store the matching triples.
     Set<Triple> matchingTriples = {};
 
