@@ -270,25 +270,115 @@ class Graph {
   }
 
   /// Finds all subjects which have a certain predicate and object.
-  Set<URIRef> subjects(URIRef pre, dynamic obj) {
+  ///
+  /// If `pre` is provided, it checks for the predicate.
+  /// If `obj` is provided, it checks for the object.
+  /// If both are provided, it checks for both predicate and object.
+  /// If neither is provided, it returns all subjects in the triples.
+  Set<URIRef> subjects({URIRef? pre, dynamic obj}) {
+    // Initialize an empty set to store the subjects.
     Set<URIRef> subs = {};
+
+    // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      if (t.pre == pre && t.obj == obj) {
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the subject.
+      if (preMatches && objMatches) {
         subs.add(t.sub);
       }
     }
+
+    // Return the set of subjects.
     return subs;
   }
 
   /// Finds all objects which have a certain subject and predicate.
-  Set objects(URIRef sub, URIRef pre) {
-    Set objs = {};
+  ///
+  /// If `sub` is provided, it checks for the subject.
+  /// If `pre` is provided, it checks for the predicate.
+  /// If both are provided, it checks for both subject and predicate.
+  /// If neither is provided, it returns all objects in the triples.
+  Set<dynamic> objects({URIRef? sub, URIRef? pre}) {
+    // Initialize an empty set to store the objects.
+    Set<dynamic> objs = {};
+
+    // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      if (t.sub == sub && t.pre == pre) {
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+
+      // If both conditions match (or are not provided), add the object.
+      if (subMatches && preMatches) {
         objs.add(t.obj);
       }
     }
+
+    // Return the set of objects.
     return objs;
+  }
+
+  /// Finds all predicates which have a certain subject and object.
+  ///
+  /// If `sub` is provided, it checks for the subject.
+  /// If `obj` is provided, it checks for the object.
+  /// If both are provided, it checks for both subject and object.
+  /// If neither is provided, it returns all predicates in the triples.
+  Set<URIRef> predicates({URIRef? sub, dynamic obj}) {
+    // Initialize an empty set to store the predicates.
+    Set<URIRef> pres = {};
+
+    // Iterate over all triples in the graph.
+    for (Triple t in triples) {
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the predicate.
+      if (subMatches && objMatches) {
+        pres.add(t.pre);
+      }
+    }
+
+    // Return the set of predicates.
+    return pres;
+  }
+
+  /// Finds all triples which have a certain value.
+  ///
+  /// This method checks if the given [value] matches any of the components
+  /// (subject, predicate, or object) of the triples in the graph. It returns
+  /// a set of triples where any of these components matches the [value].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final value = 'exampleValue';
+  /// final matchingTriples = matchTriples(value);
+  /// print(matchingTriples);
+  /// ```
+  Set<Triple> matchTriples(String value) {
+    // Initialize an empty set to store the matching triples.
+    Set<Triple> matchingTriples = {};
+
+    // Iterate over all triples in the graph.
+    for (Triple t in triples) {
+      // Check if the subject, predicate, or object matches the given value.
+      if (t.sub.value == value ||
+          t.pre.value == value ||
+          t.obj.toString() == value) {
+        // If any component matches, add the triple to the set of matching triples.
+        matchingTriples.add(t);
+      }
+    }
+
+    // Return the set of matching triples.
+    return matchingTriples;
   }
 
   /// Parses file and update graph accordingly.
