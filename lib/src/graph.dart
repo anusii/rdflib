@@ -66,19 +66,19 @@ class Graph {
   void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
     // TODO: subject as a BlankNode
     try {
-      URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
+      dynamic sub =
+          (s.runtimeType == URIRef || s.runtimeType == BNode) ? s : item(s);
       _updateCtx(sub, ctx);
       if (!groups.containsKey(sub)) {
         groups[sub] = Map();
       }
-      URIRef pre = (p.runtimeType == URIRef) ? p : item(p) as URIRef;
+      dynamic pre = (p.runtimeType == URIRef) ? p : item(p);
       _updateCtx(pre, ctx);
       if (!groups[sub]!.containsKey(pre)) {
         groups[sub]![pre] = Set();
       }
-      // var obj = (o.runtimeType == URIRef) ? o : item(o);
       var obj = (o.runtimeType == String) ? item(o) : o;
-      if (obj.runtimeType == URIRef) {
+      if (obj.runtimeType == URIRef || obj.runtimeType == BNode) {
         _updateCtx(obj, ctx);
       } else if (obj.runtimeType == Literal) {
         Literal objLiteral = obj as Literal;
@@ -88,8 +88,8 @@ class Graph {
       } else if (obj.runtimeType == String) {
         _updateCtx(XSD.string, ctx);
       }
+      // Updates triple sets as well.
       groups[sub]![pre]!.add(obj);
-      // Update the triples set as well.
       triples.add(Triple(sub: sub, pre: pre, obj: obj));
     } catch (e) {
       print('Error occurred when adding triple ($s, $p, $o), '
@@ -688,7 +688,7 @@ class Graph {
       return;
     }
     List tripleContent = tripleList[0];
-    URIRef sub = item(tripleContent[0]) as URIRef;
+    dynamic sub = item(tripleContent[0]);
     if (!groups.containsKey(sub)) {
       groups[sub] = Map();
     }
@@ -696,14 +696,14 @@ class Graph {
     for (List predicateObjectList in predicateObjectLists) {
       // Predicate is always an iri.
       // Uses URIRef as we translate PrefixedName to full form of [URIRef]
-      URIRef pre;
-      pre = item(predicateObjectList[0]);
-      // Use a set to store the triples.
+      dynamic pre = item(predicateObjectList[0]);
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
-      for (String obj in objectList) {
-        groups[sub]![pre]!.add(item(obj));
-        triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
+      for (var obj in objectList) {
+        var parsedObj =
+            (obj is List) ? item(_combineListItems(obj)) : item(obj);
+        groups[sub]![pre]!.add(parsedObj);
+        triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
       }
     }
   }
@@ -730,83 +730,79 @@ class Graph {
   /// Case 4: abc^^xsd:string -> Literal('abc', datatype:xsd:string)
   /// Case 5: abc@en -> Literal('abc', lang:'en')
   /// Case 6: abc -> Literal('abc')
-  item(String s) {
-    s = s.trim();
-    // 0. a is short for rdf:type
-    if (s == 'a') {
-      _saveToContext(['@prefix', 'rdf:', '<${RDF.rdf}>']);
-      return a;
-    }
-    // 1. <>
-    else if (s.startsWith('<') && s.endsWith('>')) {
-      String uri = s.substring(1, s.length - 1);
-      if (URIRef.isValidUri(uri)) {
-        // Valid uri is sufficient as URIRef.
+  item(dynamic s) {
+    if (s is String) {
+      s = s.trim();
+
+      // 0. a is short for rdf:type
+      if (s == 'a') {
+        _saveToContext(['@prefix', 'rdf:', '<${RDF.rdf}>']);
+        return a;
+      }
+      // 1. <>
+      else if (s.startsWith('<') && s.endsWith('>')) {
+        String uri = s.substring(1, s.length - 1);
         return URIRef(uri);
-      } else {
-        if (ctx.containsKey(':')) {
-          // FIXME: if context has base, do we need to stitch them?
-          // Examples:
-          // 1. <> -> URIRef('')
-          // 2. <./> -> URIRef('./')
-          // 3. <bob#me> -> e.g., URIRef('http://example.org/bob#me')
-          //                or just URIRef('bob#m3') [current implementation]?
-          return URIRef(uri);
-          // return URIRef('${ctx[':']!.value}${uri}');
-        } else {
-          return URIRef(uri); // or it's just a string within <>
+      }
+      // 4. abc^^xsd:string
+      // Note this needs to come before :abc or abc:efg cases.
+      else if (s.contains('^^')) {
+        List<String> lst = s.split('^^');
+        String value = lst[0];
+        String datatype = lst[1];
+        // Note: Literal only supports XSD, OWL namespaces currently
+        return Literal(value, datatype: item(datatype));
+      }
+      // 2. :abc
+      else if (s.startsWith(':')) {
+        // When using @base.
+        if (ctx[':'] == null) {
+          throw Exception('Base is not defined yet. (caused by $s)');
         }
+        return URIRef('${ctx[":"]!.value}${s.substring(1)}');
       }
-    }
-    // 4. abc^^xsd:string
-    // Note this needs to come before :abc or abc:efg cases.
-    else if (s.contains('^^')) {
-      List<String> lst = s.split('^^');
-      String value = lst[0];
-      String datatype = lst[1];
-      // Note: Literal only supports XSD, OWL namespaces currently
-      return Literal(value, datatype: item(datatype));
-    }
-    // 2. :abc
-    else if (s.startsWith(':')) {
-      // When using @base.
-      if (ctx[':'] == null) {
-        throw Exception('Base is not defined yet. (caused by $s)');
+      // 3. abc:efg
+      else if (s.contains(':') && !s.startsWith('_:')) {
+        // When using @prefix
+        int firstColonPos = s.indexOf(':');
+        String namespace = s.substring(0, firstColonPos + 1); // including ':'
+        String localname = s.substring(firstColonPos + 1);
+        // If the namespace is not defined, we can't proceed.
+        if (ctx[namespace] == null) {
+          throw Exception(
+              'Namespace ${namespace.substring(0, namespace.length - 1)} is used '
+              'but not defined. (caused by $s)');
+        }
+        return URIRef('${ctx[namespace]?.value}$localname');
       }
-      return URIRef('${ctx[":"]!.value}${s.substring(1)}');
-    }
-    // 3. abc:efg
-    else if (s.contains(':')) {
-      // When using @prefix
-      int firstColonPos = s.indexOf(':');
-      String namespace = s.substring(0, firstColonPos + 1); // including ':'
-      String localname = s.substring(firstColonPos + 1);
-      // If the namespace is not defined, we can't proceed.
-      if (ctx[namespace] == null) {
-        throw Exception(
-            'Namespace ${namespace.substring(0, namespace.length - 1)} is used '
-            'but not defined. (caused by $s)');
+      // 5. abc@en
+      else if (_existsLangTag(s)) {
+        String lang = _getLangTag(s);
+        String value = s.replaceAll('@$lang', '');
+        return Literal(value, lang: lang);
       }
-      return URIRef('${ctx[namespace]?.value}$localname');
-    }
-    // 5. abc@en
-    else if (_existsLangTag(s)) {
-      String lang = _getLangTag(s);
-      String value = s.replaceAll('@$lang', '');
-      return Literal(value, lang: lang);
-    }
-    // AV-20240621: commenting the following and adding above
-    // as the following will identify non language tags as well
-    // else if (s.contains('@')) {
-    //   List<String> lst = s.split('@');
-    //   String value = lst[0];
-    //   String lang = lst[1];
-    //   return Literal(value, lang: lang);
-    // }
-    // 6. abc
-    else {
-      // Treat it as a normal string.
-      return Literal(s);
+      // AV-20240621: commenting the following and adding above
+      // as the following will identify non language tags as well
+      // else if (s.contains('@')) {
+      //   List<String> lst = s.split('@');
+      //   String value = lst[0];
+      //   String lang = lst[1];
+      //   return Literal(value, lang: lang);
+      // }
+      // 6. _:
+      else if (s.startsWith('_:')) {
+        return BNode(s);
+      } else {
+        // Treat it as a normal string.
+        return Literal(s);
+      }
+    } else if (s is List) {
+      // Combine all items and sub-items in the list into a single string.
+      String combinedString = _combineListItems(s);
+      if (combinedString.startsWith('_:')) {
+        return BNode(combinedString);
+      }
+      return item(combinedString);
     }
   }
 
@@ -1063,5 +1059,21 @@ class Graph {
   /// Extract the language tag from a given literal
   String _getLangTag(String literal) {
     return langTags.firstWhere((element) => literal.contains('@$element'));
+  }
+
+  /// Recursively combines all items in a list and its sub-items into a single string.
+  ///
+  /// This function traverses a list and concatenates all its elements,
+  /// including elements of nested lists, into a single string.
+  /// It handles various data types by converting them to their string representations.
+  ///
+  String _combineListItems(dynamic item) {
+    if (item is List) {
+      // Recursively call combineListItems on each sub-item and join them into a single string.
+      return item.map((subItem) => _combineListItems(subItem)).join('');
+    } else {
+      // Convert non-list item to a string.
+      return item.toString();
+    }
   }
 }
