@@ -662,17 +662,73 @@ class Graph {
   ///
   /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
   void parseTurtle(String fileContent) {
-    String processedContent = _preprocessTurtleContent(fileContent);
-    final String content = _removeComments(processedContent);
+    try {
+      // Preprocess the content and remove comments.
+      String processedContent = _preprocessTurtleContent(fileContent);
+      final String content = _removeComments(processedContent);
 
-    List parsedList = parser.parse(content).value;
+      // Parse the content into a list of triples.
+      List parsedList = parser.parse(content).value;
 
-    for (List tripleList in parsedList) {
-      _saveToContext(tripleList);
+      // Save context and groups for each triple list.
+      for (int i = 0; i < parsedList.length; i++) {
+        try {
+          _saveToContext(parsedList[i]);
+        } catch (e) {
+          print(
+              'Error in _saveToContext at line ${_findLineNumber(content, parsedList[i])}: $e');
+        }
+      }
+
+      for (int i = 0; i < parsedList.length; i++) {
+        try {
+          _saveToGroups(parsedList[i]);
+        } catch (e) {
+          print(
+              'Error in _saveToGroups at line ${_findLineNumber(content, parsedList[i])}: $e');
+        }
+      }
+    } catch (e) {
+      String errorMessage = e.toString();
+      RegExp regExp = RegExp(r'at (\d+):(\d+)');
+      Match? match = regExp.firstMatch(errorMessage);
+
+      if (match != null) {
+        int line = int.parse(match.group(1)!);
+        int column = int.parse(match.group(2)!);
+
+        List<String> lines = fileContent.split('\n');
+        String errorLine =
+            lines.length >= line ? lines[line - 1] : "Unknown line";
+
+        print('ParserException: $errorMessage');
+        print('Error at line $line, column $column:');
+        print(errorLine);
+      } else {
+        print('General error in parsing Turtle content: $e');
+      }
     }
-    for (List tripleList in parsedList) {
-      _saveToGroups(tripleList);
+  }
+
+  /// Finds the line number of a given triple in the content.
+  ///
+  /// This is a helper method to aid in error reporting by providing the line number.
+  int _findLineNumber(String content, List tripleList) {
+    // Convert the content into lines
+    List<String> lines = content.split('\n');
+
+    // Convert the triple list back to a string to search for in the lines.
+    String tripleString = tripleList.toString();
+
+    // Find the line that contains the triple string.
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].contains(tripleString)) {
+        return i + 1; // Line numbers are 1-based.
+      }
     }
+
+    // Return -1 if the triple string is not found (should not happen in well-formed Turtle content)
+    return -1;
   }
 
   /// Saves triples to [Graph.groups].
