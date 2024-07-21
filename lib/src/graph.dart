@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
-import './namespace.dart';
+import 'namespace.dart';
 import './term.dart';
-import './triple.dart';
-import './constants.dart';
+import 'triple.dart';
+import 'constants.dart';
 import '../parser/grammar_parser.dart';
 
 class Graph {

@@ -1,5 +1,5 @@
 import 'package:logging/logging.dart';
-import './namespace.dart';
+import 'namespace.dart';
 
 Logger logger = Logger('term');
 
