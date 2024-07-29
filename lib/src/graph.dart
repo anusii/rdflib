@@ -1119,7 +1119,9 @@ class Graph {
   String _preprocessTurtleContent(String turtleContent) {
     // Regular expression to match multiline literals.
 
-    final multilineLiteralRegex = RegExp(r'"""(.*?)"""', dotAll: true);
+    final multilineLiteralRegex = RegExp(
+        turtleContent.contains("'''") ? r"'''(.*?)'''" : r'"""(.*?)"""',
+        dotAll: true);
 
     // Replace each multiline literal with a processed version.
 
@@ -1131,6 +1133,8 @@ class Graph {
       // Process the multiline literal as needed.
       // Example: Replace line breaks with a special sequence.
       String processedLiteral = multilineLiteral.replaceAll('\n', '\\n');
+
+      processedLiteral = processedLiteral.replaceAll('"', '\\"');
 
       // Return the processed literal with the original triple quotes
       return '"$processedLiteral"';
