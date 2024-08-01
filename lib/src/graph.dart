@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io' show File;
 
 import 'package:http/http.dart' as http;
+import 'package:universal_io/io.dart' show Platform;
 
 import './namespace.dart';
 import './term.dart';
@@ -1132,7 +1133,9 @@ class Graph {
 
       // Process the multiline literal as needed.
       // Example: Replace line breaks with a special sequence.
-      String processedLiteral = multilineLiteral.replaceAll('\n', '\\n');
+
+      String processedLiteral =
+          multilineLiteral.replaceAll(Platform.isWindows ? '\r\n' : '\n', ' ');
 
       processedLiteral = processedLiteral.replaceAll('"', '\\"');
 
