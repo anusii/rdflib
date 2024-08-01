@@ -409,7 +409,7 @@ class Graph {
   /// Parses whole text and update graph accordingly.
   @Deprecated('Use [Graph.parseTurtle] instead for parsing a turtle string')
   parseText(String text) {
-    List<String> lines = text.split('\n');
+    List<String> lines = text.split(Platform.isWindows ? '\r\n' : '\n');
     try {
       Map<String, dynamic> config = {
         'prefix': false,
@@ -700,7 +700,8 @@ class Graph {
         int line = int.parse(match.group(1)!);
         int column = int.parse(match.group(2)!);
 
-        List<String> lines = fileContent.split('\n');
+        List<String> lines =
+            fileContent.split(Platform.isWindows ? '\r\n' : '\n');
         String errorLine =
             lines.length >= line ? lines[line - 1] : "Unknown line";
 
@@ -746,7 +747,7 @@ class Graph {
   /// This is a helper method to aid in error reporting by providing the line number.
   int _findLineNumber(String content, List tripleList) {
     // Convert the content into lines
-    List<String> lines = content.split('\n');
+    List<String> lines = content.split(Platform.isWindows ? '\r\n' : '\n');
 
     // Convert the triple list back to a string to search for in the lines.
     String tripleString = tripleList.toString();
@@ -923,7 +924,7 @@ class Graph {
   void _writeGraphs(StringBuffer output, String indent) {
     String line = '';
     for (var k in graphs.keys) {
-      output.write('\n');
+      output.write(Platform.isWindows ? '\r\n' : '\n');
       bool isNewGraph = true;
       Set<Triple>? g = graphs[k];
       for (Triple t in g!) {
@@ -945,7 +946,7 @@ class Graph {
             line = '$firstHalf ${t.obj} ;';
           }
         } else {
-          line += '\n';
+          line += Platform.isWindows ? '\r\n' : '\n';
           String firstHalf = '$indent${_abbrUrirefToTtl(t.pre, contexts)}';
           if (t.obj.runtimeType == String) {
             line += '$firstHalf "${t.obj}" ;';
@@ -1038,7 +1039,7 @@ class Graph {
       }
     }
     // Add a new empty line before all the triples.
-    rtnStr += '\n';
+    rtnStr += Platform.isWindows ? '\r\n' : '\n';
     return rtnStr;
   }
 
@@ -1098,7 +1099,7 @@ class Graph {
   /// Current implementation is to match and replace line by line
   String _removeComments(String fileContent) {
     String rtnStr = '';
-    List<String> lines = fileContent.split('\n');
+    List<String> lines = fileContent.split(Platform.isWindows ? '\r\n' : '\n');
     for (var line in lines) {
       // See also: https://www.w3.org/TR/turtle/#sec-grammar-comments
       // comments in Turtle take the form of '#', outside an IRIREF or String,
@@ -1108,7 +1109,7 @@ class Graph {
         continue;
       }
       rtnStr += line.replaceAll(RegExp(r'\s*#\s.*$'), '');
-      rtnStr += '\n';
+      rtnStr += Platform.isWindows ? '\r\n' : '\n';
     }
     return rtnStr;
   }
