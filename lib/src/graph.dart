@@ -3,10 +3,10 @@ import 'dart:io' show File;
 
 import 'package:http/http.dart' as http;
 
-import './namespace.dart';
+import 'namespace.dart';
 import './term.dart';
-import './triple.dart';
-import './constants.dart';
+import 'triple.dart';
+import 'constants.dart';
 import '../parser/grammar_parser.dart';
 
 class Graph {
@@ -785,12 +785,31 @@ class Graph {
       dynamic pre = item(predicateObjectList[0]);
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
+
       for (var obj in objectList) {
-        var parsedObj =
-            (obj is List) ? item(_combineListItems(obj)) : item(obj);
-        groups[sub]![pre]!.add(parsedObj);
-        triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
+        var objItem;
+        if (obj is String) {
+          objItem = item(obj);
+        } else if (obj is List) {
+          objItem = itemFromList(obj);
+        }
+
+        groups[sub]![pre]!.add(objItem);
+        triples.add(Triple(sub: sub, pre: pre, obj: objItem));
+
+//       for (var obj in objectList) {
+//         var parsedObj =
+//             (obj is List) ? item(_combineListItems(obj)) : item(obj);
+//         groups[sub]![pre]!.add(parsedObj);
+//         triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
+
       }
+
+      // // Original for loop - TODO remove
+      // for (String obj in objectList) {
+      //   groups[sub]![pre]!.add(item(obj));
+      //   triples.add(Triple(sub: sub, pre: pre, obj: item(obj)));
+      // }
     }
   }
 
@@ -890,6 +909,122 @@ class Graph {
       }
       return item(combinedString);
     }
+  }
+
+  List stripBrackets(List values) {
+    if (values[0] == '(' || values[0] == '[') {
+      values = values.sublist(1, values.length - 1);
+    }
+    return values;
+  }
+
+  Set parseObjectValues(List objVals) {
+    /// Parses a Set or List of multiple object values
+    objVals = stripBrackets(objVals)[0];
+
+    Set values = {};
+    for (var objVal in objVals) {
+      if (objVal is List) {
+        objVal = stripBrackets(objVal)[0][0];
+
+        String objName = objVal[0];
+        List subValues = objVal[1];
+
+        // TODO try to parse to int/float etc
+        Map objMap = {
+          item(objName): subValues.length == 1
+              ? item(subValues[0])
+              : subValues.map((e) => item(e)).toSet()
+        };
+        values.add(objMap);
+      } else {
+        // TODO
+        values.add(objVal);
+      }
+    }
+    return values;
+  }
+
+  List parseObjectValueFromNameStringAndValueList(List obj) {
+    /// Used for getting name and values for objects when obj is in the format:
+    /// ['Object name string', ['Value 1', 'Value 2 (optional)'...] ]
+    /// Returns in format: {'Object name string': {'Value 1', 'Value 2 (optional)'...} }
+
+    String objName = obj[0];
+
+    List values = obj[1];
+    Set objValues = {};
+
+    if (values.length == 1) {
+      objValues.add(values[0]);
+    } else {
+      // TODO parse multiple values
+      // List singleValuesList = values[1];
+      for (final val in values) {
+        // check whether string or list
+        if (val is String) {
+          objValues.add(val);
+        } else {
+          // TODO
+          throw UnimplementedError(
+              'Parsing of multiple values is not yet implemented in this method');
+        }
+      }
+    }
+
+    return [objName, objValues];
+  }
+
+  parseObjectValue() {
+    /// Parses a single object value
+  }
+
+  Map<URIRef, Set<dynamic>> itemFromList(List tripleList) {
+    List predicateObjectLists = [];
+    Map<URIRef, Set<dynamic>> objectGroups = Map();
+
+    if (tripleList[0] == '(') {
+      if (tripleList[1][0] is List) {
+        tripleList = tripleList[1][0];
+      }
+    }
+
+    if (tripleList[0] == '[') {
+      // trim leading and trailing 'entries' that are just [ or ]
+      tripleList = tripleList.sublist(1, tripleList.length - 1);
+      predicateObjectLists = tripleList[0];
+    }
+
+    for (List predicateObjectList in predicateObjectLists) {
+      if (predicateObjectList[0] == '[') {
+        predicateObjectList =
+            predicateObjectList.sublist(1, predicateObjectList.length - 1);
+      }
+      var pre;
+      pre = item(predicateObjectList[0]);
+      var objValues = predicateObjectList[1];
+
+      if (predicateObjectList[0] is List) {
+        // detect list within predicateObjectList and iterate
+        pre = itemFromList(predicateObjectList[0]);
+      } else {
+        pre = item(predicateObjectList[0]); // URIRef
+      }
+
+      Set objItem = {};
+
+      for (final obj in objValues) {
+        if (objValues[0] is List && objValues[0].length > 1) {
+          // Multiple object values found (e.g. multiple restrictions on a ConstrainedDatatype)
+          objItem.add(parseObjectValues(objValues[0]));
+        } else {
+          objItem.add(item(obj));
+        }
+      }
+
+      objectGroups[pre] = objItem;
+    }
+    return objectGroups;
   }
 
   /// Serializes the graph to certain format and export to file.
