@@ -1,0 +1,20 @@
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix ldp: <http://www.w3.org/ns/ldp#>.
+@prefix posix: <http://www.w3.org/ns/posix/stat#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<> <urn:npm:solid:community-server:meta:contentTypeParameter> _:b22466_b12514_b12510_n3-564;
+    a ldp:Container, ldp:BasicContainer, ldp:Resource;
+    dc:modified "2024-07-10T00:36:05.000Z"^^xsd:dateTime.
+_:b22466_b12514_b12510_n3-564 <http://www.w3.org/2000/01/rdf-schema#label> "charset";
+    <urn:npm:solid:community-server:meta:value> "utf-8".
+<ind-keys.ttl> a ldp:Resource, <http://www.w3.org/ns/iana/media-types/text/turtle#Resource>;
+    dc:modified "2024-07-10T04:54:04.000Z"^^xsd:dateTime.
+<enc-keys.ttl> a ldp:Resource, <http://www.w3.org/ns/iana/media-types/text/turtle#Resource>;
+    dc:modified "2024-06-27T12:01:32.000Z"^^xsd:dateTime.
+<> posix:mtime 1720571765;
+    ldp:contains <ind-keys.ttl>, <enc-keys.ttl>.
+<ind-keys.ttl> posix:mtime 1720587244;
+    posix:size 941.
+<enc-keys.ttl> posix:mtime 1719489692;
+    posix:size 2703.

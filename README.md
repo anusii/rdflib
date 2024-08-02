@@ -102,7 +102,7 @@ main() {
 }
 ```
 
-### 2. [SOLID Health Ontology Example](https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl)
+### 2. [SOLID Health Ontology Example](<https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl>)
 
 ```dart
 import 'package:rdflib/rdflib.dart';
@@ -240,7 +240,7 @@ main() async {
 
 ### How to contribute
 
-Make a pull request on our GitHub [repo](https://github.com/anusii/rdfgraph)!
+Make a pull request on our GitHub [repo](https://github.com/anusii/rdflib)!
 
 ## Acknowledgement
 

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
+import 'package:http/http.dart' as http;
+
 import 'namespace.dart';
 import './term.dart';
 import 'triple.dart';
@@ -66,19 +68,19 @@ class Graph {
   void addTripleToGroups(dynamic s, dynamic p, dynamic o) {
     // TODO: subject as a BlankNode
     try {
-      URIRef sub = (s.runtimeType == URIRef) ? s : item(s) as URIRef;
+      dynamic sub =
+          (s.runtimeType == URIRef || s.runtimeType == BNode) ? s : item(s);
       _updateCtx(sub, ctx);
       if (!groups.containsKey(sub)) {
         groups[sub] = Map();
       }
-      URIRef pre = (p.runtimeType == URIRef) ? p : item(p) as URIRef;
+      dynamic pre = (p.runtimeType == URIRef) ? p : item(p);
       _updateCtx(pre, ctx);
       if (!groups[sub]!.containsKey(pre)) {
         groups[sub]![pre] = Set();
       }
-      // var obj = (o.runtimeType == URIRef) ? o : item(o);
       var obj = (o.runtimeType == String) ? item(o) : o;
-      if (obj.runtimeType == URIRef) {
+      if (obj.runtimeType == URIRef || obj.runtimeType == BNode) {
         _updateCtx(obj, ctx);
       } else if (obj.runtimeType == Literal) {
         Literal objLiteral = obj as Literal;
@@ -88,8 +90,8 @@ class Graph {
       } else if (obj.runtimeType == String) {
         _updateCtx(XSD.string, ctx);
       }
+      // Updates triple sets as well.
       groups[sub]![pre]!.add(obj);
-      // Update the triples set as well.
       triples.add(Triple(sub: sub, pre: pre, obj: obj));
     } catch (e) {
       print('Error occurred when adding triple ($s, $p, $o), '
@@ -270,25 +272,115 @@ class Graph {
   }
 
   /// Finds all subjects which have a certain predicate and object.
-  Set<URIRef> subjects(URIRef pre, dynamic obj) {
+  ///
+  /// If `pre` is provided, it checks for the predicate.
+  /// If `obj` is provided, it checks for the object.
+  /// If both are provided, it checks for both predicate and object.
+  /// If neither is provided, it returns all subjects in the triples.
+  Set<URIRef> subjects({URIRef? pre, dynamic obj}) {
+    // Initialize an empty set to store the subjects.
     Set<URIRef> subs = {};
+
+    // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      if (t.pre == pre && t.obj == obj) {
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the subject.
+      if (preMatches && objMatches) {
         subs.add(t.sub);
       }
     }
+
+    // Return the set of subjects.
     return subs;
   }
 
   /// Finds all objects which have a certain subject and predicate.
-  Set objects(URIRef sub, URIRef pre) {
-    Set objs = {};
+  ///
+  /// If `sub` is provided, it checks for the subject.
+  /// If `pre` is provided, it checks for the predicate.
+  /// If both are provided, it checks for both subject and predicate.
+  /// If neither is provided, it returns all objects in the triples.
+  Set<dynamic> objects({URIRef? sub, URIRef? pre}) {
+    // Initialize an empty set to store the objects.
+    Set<dynamic> objs = {};
+
+    // Iterate over all triples in the graph.
     for (Triple t in triples) {
-      if (t.sub == sub && t.pre == pre) {
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the pre condition matches, if provided.
+      bool preMatches = pre == null || t.pre == pre;
+
+      // If both conditions match (or are not provided), add the object.
+      if (subMatches && preMatches) {
         objs.add(t.obj);
       }
     }
+
+    // Return the set of objects.
     return objs;
+  }
+
+  /// Finds all predicates which have a certain subject and object.
+  ///
+  /// If `sub` is provided, it checks for the subject.
+  /// If `obj` is provided, it checks for the object.
+  /// If both are provided, it checks for both subject and object.
+  /// If neither is provided, it returns all predicates in the triples.
+  Set<URIRef> predicates({URIRef? sub, dynamic obj}) {
+    // Initialize an empty set to store the predicates.
+    Set<URIRef> pres = {};
+
+    // Iterate over all triples in the graph.
+    for (Triple t in triples) {
+      // Check if the sub condition matches, if provided.
+      bool subMatches = sub == null || t.sub == sub;
+      // Check if the obj condition matches, if provided.
+      bool objMatches = obj == null || t.obj == obj;
+
+      // If both conditions match (or are not provided), add the predicate.
+      if (subMatches && objMatches) {
+        pres.add(t.pre);
+      }
+    }
+
+    // Return the set of predicates.
+    return pres;
+  }
+
+  /// Finds all triples which have a certain value.
+  ///
+  /// This method checks if the given [value] matches any of the components
+  /// (subject, predicate, or object) of the triples in the graph. It returns
+  /// a set of triples where any of these components matches the [value].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final value = 'exampleValue';
+  /// final matchingTriples = matchTriples(value);
+  /// print(matchingTriples);
+  /// ```
+  Set<Triple> matchTriples(String value) {
+    // Initialize an empty set to store the matching triples.
+    Set<Triple> matchingTriples = {};
+
+    // Iterate over all triples in the graph.
+    for (Triple t in triples) {
+      // Check if the subject, predicate, or object matches the given value.
+      if (t.sub.value == value ||
+          t.pre.value == value ||
+          t.obj.toString() == value) {
+        // If any component matches, add the triple to the set of matching triples.
+        matchingTriples.add(t);
+      }
+    }
+
+    // Return the set of matching triples.
+    return matchingTriples;
   }
 
   /// Parses file and update graph accordingly.
@@ -572,17 +664,101 @@ class Graph {
   ///
   /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
   void parseTurtle(String fileContent) {
-    String processedContent = _preprocessTurtleContent(fileContent);
-    final String content = _removeComments(processedContent);
+    try {
+      // Preprocess the content and remove comments.
+      String processedContent = _preprocessTurtleContent(fileContent);
+      final String content = _removeComments(processedContent);
 
-    List parsedList = parser.parse(content).value;
+      // Parse the content into a list of triples.
+      List parsedList = parser.parse(content).value;
 
-    for (List tripleList in parsedList) {
-      _saveToContext(tripleList);
+      // Save context and groups for each triple list.
+      for (int i = 0; i < parsedList.length; i++) {
+        try {
+          _saveToContext(parsedList[i]);
+        } catch (e) {
+          print(
+              'Error in _saveToContext at line ${_findLineNumber(content, parsedList[i])}: $e');
+        }
+      }
+
+      for (int i = 0; i < parsedList.length; i++) {
+        try {
+          _saveToGroups(parsedList[i]);
+        } catch (e) {
+          print(
+              'Error in _saveToGroups at line ${_findLineNumber(content, parsedList[i])}: $e');
+        }
+      }
+    } catch (e) {
+      String errorMessage = e.toString();
+      RegExp regExp = RegExp(r'at (\d+):(\d+)');
+      Match? match = regExp.firstMatch(errorMessage);
+
+      if (match != null) {
+        int line = int.parse(match.group(1)!);
+        int column = int.parse(match.group(2)!);
+
+        List<String> lines = fileContent.split('\n');
+        String errorLine =
+            lines.length >= line ? lines[line - 1] : "Unknown line";
+
+        print('ParserException: $errorMessage');
+        print('Error at line $line, column $column:');
+        print(errorLine);
+      } else {
+        print('General error in parsing Turtle content: $e');
+      }
     }
-    for (List tripleList in parsedList) {
-      _saveToGroups(tripleList);
+  }
+
+  /// Parses a valid turtle file from a web link [webLink].
+  ///
+  /// Updates [Graph.ctx], [Graph.groups] and [Graph.triples] in the process.
+  /// The [webLink] should point to a valid Turtle (.ttl) file to ensure correct parsing.
+  /// If the [webLink] does not point to a .ttl file, it might cause unexpected parsing errors.
+  Future<void> parseTurtleFromWeb(String webLink) async {
+    String fileContent = '';
+
+    try {
+      // Fetch the content from the web link.
+      final response = await http.get(
+        Uri.parse(webLink),
+      );
+
+      if (response.statusCode == 200) {
+        fileContent = utf8.decode(response.bodyBytes);
+
+        // Parse the Turtle content.
+        parseTurtle(fileContent);
+      } else {
+        print(
+            'Failed to load content from $webLink. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to load content from $webLink. Error: $e');
     }
+  }
+
+  /// Finds the line number of a given triple in the content.
+  ///
+  /// This is a helper method to aid in error reporting by providing the line number.
+  int _findLineNumber(String content, List tripleList) {
+    // Convert the content into lines
+    List<String> lines = content.split('\n');
+
+    // Convert the triple list back to a string to search for in the lines.
+    String tripleString = tripleList.toString();
+
+    // Find the line that contains the triple string.
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].contains(tripleString)) {
+        return i + 1; // Line numbers are 1-based.
+      }
+    }
+
+    // Return -1 if the triple string is not found (should not happen in well-formed Turtle content)
+    return -1;
   }
 
   /// Saves triples to [Graph.groups].
@@ -598,7 +774,7 @@ class Graph {
       return;
     }
     List tripleContent = tripleList[0];
-    URIRef sub = item(tripleContent[0]) as URIRef;
+    dynamic sub = item(tripleContent[0]);
     if (!groups.containsKey(sub)) {
       groups[sub] = Map();
     }
@@ -606,13 +782,10 @@ class Graph {
     for (List predicateObjectList in predicateObjectLists) {
       // Predicate is always an iri.
       // Uses URIRef as we translate PrefixedName to full form of [URIRef]
-      URIRef pre;
-      pre = item(predicateObjectList[0]);
-      // Use a set to store the triples.
+      dynamic pre = item(predicateObjectList[0]);
       groups[sub]![pre] = Set();
       List objectList = predicateObjectList[1];
 
-      // My new code:
       for (var obj in objectList) {
         var objItem;
         if (obj is String) {
@@ -623,6 +796,13 @@ class Graph {
 
         groups[sub]![pre]!.add(objItem);
         triples.add(Triple(sub: sub, pre: pre, obj: objItem));
+
+//       for (var obj in objectList) {
+//         var parsedObj =
+//             (obj is List) ? item(_combineListItems(obj)) : item(obj);
+//         groups[sub]![pre]!.add(parsedObj);
+//         triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
+
       }
 
       // // Original for loop - TODO remove
@@ -655,83 +835,79 @@ class Graph {
   /// Case 4: abc^^xsd:string -> Literal('abc', datatype:xsd:string)
   /// Case 5: abc@en -> Literal('abc', lang:'en')
   /// Case 6: abc -> Literal('abc')
-  item(String s) {
-    s = s.trim();
-    // 0. a is short for rdf:type
-    if (s == 'a') {
-      _saveToContext(['@prefix', 'rdf:', '<${RDF.rdf}>']);
-      return a;
-    }
-    // 1. <>
-    else if (s.startsWith('<') && s.endsWith('>')) {
-      String uri = s.substring(1, s.length - 1);
-      if (URIRef.isValidUri(uri)) {
-        // Valid uri is sufficient as URIRef.
+  item(dynamic s) {
+    if (s is String) {
+      s = s.trim();
+
+      // 0. a is short for rdf:type
+      if (s == 'a') {
+        _saveToContext(['@prefix', 'rdf:', '<${RDF.rdf}>']);
+        return a;
+      }
+      // 1. <>
+      else if (s.startsWith('<') && s.endsWith('>')) {
+        String uri = s.substring(1, s.length - 1);
         return URIRef(uri);
-      } else {
-        if (ctx.containsKey(':')) {
-          // FIXME: if context has base, do we need to stitch them?
-          // Examples:
-          // 1. <> -> URIRef('')
-          // 2. <./> -> URIRef('./')
-          // 3. <bob#me> -> e.g., URIRef('http://example.org/bob#me')
-          //                or just URIRef('bob#m3') [current implementation]?
-          return URIRef(uri);
-          // return URIRef('${ctx[':']!.value}${uri}');
-        } else {
-          return URIRef(uri); // or it's just a string within <>
+      }
+      // 4. abc^^xsd:string
+      // Note this needs to come before :abc or abc:efg cases.
+      else if (s.contains('^^')) {
+        List<String> lst = s.split('^^');
+        String value = lst[0];
+        String datatype = lst[1];
+        // Note: Literal only supports XSD, OWL namespaces currently
+        return Literal(value, datatype: item(datatype));
+      }
+      // 2. :abc
+      else if (s.startsWith(':')) {
+        // When using @base.
+        if (ctx[':'] == null) {
+          throw Exception('Base is not defined yet. (caused by $s)');
         }
+        return URIRef('${ctx[":"]!.value}${s.substring(1)}');
       }
-    }
-    // 4. abc^^xsd:string
-    // Note this needs to come before :abc or abc:efg cases.
-    else if (s.contains('^^')) {
-      List<String> lst = s.split('^^');
-      String value = lst[0];
-      String datatype = lst[1];
-      // Note: Literal only supports XSD, OWL namespaces currently
-      return Literal(value, datatype: item(datatype));
-    }
-    // 2. :abc
-    else if (s.startsWith(':')) {
-      // When using @base.
-      if (ctx[':'] == null) {
-        throw Exception('Base is not defined yet. (caused by $s)');
+      // 3. abc:efg
+      else if (s.contains(':') && !s.startsWith('_:')) {
+        // When using @prefix
+        int firstColonPos = s.indexOf(':');
+        String namespace = s.substring(0, firstColonPos + 1); // including ':'
+        String localname = s.substring(firstColonPos + 1);
+        // If the namespace is not defined, we can't proceed.
+        if (ctx[namespace] == null) {
+          throw Exception(
+              'Namespace ${namespace.substring(0, namespace.length - 1)} is used '
+              'but not defined. (caused by $s)');
+        }
+        return URIRef('${ctx[namespace]?.value}$localname');
       }
-      return URIRef('${ctx[":"]!.value}${s.substring(1)}');
-    }
-    // 3. abc:efg
-    else if (s.contains(':')) {
-      // When using @prefix
-      int firstColonPos = s.indexOf(':');
-      String namespace = s.substring(0, firstColonPos + 1); // including ':'
-      String localname = s.substring(firstColonPos + 1);
-      // If the namespace is not defined, we can't proceed.
-      if (ctx[namespace] == null) {
-        throw Exception(
-            'Namespace ${namespace.substring(0, namespace.length - 1)} is used '
-            'but not defined. (caused by $s)');
+      // 5. abc@en
+      else if (_existsLangTag(s)) {
+        String lang = _getLangTag(s);
+        String value = s.replaceAll('@$lang', '');
+        return Literal(value, lang: lang);
       }
-      return URIRef('${ctx[namespace]?.value}$localname');
-    }
-    // 5. abc@en
-    else if (_existsLangTag(s)) {
-      String lang = _getLangTag(s);
-      String value = s.replaceAll('@$lang', '');
-      return Literal(value, lang: lang);
-    }
-    // AV-20240621: commenting the following and adding above
-    // as the following will identify non language tags as well
-    // else if (s.contains('@')) {
-    //   List<String> lst = s.split('@');
-    //   String value = lst[0];
-    //   String lang = lst[1];
-    //   return Literal(value, lang: lang);
-    // }
-    // 6. abc
-    else {
-      // Treat it as a normal string.
-      return Literal(s);
+      // AV-20240621: commenting the following and adding above
+      // as the following will identify non language tags as well
+      // else if (s.contains('@')) {
+      //   List<String> lst = s.split('@');
+      //   String value = lst[0];
+      //   String lang = lst[1];
+      //   return Literal(value, lang: lang);
+      // }
+      // 6. _:
+      else if (s.startsWith('_:')) {
+        return BNode(s);
+      } else {
+        // Treat it as a normal string.
+        return Literal(s);
+      }
+    } else if (s is List) {
+      // Combine all items and sub-items in the list into a single string.
+      String combinedString = _combineListItems(s);
+      if (combinedString.startsWith('_:')) {
+        return BNode(combinedString);
+      }
+      return item(combinedString);
     }
   }
 
@@ -1104,5 +1280,21 @@ class Graph {
   /// Extract the language tag from a given literal
   String _getLangTag(String literal) {
     return langTags.firstWhere((element) => literal.contains('@$element'));
+  }
+
+  /// Recursively combines all items in a list and its sub-items into a single string.
+  ///
+  /// This function traverses a list and concatenates all its elements,
+  /// including elements of nested lists, into a single string.
+  /// It handles various data types by converting them to their string representations.
+  ///
+  String _combineListItems(dynamic item) {
+    if (item is List) {
+      // Recursively call combineListItems on each sub-item and join them into a single string.
+      return item.map((subItem) => _combineListItems(subItem)).join('');
+    } else {
+      // Convert non-list item to a string.
+      return item.toString();
+    }
   }
 }

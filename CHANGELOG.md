@@ -1,17 +1,28 @@
+## 0.2.10
+
+- Support navigation in Graph
+  - `g.value()` to find out any triple that has a single rdf:value
+  - `g.subjects()` to extract matching subjects in the graph
+  - `g.predicates()`to extract matching predicates in the graph
+  - `g.objects()` to extract matching objects in the graph
+- Fix exception when triples have the Blank Node (in the format of `_:`)
+- `parseTurtle()` gives more information of error, such as pointing out which line has the error
+- Read remote turtle files (e.g. from web link) `parseTurtleFromWeb(webLink)`
+
 ## 0.2.9
 
-_ Identify language tags properly
+- Identify language tags properly
 
 ## 0.2.8
 
-_ Static analysis
+- Static analysis
   - revert changes of static analysis
 
 ## 0.2.7
 
 - Examples
   - add a example to package homepage
-_ Static analysis
+- Static analysis
   - fix warnings, lints, or formatting issues
 
 ## 0.2.6
@@ -23,7 +34,6 @@ _ Static analysis
   - update [parseTurtle] to work when the content with multiline comments
 - Examples
   - add a example to parse files with multiline field
-
 
 ## 0.2.5
 
