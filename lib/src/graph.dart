@@ -1152,7 +1152,7 @@ class Graph {
 
   /// Extract the language tag from a given literal
   String _getLangTag(String literal) {
-    return langTags.firstWhere((element) => literal.contains('@$element'));
+    return langTags.lastWhere((element) => literal.contains('@$element'));
   }
 
   /// Recursively combines all items in a list and its sub-items into a single string.
