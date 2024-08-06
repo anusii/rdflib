@@ -1135,8 +1135,9 @@ class Graph {
       // Process the multiline literal as needed.
       // Example: Replace line breaks with a special sequence.
 
-      String processedLiteral =
-          multilineLiteral.replaceAll(Platform.isWindows ? '\r\n' : '\n', ' ');
+      String processedLiteral = multilineLiteral.replaceAll(
+          Platform.isWindows ? '\r\n' : '\n',
+          Platform.isWindows ? r'\r\n' : r'\n');
 
       processedLiteral = processedLiteral.replaceAll('"', '\\"');
 
