@@ -337,7 +337,9 @@ class EvaluatorDefinition extends ExpressionDefinition {
         rtnList.add(firstPreObj);
         final restPreObjs = values[2] as List;
         for (var i = 0; i < restPreObjs.length; i++) {
-          rtnList.add(restPreObjs[i][1][0]);
+          var o = restPreObjs[i][1] as List;
+          if (o.length > 0)
+            rtnList.add(o[0]);
         }
         return rtnList;
       });
