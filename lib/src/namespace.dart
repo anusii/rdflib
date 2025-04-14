@@ -1,4 +1,4 @@
-import './term.dart';
+import 'term.dart';
 import 'constants.dart';
 
 class Namespace {

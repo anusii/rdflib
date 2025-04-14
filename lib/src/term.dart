@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart' as uuid;
 
-import './namespace.dart';
+import 'namespace.dart';
 
 Logger logger = Logger('term');
 

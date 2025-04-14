@@ -257,7 +257,7 @@ class ExpressionDefinition extends GrammarDefinition {
   Parser turtleDoc() => ref0(statement).star();
 }
 
-/// This class focuses on interpreting and formatting the raw parsed data 
+/// This class focuses on interpreting and formatting the raw parsed data
 /// into a more structured and meaningful format.
 
 class EvaluatorDefinition extends ExpressionDefinition {
@@ -337,7 +337,8 @@ class EvaluatorDefinition extends ExpressionDefinition {
         rtnList.add(firstPreObj);
         final restPreObjs = values[2] as List;
         for (var i = 0; i < restPreObjs.length; i++) {
-          rtnList.add(restPreObjs[i][1][0]);
+          var o = restPreObjs[i][1] as List;
+          if (o.length > 0) rtnList.add(o[0]);
         }
         return rtnList;
       });
