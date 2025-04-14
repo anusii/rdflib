@@ -799,12 +799,17 @@ class Graph {
         groups[sub]![pre]!.add(objItem);
         triples.add(Triple(sub: sub, pre: pre, obj: objItem));
 
-//       for (var obj in objectList) {
-//         var parsedObj =
-//             (obj is List) ? item(_combineListItems(obj)) : item(obj);
-//         groups[sub]![pre]!.add(parsedObj);
-//         triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
+        /// Keep it for future use.
+
+        // for (var obj in objectList) {
+        //   var parsedObj =
+        //       (obj is List) ? item(_combineListItems(obj)) : item(obj);
+        //   groups[sub]![pre]!.add(parsedObj);
+        //   triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
+        // }
       }
+
+      /// Keep it for future use.
 
       // // Original for loop - TODO remove
       // for (String obj in objectList) {
