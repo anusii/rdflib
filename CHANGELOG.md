@@ -1,6 +1,6 @@
 ## 0.2.12
 
-- Fix parsing of semicolon at end of predicateObjectLis
+- Fix parsing of semicolon at end of predicateObjectList
 
 ## 0.2.11
 
