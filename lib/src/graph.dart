@@ -804,7 +804,6 @@ class Graph {
 //             (obj is List) ? item(_combineListItems(obj)) : item(obj);
 //         groups[sub]![pre]!.add(parsedObj);
 //         triples.add(Triple(sub: sub, pre: pre, obj: parsedObj));
-
       }
 
       // // Original for loop - TODO remove
