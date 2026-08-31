@@ -230,10 +230,10 @@ class ExpressionDefinition extends GrammarDefinition {
   // Keywords in double quotes ("BASE", "PREFIX") are case-insensitive.
   // refer to: https://www.w3.org/TR/turtle/#sec-grammar-grammar
   Parser sparqlPrefix() =>
-      stringIgnoreCase('PREFIX') & ref0(PNAME_NS).trim() & ref0(IRIREF);
+      string('PREFIX', ignoreCase: true) & ref0(PNAME_NS).trim() & ref0(IRIREF);
 
   // [5s] 	sparqlBase 	::= 	"BASE" IRIREF
-  Parser sparqlBase() => stringIgnoreCase('BASE') & ref0(IRIREF).trim();
+  Parser sparqlBase() => string('BASE', ignoreCase: true) & ref0(IRIREF).trim();
 
   // [5] 	base 	::= 	'@base' IRIREF '.'
   Parser base() => string('@base') & ref0(IRIREF).trim() & string('.');

@@ -275,10 +275,11 @@ final triples = (subject & predicateObjectList.trim()) |
     (blankNodePropertyList & predicateObjectList.repeat(0, 1).trim());
 
 /// [6s] 	sparqlPrefix 	::= 	"PREFIX" PNAME_NS IRIREF
-final sparqlPrefix = stringIgnoreCase('PREFIX') & PNAME_NS.trim() & IRIREF;
+final sparqlPrefix =
+    string('PREFIX', ignoreCase: true) & PNAME_NS.trim() & IRIREF;
 
 /// [5s] 	sparqlBase 	::= 	"BASE" IRIREF
-final sparqlBase = stringIgnoreCase('BASE') & IRIREF.trim();
+final sparqlBase = string('BASE', ignoreCase: true) & IRIREF.trim();
 
 /// [5] 	base 	::= 	'@base' IRIREF '.'
 final base = string('@base') & IRIREF.trim() & string('.');
