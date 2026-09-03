@@ -1,3 +1,7 @@
+## 0.2.13
+
+- Upgrade `petitparser` from 6.1.0 to 7.0.2
+
 ## 0.2.12
 
 - Fix parsing of semicolon at end of predicateObjectList
