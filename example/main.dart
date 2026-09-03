@@ -1,4 +1,4 @@
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() {
   // the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>

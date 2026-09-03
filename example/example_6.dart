@@ -1,4 +1,4 @@
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() async {
   String webLink = 'https://www.w3.org/TR/turtle/examples/example3.ttl';

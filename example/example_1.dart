@@ -1,4 +1,4 @@
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() {
   // Initialize a Graph

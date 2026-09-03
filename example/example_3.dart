@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() async {
-  // https://github.com/anusii/rdflib/blob/main/example/sample_acl_1.acl
-  // https://raw.githubusercontent.com/anusii/rdflib/main/example/sample_acl_1.acl
+  // https://github.com/anusii/rdf/blob/main/example/sample_acl_1.acl
+  // https://raw.githubusercontent.com/anusii/rdf/main/example/sample_acl_1.acl
   var url = Uri.https('raw.githubusercontent.com',
-      'anusii/rdflib/main/example/sample_acl_1.acl');
+      'anusii/rdf/main/example/sample_acl_1.acl');
   // Get the contents of the acl file
   var res = await http.get(url);
   String aclContents = res.body;

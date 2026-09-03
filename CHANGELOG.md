@@ -1,3 +1,9 @@
+## 1.0.0
+
+- **Breaking:** Rename the package from `rdflib` to `rdf`. Update imports from
+  `package:rdflib/rdflib.dart` to `package:rdf/rdf.dart`, and the dependency in
+  `pubspec.yaml` from `rdflib:` to `rdf:`. The public API is otherwise unchanged.
+
 ## 0.2.13
 
 - Upgrade `petitparser` from 6.1.0 to 7.0.2

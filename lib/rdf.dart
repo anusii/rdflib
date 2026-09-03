@@ -1,4 +1,4 @@
-library rdflib;
+library rdf;
 
 export 'src/term.dart';
 export 'src/namespace.dart';

@@ -1,8 +1,8 @@
-# RDFLib
+# RDF
 
-[![Pub Package](https://img.shields.io/pub/v/rdflib)](https://pub.dev/packages/rdflib)
-[![GitHub Issues](https://img.shields.io/github/issues/anusii/rdflib)](https://github.com/anusii/rdflib/issues)
-[![GitHub License](https://img.shields.io/github/license/anusii/rdflib)](https://raw.githubusercontent.com/anusii/rdflib/main/LICENSE)
+[![Pub Package](https://img.shields.io/pub/v/rdf)](https://pub.dev/packages/rdf)
+[![GitHub Issues](https://img.shields.io/github/issues/anusii/rdf)](https://github.com/anusii/rdf/issues)
+[![GitHub License](https://img.shields.io/github/license/anusii/rdf)](https://raw.githubusercontent.com/anusii/rdf/main/LICENSE)
 
 > A pure Dart package for working with RDF (resource description framework).
 
@@ -21,15 +21,15 @@
 
 Refer to the code example below, or go to `/example` to find out more!
 
-### For testing the `rdflib` package
+### For testing the `rdf` package
 
 ```bash
 # create a dart project for testing
-dart create test_rdflib
-cd test_rdflib
-# install rdflib as the dependency with dart pub add
-dart pub add rdflib
-# copy the following code examples to ~/bin/test_rdflib.dart
+dart create test_rdf
+cd test_rdf
+# install rdf as the dependency with dart pub add
+dart pub add rdf
+# copy the following code examples to ~/bin/test_rdf.dart
 # run the file with dart
 dart run
 ```
@@ -37,7 +37,7 @@ dart run
 ## Usage
 
 Head over to our GitHub repo to check out
-more [examples](https://github.com/anusii/rdfgraph/tree/main/example)!
+more [examples](https://github.com/anusii/rdf/tree/main/example)!
 
 ### 1. General usage
 
@@ -49,7 +49,7 @@ The following code snippet shows how to:
 4. Bind shorted string to long `namespace`;
 
 ```dart
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() {
   // the following example is modified from <https://rdflib.readthedocs.io/en/stable/gettingstarted.html#a-more-extensive-example>
@@ -105,7 +105,7 @@ main() {
 ### 2. [SOLID Health Ontology Example](<https://github.com/anusii/pods/blob/main/datasets/turtle-data/SOLID-Health-Ontology-Example%20-%20(data).ttl>)
 
 ```dart
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() {
   // Initialize a Graph
@@ -163,7 +163,7 @@ main() {
 ```dart
 import 'dart:io';
 
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() async {
   String filePath = 'example/sample_ttl_1.ttl';
@@ -196,13 +196,13 @@ main() async {
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() async {
-  // https://github.com/anusii/rdflib/blob/main/example/sample_acl_1.acl
-  // https://raw.githubusercontent.com/anusii/rdflib/main/example/sample_acl_1.acl
+  // https://github.com/anusii/rdf/blob/main/example/sample_acl_1.acl
+  // https://raw.githubusercontent.com/anusii/rdf/main/example/sample_acl_1.acl
   var url = Uri.https('raw.githubusercontent.com',
-      'anusii/rdflib/main/example/sample_acl_1.acl');
+      'anusii/rdf/main/example/sample_acl_1.acl');
   // Get the contents of the acl file
   var res = await http.get(url);
   String aclContents = res.body;
@@ -240,10 +240,10 @@ main() async {
 
 ### How to contribute
 
-Make a pull request on our GitHub [repo](https://github.com/anusii/rdflib)!
+Make a pull request on our GitHub [repo](https://github.com/anusii/rdf)!
 
 ## Acknowledgement
 
-- This `rdflib` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
+- This `rdf` dart package is modelled on the [RDFLib](https://rdflib.readthedocs.io/).
 - The parser is written with
   package [dart-petitparser](https://github.com/petitparser/dart-petitparser)

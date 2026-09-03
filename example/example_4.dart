@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:rdflib/rdflib.dart';
+import 'package:rdf/rdf.dart';
 
 main() async {
   String filePath = 'example/sample_ttl_4.ttl';
